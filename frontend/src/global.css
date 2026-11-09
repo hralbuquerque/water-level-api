@@ -1,0 +1,80 @@
+/* Homepage styles on the v2 system. Import AFTER the v2 globals css.
+   Uses the tokens/classes it defines on .rhodex-v2 (--navy, --ink, --accent,
+   .glass, .label, .plugs, .section-frame). Everything here hangs off .hp-root. */
+.hp-root { --muted: #2f3f5e; font-size: 15px; line-height: 1.6; }
+.hp-root a { color: inherit; text-decoration: none; }
+.hp-muted { color: var(--muted); font-size: 0.85rem; }
+.hp-num { font-variant-numeric: tabular-nums; }
+
+.hp-nav { display: flex; justify-content: space-between; align-items: center; width: min(1072px, calc(100% - 48px)); margin: 0 auto; padding: 20px 0; }
+.hp-brand { font-weight: 600; color: var(--ink); }
+.hp-nav nav { display: flex; gap: 24px; font-size: 0.85rem; }
+.hp-nav nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+.hp-hero { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; width: min(1072px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0; }
+.hp-copy h1 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; color: var(--ink); margin: 0 0 20px; }
+.hp-copy p { max-width: 46ch; color: var(--muted); margin: 0 0 28px; }
+.hp-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hp-btn { display: inline-block; padding: 10px 18px; border-radius: 999px; font: inherit; font-weight: 500; border: 1px solid var(--navy); transition: background-color 200ms; }
+.hp-btn.primary { background: var(--navy); color: #fff; }
+.hp-btn.primary:hover { background: var(--ink); }
+.hp-btn.glass:hover { background: rgba(255,255,255,.55); }
+
+.hp-panel { padding: 20px; min-height: 380px; }
+.hp-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,.6); }
+.hp-tab { background: none; border: 0; padding: 8px 12px; margin-bottom: -1px; font: inherit; font-size: 0.85rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.hp-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--navy); font-weight: 600; }
+
+.hp-reading { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.hp-big { font-size: 3rem; font-weight: 500; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
+.hp-unit { color: var(--muted); }
+.hp-badge { margin-left: auto; padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(45,66,116,.4); color: var(--muted); }
+.hp-badge.is-verified { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+.hp-chart { width: 100%; height: auto; margin: 16px 0 8px; overflow: visible; }
+.hp-line { fill: none; stroke: var(--navy); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.hp-trigger { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; transition: stroke 200ms; }
+.hp-trigger.near { stroke: #8a5a00; stroke-width: 2; }
+.hp-trigger.hit { stroke: #a3261d; stroke-width: 2; }
+.hp-slider { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; font-size: 0.85rem; }
+.hp-slider input { accent-color: var(--navy); }
+.hp-status { margin: 10px 0 0; font-weight: 500; }
+.hp-status.near { color: #8a5a00; }
+.hp-status.hit { color: #a3261d; }
+.hp-status .hp-muted { font-weight: 400; display: block; }
+
+/* Sections sit inside the thin white frame from .section-frame */
+.hp-section { width: min(1072px, calc(100% - 48px)); margin: 0 auto 32px; padding: 56px 48px; }
+.hp-section h2 { font-size: 1.5rem; letter-spacing: -0.02em; font-weight: 500; color: var(--ink); margin: 0 0 8px; }
+.hp-lead { color: var(--muted); max-width: 60ch; margin: 0 0 32px; }
+
+.hp-rows { list-style: none; margin: 0; padding: 0; }
+.hp-rows li { display: grid; grid-template-columns: 300px 1fr; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.6); align-items: baseline; }
+.hp-rows span { color: var(--muted); }
+.hp-code { color: var(--ink); font-size: 0.85rem; }
+
+.hp-split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.hp-split .hp-lead { margin-bottom: 0; }
+.hp-record { margin: 0; padding: 20px; font-size: 0.9rem; }
+.hp-record div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.6); }
+.hp-record div:last-child { border-bottom: 0; }
+.hp-record dt { color: var(--muted); }
+.hp-record dd { margin: 0; color: var(--ink); }
+
+/* How it works: blocks stack with a dot at the top and bottom of each (.plugs) */
+.hp-steps { list-style: none; margin: 0 auto 0 0; padding: 0; display: grid; gap: 28px; max-width: 560px; }
+.hp-steps li { position: relative; display: flex; gap: 14px; padding: 20px; }
+.hp-steps li > span { color: var(--accent); font-weight: 600; filter: brightness(.7); }
+.hp-steps strong { color: var(--ink); }
+.hp-steps p { margin: 4px 0 0; color: var(--muted); }
+
+.hp-cta .hp-lead { margin-bottom: 24px; }
+.hp-foot { width: min(1072px, calc(100% - 48px)); margin: 0 auto; padding: 16px 0 40px; }
+
+@media (prefers-reduced-motion: reduce) { .hp-root * { transition-duration: 0.001ms !important; } }
+@media (max-width: 860px) {
+  .hp-hero, .hp-split { grid-template-columns: 1fr; gap: 32px; padding-top: 40px; }
+  .hp-section { padding: 36px 24px; }
+  .hp-rows li { grid-template-columns: 1fr; gap: 4px; }
+  .hp-nav nav { gap: 14px; }
+}
