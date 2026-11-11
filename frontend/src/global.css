@@ -1,80 +1,193 @@
-/* Homepage styles on the v2 system. Import AFTER the v2 globals css.
-   Uses the tokens/classes it defines on .rhodex-v2 (--navy, --ink, --accent,
-   .glass, .label, .plugs, .section-frame). Everything here hangs off .hp-root. */
-.hp-root { --muted: #2f3f5e; font-size: 15px; line-height: 1.6; }
-.hp-root a { color: inherit; text-decoration: none; }
-.hp-muted { color: var(--muted); font-size: 0.85rem; }
-.hp-num { font-variant-numeric: tabular-nums; }
+/* App shell + landing page, styled from the company theme in src/theme/.
+   ThemeProvider writes the active theme's tokens onto :root as --rhodex-*
+   variables and sets <html data-theme="lapis|ghost">. Buttons, cards and tags
+   come from the theme's primitives (ActionButton, Surface, Tag); this file only
+   covers layout and the few app-level values that differ per theme. */
 
-.hp-nav { display: flex; justify-content: space-between; align-items: center; width: min(1072px, calc(100% - 48px)); margin: 0 auto; padding: 20px 0; }
-.hp-brand { font-weight: 600; color: var(--ink); }
-.hp-nav nav { display: flex; gap: 24px; font-size: 0.85rem; }
-.hp-nav nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+/* ---- App-level tokens derived from the theme ------------------------------ */
+:root {
+  --app-ink: var(--rhodex-text-dark);
+  --app-muted: var(--rhodex-text-dark-muted);
+  --app-accent: var(--rhodex-accent);
+  --app-danger: #B91C1C;   /* the theme primitives' "danger" red */
+  --app-warning: #B45309;  /* the theme primitives' amber */
+}
+/* Lapis: square, brutalist; thin navy rules on the blue-gray gradient */
+:root[data-theme="lapis"] {
+  --app-line: var(--rhodex-rule-color);
+  --app-radius: 0px;
+  --app-field: rgba(255, 255, 255, 0.6);
+  --app-field-border: var(--rhodex-border-white);
+  --app-wash: rgba(255, 255, 255, 0.35);
+  --app-plot: rgba(255, 255, 255, 0.8); /* chart panel: opaque enough for legible series colors */
+  --app-radius-lg: 0px;                   /* inner boxes (option box, summary, gauge cards) */
+  --app-box: rgba(255, 255, 255, 0.35);
+  --app-box-border: var(--rhodex-border-white);
+}
+/* Ghost: white "clean room", hairline borders, soft 8px corners */
+:root[data-theme="ghost"] {
+  --app-line: var(--rhodex-hairline);
+  --app-radius: 8px;
+  --app-field: #FFFFFF;
+  --app-field-border: var(--rhodex-hairline);
+  --app-wash: var(--rhodex-accent-wash);
+  --app-plot: var(--rhodex-panel-raised);
+  --app-radius-lg: 12px;
+  --app-box: #FFFFFF;
+  --app-box-border: rgba(11, 31, 91, 0.12);
+}
 
-.hp-hero { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; width: min(1072px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0; }
-.hp-copy h1 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; color: var(--ink); margin: 0 0 20px; }
-.hp-copy p { max-width: 46ch; color: var(--muted); margin: 0 0 28px; }
+/* ---- Page frame ------------------------------------------------------------ */
+.app-root {
+  min-height: 100vh;
+  background: var(--rhodex-bg);
+  background-attachment: fixed;
+  color: var(--app-ink);
+  font-size: 15px;
+  line-height: 1.6;
+}
+/* :where() keeps this at zero specificity, so the theme primitives' color classes
+   (e.g. white text on an ActionButton rendered as a link) still win */
+:where(.app-root) a { color: inherit; text-decoration: none; }
+.app-wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+
+/* Labels, numbers, eyebrows: IBM Plex Mono in both themes (Lapis is all mono already) */
+.app-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--app-muted); }
+.app-muted { color: var(--app-muted); }
+.app-num { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 2px solid var(--app-accent); outline-offset: 2px; }
+
+/* ---- Header ---------------------------------------------------------------- */
+.app-nav { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; padding: 20px 0; }
+.app-brand { font-weight: 700; letter-spacing: -0.01em; }
+.app-brand span { font-weight: 400; color: var(--app-muted); }
+.app-nav-right { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+.app-nav nav { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.85rem; }
+.app-nav nav a { color: var(--app-muted); }
+.app-nav nav a:hover, .app-nav nav a[aria-current="page"] { color: var(--app-ink); text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; }
+.app-nav nav a[aria-current="page"] { font-weight: 600; text-decoration-color: var(--app-accent); }
+
+/* ---- Page header, after the "Build a bond" page -----------------------------
+   "← RHODEX." back link and an optional toggle on one row, then title + subtitle */
+.page-head { padding: 12px 0 32px; }
+.page-head-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.page-back { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--app-muted); }
+.page-back:hover { color: var(--app-ink); }
+.page-highlight { display: inline-flex; align-items: center; gap: 8px; color: var(--app-muted); font-size: 0.9rem; cursor: pointer; }
+.page-highlight input { width: 16px; height: 16px; accent-color: var(--app-accent); cursor: pointer; }
+.page-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin: 16px 0 6px; }
+.page-sub { color: var(--app-muted); font-size: 1.05rem; margin: 0; }
+
+/* ---- Numbered section cards (components/Section.jsx) ------------------------
+   The card itself is a theme Surface; this adds the header row, the hairline
+   under it, the body padding and the pieces used inside sections. */
+.sec { margin: 0 0 24px; overflow: visible; }
+:root[data-theme="ghost"] .sec { border-radius: 14px; }
+.sec-head { display: flex; align-items: center; gap: 18px; padding: 22px 28px; }
+.sec.is-open .sec-head { border-bottom: 1px solid var(--app-line); }
+.sec-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; color: var(--app-muted); }
+.sec-title { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+.sec-toggle { margin-left: auto; width: 32px; height: 32px; display: grid; place-items: center; color: var(--app-ink); border-radius: var(--app-radius); transition: background-color 150ms; }
+.sec-toggle:hover { background: var(--app-wash); }
+.sec-toggle svg { transition: transform 200ms cubic-bezier(0.32, 0.72, 0, 1); }
+.sec-toggle svg.is-x { transform: rotate(45deg); } /* the + turns into × */
+.sec-body { padding: 28px; }
+.sec.is-stale .sec-body > *:not(.hx-status) { opacity: 0.45; transition: opacity 200ms; }
+
+/* Two columns inside a section ("HISTORICAL" | "YOUR LAYER") */
+.sec-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 48px; margin-bottom: 28px; }
+.sec-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+/* Uppercase sub-heading: the theme font (sans under Ghost, mono under Lapis), letter-spaced */
+.sec-label { display: block; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--app-muted); margin: 10px 0 6px; padding: 0; }
+.sec-col > .sec-label:first-child { margin-top: 0; }
+/* Mono summary box with an "Edit" link */
+.sec-summary { display: flex; align-items: center; gap: 16px; padding: 18px 20px; background: var(--app-box); border: 1px solid var(--app-box-border); border-radius: var(--app-radius-lg); font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; line-height: 1.6; }
+.sec-summary p { margin: 0; }
+.sec-link { margin-left: auto; flex: none; color: var(--app-ink); text-decoration: underline; text-underline-offset: 3px; font-size: 0.9rem; }
+.sec-link:hover { color: var(--app-accent); }
+.sec-source { color: var(--app-muted); font-size: 0.85rem; margin: 6px 0 0; }
+/* Centered action at the foot of a section, like "+ Add layer" */
+.sec-foot { display: flex; justify-content: center; margin-top: 28px; }
+
+/* "Highlight key fields": one attribute on the page root outlines every input and
+   value a trigger depends on, so no component needs a highlighted variant */
+[data-highlight="on"] .hl { border-color: var(--app-accent); box-shadow: 0 0 0 1px var(--app-accent); }
+[data-highlight="on"] .hl-text { color: var(--app-accent); }
+
+@media (max-width: 760px) {
+  .sec-cols { grid-template-columns: 1fr; }
+  .sec-head { padding: 18px 20px; }
+  .sec-body { padding: 20px; }
+}
+
+/* ---- Landing: hero ---------------------------------------------------------- */
+.hp-hero { position: relative; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; padding: 64px 0 72px; }
+/* Lapis's soft glow behind the hero copy (the token is empty under Ghost) */
+.hp-hero::before {
+  content: "";
+  position: absolute;
+  inset: -120px 35% -80px -160px;
+  background: var(--rhodex-orb-gradient, none);
+  /* Fade the glow out before the box edge so it never shows a hard seam */
+  -webkit-mask-image: radial-gradient(closest-side at 60% 45%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(closest-side at 60% 45%, #000 55%, transparent 100%);
+  pointer-events: none;
+}
+.hp-copy { position: relative; }
+.hp-copy h1 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.08; letter-spacing: -0.03em; font-weight: 600; margin: 12px 0 20px; }
+.hp-copy p { max-width: 46ch; color: var(--app-muted); margin: 0 0 28px; }
 .hp-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.hp-btn { display: inline-block; padding: 10px 18px; border-radius: 999px; font: inherit; font-weight: 500; border: 1px solid var(--navy); transition: background-color 200ms; }
-.hp-btn.primary { background: var(--navy); color: #fff; }
-.hp-btn.primary:hover { background: var(--ink); }
-.hp-btn.glass:hover { background: rgba(255,255,255,.55); }
 
+/* ---- Landing: live gauge panel ---------------------------------------------- */
 .hp-panel { padding: 20px; min-height: 380px; }
-.hp-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,.6); }
-.hp-tab { background: none; border: 0; padding: 8px 12px; margin-bottom: -1px; font: inherit; font-size: 0.85rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
-.hp-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--navy); font-weight: 600; }
-
+.hp-tabs { display: flex; gap: 4px; margin-bottom: 18px; border-bottom: 1px solid var(--app-line); }
+.hp-tab { padding: 8px 12px; margin-bottom: -1px; font-size: 0.85rem; color: var(--app-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.hp-tab[aria-selected="true"] { color: var(--app-ink); border-bottom-color: var(--app-accent); font-weight: 600; }
 .hp-reading { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.hp-big { font-size: 3rem; font-weight: 500; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
-.hp-unit { color: var(--muted); }
-.hp-badge { margin-left: auto; padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(45,66,116,.4); color: var(--muted); }
-.hp-badge.is-verified { background: var(--navy); border-color: var(--navy); color: #fff; }
-
+.hp-big { font-size: 3rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+.hp-reading .hp-badge { margin-left: auto; }
 .hp-chart { width: 100%; height: auto; margin: 16px 0 8px; overflow: visible; }
-.hp-line { fill: none; stroke: var(--navy); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
-.hp-trigger { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; transition: stroke 200ms; }
-.hp-trigger.near { stroke: #8a5a00; stroke-width: 2; }
-.hp-trigger.hit { stroke: #a3261d; stroke-width: 2; }
+.hp-line { fill: none; stroke: var(--app-accent); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.hp-trigger { stroke: var(--app-muted); stroke-width: 1; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; transition: stroke 200ms; }
+.hp-trigger.near { stroke: var(--app-warning); stroke-width: 2; }
+.hp-trigger.hit { stroke: var(--app-danger); stroke-width: 2; }
 .hp-slider { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; font-size: 0.85rem; }
-.hp-slider input { accent-color: var(--navy); }
-.hp-status { margin: 10px 0 0; font-weight: 500; }
-.hp-status.near { color: #8a5a00; }
-.hp-status.hit { color: #a3261d; }
-.hp-status .hp-muted { font-weight: 400; display: block; }
+.hp-slider input { accent-color: var(--app-accent); }
+.hp-status { margin: 10px 0 0; font-weight: 600; }
+.hp-status.near { color: var(--app-warning); }
+.hp-status.hit { color: var(--app-danger); }
+.hp-status .app-muted { font-weight: 400; display: block; font-size: 0.85rem; }
 
-/* Sections sit inside the thin white frame from .section-frame */
-.hp-section { width: min(1072px, calc(100% - 48px)); margin: 0 auto 32px; padding: 56px 48px; }
-.hp-section h2 { font-size: 1.5rem; letter-spacing: -0.02em; font-weight: 500; color: var(--ink); margin: 0 0 8px; }
-.hp-lead { color: var(--muted); max-width: 60ch; margin: 0 0 32px; }
+/* ---- Landing: sections (numbered Section cards) ------------------------------------ */
+.hp-section h3 { font-size: 1.5rem; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 8px; }
+.hp-cta { padding: 40px 28px; text-align: center; margin-bottom: 24px; }
+.hp-cta h2 { font-size: 1.5rem; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 8px; }
+.hp-cta .hp-lead { margin-left: auto; margin-right: auto; }
+.hp-lead { color: var(--app-muted); max-width: 60ch; margin: 0 0 28px; }
 
-.hp-rows { list-style: none; margin: 0; padding: 0; }
-.hp-rows li { display: grid; grid-template-columns: 300px 1fr; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.6); align-items: baseline; }
-.hp-rows span { color: var(--muted); }
-.hp-code { color: var(--ink); font-size: 0.85rem; }
+.hp-steps { display: grid; gap: 16px; max-width: 620px; }
+.hp-steps li { display: flex; gap: 16px; padding: 18px 20px; background: var(--app-box); border: 1px solid var(--app-box-border); border-radius: var(--app-radius-lg); }
+.hp-steps li > span { color: var(--app-accent); font-weight: 700; }
+.hp-steps p { margin: 4px 0 0; color: var(--app-muted); }
+
+.hp-rows li { display: grid; grid-template-columns: 340px 1fr; gap: 24px; padding: 14px 0; border-bottom: 1px solid var(--app-line); align-items: baseline; }
+.hp-rows li:last-child { border-bottom: 0; }
+.hp-rows span { color: var(--app-muted); }
+.hp-code { font-size: 0.85rem; }
+.hp-code a { color: var(--app-accent); text-decoration: underline; text-underline-offset: 3px; }
 
 .hp-split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .hp-split .hp-lead { margin-bottom: 0; }
-.hp-record { margin: 0; padding: 20px; font-size: 0.9rem; }
-.hp-record div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.6); }
+.hp-record { padding: 8px 20px; font-size: 0.9rem; background: var(--app-box); border: 1px solid var(--app-box-border); border-radius: var(--app-radius-lg); }
+.hp-record div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--app-line); }
 .hp-record div:last-child { border-bottom: 0; }
-.hp-record dt { color: var(--muted); }
-.hp-record dd { margin: 0; color: var(--ink); }
-
-/* How it works: blocks stack with a dot at the top and bottom of each (.plugs) */
-.hp-steps { list-style: none; margin: 0 auto 0 0; padding: 0; display: grid; gap: 28px; max-width: 560px; }
-.hp-steps li { position: relative; display: flex; gap: 14px; padding: 20px; }
-.hp-steps li > span { color: var(--accent); font-weight: 600; filter: brightness(.7); }
-.hp-steps strong { color: var(--ink); }
-.hp-steps p { margin: 4px 0 0; color: var(--muted); }
+.hp-record dt { color: var(--app-muted); }
 
 .hp-cta .hp-lead { margin-bottom: 24px; }
-.hp-foot { width: min(1072px, calc(100% - 48px)); margin: 0 auto; padding: 16px 0 40px; }
+.hp-foot { padding: 16px 0 40px; font-size: 0.85rem; }
 
-@media (prefers-reduced-motion: reduce) { .hp-root * { transition-duration: 0.001ms !important; } }
+@media (prefers-reduced-motion: reduce) { .app-root * { transition-duration: 0.001ms !important; } }
 @media (max-width: 860px) {
-  .hp-hero, .hp-split { grid-template-columns: 1fr; gap: 32px; padding-top: 40px; }
-  .hp-section { padding: 36px 24px; }
+  .hp-hero, .hp-split { grid-template-columns: 1fr; gap: 32px; padding-top: 32px; }
   .hp-rows li { grid-template-columns: 1fr; gap: 4px; }
-  .hp-nav nav { gap: 14px; }
 }
