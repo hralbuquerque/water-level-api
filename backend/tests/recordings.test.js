@@ -1,6 +1,7 @@
 import { test, describe, beforeEach, afterEach, expect, vi } from 'vitest';
 import request from 'supertest';
 import { buildApp } from '../src/app.js';
+import { splitDateRange } from '../src/noaa.js';
 
 // Fake NOAA response: one verified reading, one missing value
 const fakeNoaa = {
@@ -117,10 +118,6 @@ describe('GET /locations/:loc/historical', () => {
     expect(res.status).toBe(400);
   });
 
-  test('400 for date range over 31 days', async () => {
-    const res = await request(app).get('/locations/nyc/historical?start=2012-10-01&end=2012-11-15');
-    expect(res.status).toBe(400);
-  });
 
   test('400 for impossible date (month 13)', async () => {
     const res = await request(app).get('/locations/nyc/historical?start=2012-13-45&end=2012-10-30');
@@ -145,10 +142,6 @@ describe('GET /locations/:loc/historical', () => {
     expect(res.status).toBe(200);
   });
 
-  test('400 for date range of 32 days', async () => {
-    const res = await request(app).get('/locations/nyc/historical?start=2012-10-01&end=2012-11-02');
-    expect(res.status).toBe(400);
-  });
 
   test('parsing of invalid numeric value results in null', async () => {
     // This tests parseValue with an invalid format (e.g., "abc")
@@ -249,5 +242,120 @@ describe('GET /locations/:loc/historical (v2)', () => {
       '8531680',  // Sandy Hook
       '8516945' // Kings Point
     ]);
+  });
+});
+
+describe('historical ranges longer than NOAA\'s 31-day limit', () => {
+  let app;
+  let calls;
+
+  // Each NOAA request returns one reading stamped with its begin_date, so we can
+  // see exactly which windows were requested.
+  const row = (begin) => ({ t: `${begin.slice(0, 4)}-${begin.slice(4, 6)}-${begin.slice(6)} 00:00`, v: '1.00', s: '0.01', f: '0,0,0,0', q: 'v' });
+  const stub = (handler) => vi.stubGlobal('fetch', async (url) => {
+    const params = new URL(url).searchParams;
+    calls.push({ station: params.get('station'), begin: params.get('begin_date'), end: params.get('end_date') });
+    return handler(params);
+  });
+  const ok = (params) => ({ ok: true, json: async () => ({ data: [row(params.get('begin_date'))] }) });
+  const noData = { ok: true, json: async () => ({ error: { message: 'No data was found. This product may not be offered at this station at the requested time.' } }) };
+
+  beforeEach(() => {
+    app = buildApp();
+    calls = [];
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  test('splitDateRange makes consecutive, non-overlapping 31-day chunks', () => {
+    expect(splitDateRange('2012-10-01', '2012-10-31')).toEqual([['2012-10-01', '2012-10-31']]);
+    expect(splitDateRange('2012-10-01', '2012-11-15')).toEqual([
+      ['2012-10-01', '2012-10-31'],
+      ['2012-11-01', '2012-11-15'],
+    ]);
+    expect(splitDateRange('2012-01-01', '2012-12-31')).toHaveLength(12);
+    expect(splitDateRange('2012-10-29', '2012-10-29')).toEqual([['2012-10-29', '2012-10-29']]);
+  });
+
+  test('pages a 46-day range into two NOAA requests per station and joins them in order', async () => {
+    stub(ok);
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-01&end=2012-11-15');
+    expect(res.status).toBe(200);
+    expect(calls).toEqual([
+      { station: '8518750', begin: '20121001', end: '20121031' },
+      { station: '8518750', begin: '20121101', end: '20121115' },
+    ]);
+    expect(res.body.readings.map((r) => r.t)).toEqual(['2012-10-01T00:00:00.000Z', '2012-11-01T00:00:00.000Z']);
+  });
+
+  test('pages every station in a location', async () => {
+    stub(ok);
+    const res = await request(app).get('/locations/nyc/historical?start=2012-10-01&end=2012-11-15');
+    expect(res.status).toBe(200);
+    expect(calls).toHaveLength(6);
+    res.body.stations.forEach((s) => expect(s.readings).toHaveLength(2));
+  });
+
+  test('allows a full leap year (366 days)', async () => {
+    stub(ok);
+    const res = await request(app).get('/stations/8518750/historical?start=2012-01-01&end=2012-12-31');
+    expect(res.status).toBe(200);
+    expect(calls).toHaveLength(12);
+  });
+
+  test('400 for ranges over 366 days', async () => {
+    stub(ok);
+    const res = await request(app).get('/stations/8518750/historical?start=2012-01-01&end=2013-01-01');
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/maximum at 6min resolution is 366/);
+    expect(calls).toHaveLength(0);
+  });
+
+  test('a chunk with no data (gauge outage) is skipped, not fatal', async () => {
+    stub((params) => (params.get('begin_date') === '20121001' ? noData : ok(params)));
+    const res = await request(app).get('/stations/8531680/historical?start=2012-10-01&end=2012-11-15');
+    expect(res.status).toBe(200);
+    expect(res.body.readings.map((r) => r.t)).toEqual(['2012-11-01T00:00:00.000Z']);
+  });
+
+  test('no data in any chunk is reported as an error for that station', async () => {
+    stub((params) => (params.get('station') === '8531680' ? noData : ok(params)));
+    const res = await request(app).get('/locations/nyc/historical?start=2012-10-01&end=2012-11-15');
+    expect(res.status).toBe(200);
+    expect(res.body.stations.find((s) => s.station === '8531680').error).toMatch(/No data was found/);
+    expect(res.body.stations.find((s) => s.station === '8518750').readings).toHaveLength(2);
+  });
+
+  test('a hard NOAA error in any chunk fails the station instead of returning partial data', async () => {
+    stub((params) => (params.get('begin_date') === '20121101'
+      ? { ok: false, statusText: 'Bad Gateway', json: async () => { throw new Error('not json'); } }
+      : ok(params)));
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-01&end=2012-11-15');
+    expect(res.status).toBe(502);
+    expect(res.body.error).toBe('NOAA API error: Bad Gateway');
+  });
+
+  test('400 explains which date rule failed', async () => {
+    const future = await request(app).get('/stations/8518750/historical?start=2999-01-01&end=2999-01-02');
+    expect(future.body.error).toMatch(/future/);
+    const order = await request(app).get('/stations/8518750/historical?start=2012-11-01&end=2012-10-01');
+    expect(order.body.error).toMatch(/before end/);
+    const missing = await request(app).get('/stations/8518750/historical?start=2012-11-01');
+    expect(missing.body.error).toMatch(/required/);
+  });
+
+  test('400 for a date that rolls over (Feb 30)', async () => {
+    const res = await request(app).get('/stations/8518750/historical?start=2012-02-30&end=2012-03-02');
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/invalid date/);
+  });
+
+  test('response records datum, units, time zone and when the data was retrieved', async () => {
+    stub(ok);
+    const res = await request(app).get('/locations/nyc/historical?start=2012-10-29&end=2012-10-30');
+    expect(res.body).toMatchObject({ datum: 'MLLW', units: 'english', timeZone: 'GMT' });
+    expect(Number.isNaN(Date.parse(res.body.retrievedAt))).toBe(false);
   });
 });

@@ -1,0 +1,223 @@
+/* Historical readings page, styled from the company theme (src/theme/).
+   Colors come from the --rhodex-* tokens via the --app-* values in global.css;
+   panels, cards and buttons are the theme's Surface / ActionButton primitives.
+   Only layout, form controls and the chart live here. */
+
+:root {
+  /* Gauge colors for the chart (one per gauge, fixed by gauge order). The dataviz
+     reference palette, with its darker orange/aqua steps so the first three pass
+     the validator on both theme surfaces: Lapis chart panel ≈ #E5EAEE, Ghost ≈ #FEFEFF.
+     Identity colors are kept apart from the theme's brand blue, which is reserved
+     for buttons and selection. */
+  --series-1: #2a78d6;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #6250d6;
+  --series-8: #e34948;
+}
+
+.hx-muted { color: var(--app-muted); }
+.hx-small { font-size: 0.85rem; margin: 0; }
+.hx-main { padding: 8px 0 64px; }
+
+/* ---- 01 Request: form controls inside the section ---- */
+.hx-fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.hx-fieldset > legend { margin-top: 16px; }
+/* "From" / "To" captions under the date-range label */
+.hx-dates label > span { font-size: 0.75rem; color: var(--app-muted); }
+.hx-input {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--app-ink);
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
+  border-radius: var(--app-radius);
+}
+.hx-input::placeholder { color: var(--app-muted); }
+.hx-input[readonly] { cursor: pointer; color: var(--app-muted); }
+
+/* Preset chips: square tags under Lapis, pills under Ghost (like the theme's Tag) */
+.hx-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.hx-chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--app-field-border);
+  border-radius: var(--app-radius);
+  background: var(--app-wash);
+  color: var(--app-ink);
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+:root[data-theme="ghost"] .hx-chip { border-radius: 999px; background: transparent; font-weight: 500; }
+.hx-chip:hover { background: var(--rhodex-ghost-fill); }
+:root[data-theme="ghost"] .hx-chip:hover { background: var(--app-wash); }
+/* Listed for both themes so it outranks the Ghost-specific chip rule above */
+.hx-chip[aria-checked="true"],
+:root[data-theme="ghost"] .hx-chip[aria-checked="true"] { background: var(--app-accent); border-color: var(--app-accent); color: var(--rhodex-text-white); }
+.hx-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hx-dates label { display: flex; flex-direction: column; gap: 4px; }
+.hx-suffix { position: relative; }
+.hx-suffix .hx-input { padding-right: 32px; }
+.hx-suffix span { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--app-muted); font-size: 0.85rem; }
+
+/* ---- Location picker: an option box (title, description, caret) over a combobox ---- */
+.hx-picker { position: relative; }
+.hx-optbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 44px 14px 18px;
+  background: var(--app-box);
+  border: 1px solid var(--app-box-border);
+  border-radius: var(--app-radius-lg);
+  cursor: text;
+  transition: border-color 150ms;
+}
+.hx-optbox:hover, .hx-optbox.is-open { border-color: var(--app-muted); }
+.hx-optbox.is-disabled { opacity: 0.6; }
+.hx-optbox-input { width: 100%; padding: 0; border: 0; background: transparent; font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--app-ink); outline: none; }
+.hx-optbox-input::placeholder { color: var(--app-ink); opacity: 1; }
+.hx-optbox.is-open .hx-optbox-input::placeholder { color: var(--app-muted); font-weight: 400; }
+.hx-optbox-detail { font-size: 0.875rem; color: var(--app-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hx-optbox-caret { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--app-muted); transition: transform 200ms; }
+.hx-optbox.is-open .hx-optbox-caret { transform: translateY(-50%) rotate(180deg); }
+/* The option box shows focus as a whole, since the input inside is borderless */
+.hx-optbox:focus-within { outline: 2px solid var(--app-accent); outline-offset: 2px; }
+.hx-optbox-input:focus-visible { outline: none; }
+.hx-listbox {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  width: max(100%, 340px);
+  max-width: calc(100vw - 32px);
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 6px;
+  background: #FFFFFF;
+  border: 1px solid var(--app-field-border);
+  border-radius: var(--app-radius);
+  box-shadow: 0 12px 32px rgba(11, 31, 91, 0.16);
+}
+:root[data-theme="lapis"] .hx-listbox { border: 1px solid var(--rhodex-text-dark); }
+.hx-option { display: flex; flex-direction: column; padding: 7px 10px; border-radius: var(--app-radius); cursor: pointer; }
+.hx-option.is-active { background: rgba(47, 83, 148, 0.08); }
+:root[data-theme="ghost"] .hx-option.is-active { background: var(--app-wash); }
+.hx-option[aria-selected="true"] .hx-option-label { font-weight: 600; }
+.hx-option-detail { font-size: 0.8rem; color: var(--app-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hx-option-group { padding: 8px 10px 4px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--app-muted); }
+.hx-option-empty { padding: 8px 10px; font-size: 0.85rem; color: var(--app-muted); }
+
+/* ---- Status ---- */
+.hx-hint { margin: 10px 2px 0; font-size: 0.85rem; color: var(--app-muted); }
+.hx-error { color: var(--app-danger); margin: 0; }
+
+/* ---- 02 Readings ---- */
+.hx-status:empty { display: none; }
+.hx-status p { margin: 0 0 16px; }
+/* Headline sentences with the key number in bold */
+.hx-headline { font-size: 1.05rem; margin: 0; }
+.hx-results > .hx-headline { margin-top: 20px; }
+.hx-headline strong { font-weight: 700; }
+
+/* Gauge cards: the same inner-box style as the option and summary boxes */
+.hx-cards { margin: 0 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.hx-card { padding: 16px 18px; min-width: 0; background: var(--app-box); border: 1px solid var(--app-box-border); border-radius: var(--app-radius-lg); }
+.hx-card p { margin: 0; }
+.hx-card-name { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px; }
+.hx-card-name .hx-muted { font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 0.8rem; margin-left: auto; }
+.hx-card-value { font-family: 'IBM Plex Mono', monospace; font-size: 1.75rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+.hx-card-value .hx-muted { font-family: inherit; font-size: 0.8rem; font-weight: 400; letter-spacing: 0; }
+.hx-card > .hx-muted { font-size: 0.85rem; }
+.hx-facts { margin: 12px 0 0; display: grid; gap: 6px; font-size: 0.85rem; }
+.hx-facts div { display: grid; grid-template-columns: minmax(84px, auto) 1fr; gap: 10px; }
+.hx-facts dt { color: var(--app-muted); }
+.hx-hit { color: var(--app-danger); font-weight: 600; }
+
+.hx-key { display: inline-block; width: 14px; height: 3px; flex: none; }
+.hx-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 8px; font-size: 0.85rem; color: var(--app-muted); }
+.hx-legend li { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---- Chart ----
+   The chart panel is more opaque than a regular Lapis glass card: the series
+   colors were validated against it, and they'd lose contrast on the bare glass. */
+.hx-chart {
+  position: relative;
+  padding: 8px 4px 4px;
+  overflow: hidden;
+  background: var(--app-plot);
+  border: 1px solid var(--app-field-border);
+  border-radius: var(--app-radius);
+}
+:root[data-theme="ghost"] .hx-chart { border-radius: 10px; box-shadow: var(--rhodex-shadow); }
+.hx-chart svg { display: block; max-width: 100%; height: auto; touch-action: pan-y; }
+.hx-grid { stroke: rgba(30, 42, 71, 0.10); stroke-width: 1; shape-rendering: crispEdges; }
+.hx-axis { stroke: rgba(30, 42, 71, 0.28); stroke-width: 1; shape-rendering: crispEdges; }
+.hx-tick { fill: var(--app-muted); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-variant-numeric: tabular-nums; }
+.hx-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.hx-trigger { stroke: var(--app-danger); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.hx-trigger-label, .hx-peak-label {
+  fill: var(--app-ink);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: #FFFFFF;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.hx-dot { stroke: #FFFFFF; stroke-width: 2; }
+.hx-crosshair { stroke: rgba(30, 42, 71, 0.35); stroke-width: 1; }
+.hx-tooltip {
+  position: absolute;
+  width: 230px;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--app-field-border);
+  border-radius: var(--app-radius);
+  box-shadow: 0 8px 24px rgba(11, 31, 91, 0.14);
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+:root[data-theme="lapis"] .hx-tooltip { border-color: var(--rhodex-text-dark); }
+.hx-tooltip-time { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--app-muted); margin-bottom: 6px; }
+.hx-tooltip-row { display: grid; grid-template-columns: 14px auto; column-gap: 8px; align-items: center; margin-top: 4px; }
+.hx-tooltip-row strong { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.hx-tooltip-name { grid-column: 2; color: var(--app-muted); }
+.hx-empty { padding: 32px; text-align: center; color: var(--app-muted); background: var(--app-plot); border: 1px solid var(--app-field-border); border-radius: var(--app-radius); }
+
+/* ---- Table ---- */
+.hx-table-wrap { overflow: hidden; border: 1px solid var(--app-box-border); border-radius: var(--app-radius-lg); }
+.hx-table-wrap > table { display: block; overflow-x: auto; max-height: 560px; overflow-y: auto; }
+.hx-table { width: 100%; font-size: 0.85rem; }
+.hx-table th, .hx-table td { padding: 7px 14px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--app-line); }
+.hx-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--app-plot);
+  backdrop-filter: blur(8px);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+}
+.hx-table td:first-child, .hx-table .num { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+.hx-table .num { text-align: right; }
+.hx-row-hit td { background: rgba(185, 28, 28, 0.08); }
+.hx-pager { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 10px 14px; font-size: 0.85rem; flex-wrap: wrap; }
+.hx-pager .hx-muted { margin-right: auto; }
+
+

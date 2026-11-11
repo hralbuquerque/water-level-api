@@ -4,2113 +4,2423 @@
     "name": "Nawiliwili",
     "state": "HI",
     "lat": 21.9544,
-    "lng": -159.3561
+    "lng": -159.3561,
+    "established": "1954-11-24"
   },
   {
     "id": "1612340",
     "name": "Honolulu",
     "state": "HI",
     "lat": 21.303333,
-    "lng": -157.86453
+    "lng": -157.86453,
+    "established": "1905-01-01"
   },
   {
     "id": "1612401",
     "name": "Pearl Harbor",
     "state": "HI",
     "lat": 21.3675,
-    "lng": -157.9639
+    "lng": -157.9639,
+    "established": "2023-05-31"
   },
   {
     "id": "1612480",
     "name": "Mokuoloe",
     "state": "HI",
     "lat": 21.433056,
-    "lng": -157.79
+    "lng": -157.79,
+    "established": "1957-05-03"
   },
   {
     "id": "1615680",
     "name": "Kahului, Kahului Harbor",
     "state": "HI",
     "lat": 20.894945,
-    "lng": -156.469
+    "lng": -156.469,
+    "established": "1946-12-19"
   },
   {
     "id": "1617433",
     "name": "Kawaihae",
     "state": "HI",
     "lat": 20.0366,
-    "lng": -155.8294
+    "lng": -155.8294,
+    "established": "1988-02-06"
   },
   {
     "id": "1617760",
     "name": "Hilo, Hilo Bay, Kuhio Bay",
     "state": "HI",
     "lat": 19.730278,
-    "lng": -155.05556
+    "lng": -155.05556,
+    "established": "1946-11-30"
   },
   {
     "id": "1619910",
     "name": "Sand Island, Midway Islands",
     "state": "United States of America",
     "lat": 28.211666,
-    "lng": -177.36
+    "lng": -177.36,
+    "established": "1947-02-02"
   },
   {
     "id": "1630000",
     "name": "Apra Harbor, Guam",
     "state": "United States of America",
     "lat": 13.443389,
-    "lng": 144.65636
+    "lng": 144.65636,
+    "established": "1948-03-11"
   },
   {
     "id": "1631428",
     "name": "Pago Bay, Guam",
     "state": "United States of America",
     "lat": 13.428333,
-    "lng": 144.79889
+    "lng": 144.79889,
+    "established": "2004-04-22"
   },
   {
     "id": "1770000",
     "name": "Pago Pago, American Samoa",
     "state": "American Samoa",
     "lat": -14.28,
-    "lng": -170.69
+    "lng": -170.69,
+    "established": "1948-09-06"
   },
   {
     "id": "1820000",
     "name": "Kwajalein, Marshall Islands",
     "state": "United States of America",
     "lat": 8.731667,
-    "lng": 167.73611
+    "lng": 167.73611,
+    "established": "1946-06-10"
   },
   {
     "id": "1890000",
     "name": "Wake Island, Pacific Ocean",
     "state": "United States of America",
     "lat": 19.290556,
-    "lng": 166.6175
+    "lng": 166.6175,
+    "established": "1950-05-29"
   },
   {
     "id": "2695535",
     "name": "Bermuda Biological Station",
     "state": "Bermuda",
     "lat": 32.370224,
-    "lng": -64.695724
+    "lng": -64.695724,
+    "established": "1932-01-01"
   },
   {
     "id": "2695540",
     "name": "Bermuda, St. Georges Island",
     "state": "Bermuda",
     "lat": 32.3734,
-    "lng": -64.7033
+    "lng": -64.7033,
+    "established": "1989-05-29"
   },
   {
     "id": "8311030",
     "name": "Ogdensburg",
     "state": "NY",
     "lat": 44.702778,
-    "lng": -75.494446
+    "lng": -75.494446,
+    "established": "1900-09-01"
   },
   {
     "id": "8311062",
     "name": "Alexandria Bay",
     "state": "NY",
     "lat": 44.33111,
-    "lng": -75.934525
+    "lng": -75.934525,
+    "established": "1983-06-01"
   },
   {
     "id": "8410140",
     "name": "Eastport",
     "state": "ME",
     "lat": 44.90461,
-    "lng": -66.98289
+    "lng": -66.98289,
+    "established": "1929-09-12"
   },
   {
     "id": "8411060",
     "name": "Cutler Farris Wharf",
     "state": "ME",
     "lat": 44.6567,
-    "lng": -67.21
+    "lng": -67.21,
+    "established": "1963-09-25"
   },
   {
     "id": "8413320",
     "name": "Bar Harbor",
     "state": "ME",
     "lat": 44.392193,
-    "lng": -68.20428
+    "lng": -68.20428,
+    "established": "1947-08-16"
   },
   {
     "id": "8418150",
     "name": "Portland",
     "state": "ME",
     "lat": 43.658054,
-    "lng": -70.24416
+    "lng": -70.24416,
+    "established": "1910-03-04"
   },
   {
     "id": "8419870",
     "name": "Seavey Island",
     "state": "ME",
     "lat": 43.079723,
-    "lng": -70.74111
+    "lng": -70.74111,
+    "established": "1926-08-26"
   },
   {
     "id": "8443970",
     "name": "Boston",
     "state": "MA",
     "lat": 42.35389,
-    "lng": -71.05028
+    "lng": -71.05028,
+    "established": "1921-05-03"
   },
   {
     "id": "8447386",
     "name": "Fall River",
     "state": "MA",
     "lat": 41.7043,
-    "lng": -71.1641
+    "lng": -71.1641,
+    "established": "1955-10-28"
   },
   {
     "id": "8447435",
     "name": "Chatham",
     "state": "MA",
     "lat": 41.6885,
-    "lng": -69.9511
+    "lng": -69.9511,
+    "established": "1955-04-27"
   },
   {
     "id": "8447636",
     "name": "New Bedford Harbor",
     "state": "MA",
     "lat": 41.6212,
-    "lng": -70.9137
+    "lng": -70.9137,
+    "established": "2022-11-10"
   },
   {
     "id": "8447930",
     "name": "Woods Hole",
     "state": "MA",
     "lat": 41.523613,
-    "lng": -70.67111
+    "lng": -70.67111,
+    "established": "1932-07-16"
   },
   {
     "id": "8449130",
     "name": "Nantucket Island",
     "state": "MA",
     "lat": 41.285,
-    "lng": -70.0967
+    "lng": -70.0967,
+    "established": "1963-10-04"
   },
   {
     "id": "8452660",
     "name": "Newport",
     "state": "RI",
     "lat": 41.504333,
-    "lng": -71.32614
+    "lng": -71.32614,
+    "established": "1930-09-11"
   },
   {
     "id": "8452944",
     "name": "Conimicut Light",
     "state": "RI",
     "lat": 41.7167,
-    "lng": -71.3433
+    "lng": -71.3433,
+    "established": "1999-09-28"
   },
   {
     "id": "8454000",
     "name": "Providence",
     "state": "RI",
     "lat": 41.807167,
-    "lng": -71.400665
+    "lng": -71.400665,
+    "established": "1938-06-03"
   },
   {
     "id": "8461490",
     "name": "New London",
     "state": "CT",
     "lat": 41.371666,
-    "lng": -72.09556
+    "lng": -72.09556,
+    "established": "1938-06-11"
   },
   {
     "id": "8465705",
     "name": "New Haven",
     "state": "CT",
     "lat": 41.2833,
-    "lng": -72.9083
+    "lng": -72.9083,
+    "established": "1999-08-11"
   },
   {
     "id": "8467150",
     "name": "Bridgeport",
     "state": "CT",
     "lat": 41.17582,
-    "lng": -73.18397
+    "lng": -73.18397,
+    "established": "1932-06-10"
   },
   {
     "id": "8510560",
     "name": "Montauk",
     "state": "NY",
     "lat": 41.048332,
-    "lng": -71.95944
+    "lng": -71.95944,
+    "established": "1947-09-05"
   },
   {
     "id": "8516945",
     "name": "Kings Point",
     "state": "NY",
     "lat": 40.8103,
-    "lng": -73.7649
+    "lng": -73.7649,
+    "established": "1998-10-27"
   },
   {
     "id": "8518750",
     "name": "The Battery",
     "state": "NY",
     "lat": 40.700554,
-    "lng": -74.01417
+    "lng": -74.01417,
+    "established": "1920-05-24"
   },
   {
     "id": "8518962",
     "name": "Turkey Point Hudson River NERRS",
     "state": "NY",
     "lat": 42.0139,
-    "lng": -73.9392
+    "lng": -73.9392,
+    "established": "2017-06-20"
   },
   {
     "id": "8518979",
     "name": "Coxsackie, Hudson River",
     "state": "NY",
     "lat": 42.35264,
-    "lng": -73.79486
+    "lng": -73.79486,
+    "established": "2025-05-22"
   },
   {
     "id": "8531680",
     "name": "Sandy Hook",
     "state": "NJ",
     "lat": 40.4669,
-    "lng": -74.0094
+    "lng": -74.0094,
+    "established": "1910-01-07"
   },
   {
     "id": "8534720",
     "name": "Atlantic City",
     "state": "NJ",
     "lat": 39.356667,
-    "lng": -74.41805
+    "lng": -74.41805,
+    "established": "1911-08-15"
   },
   {
     "id": "8536110",
     "name": "Cape May",
     "state": "NJ",
     "lat": 38.9683,
-    "lng": -74.96
+    "lng": -74.96,
+    "established": "1965-10-25"
   },
   {
     "id": "8537121",
     "name": "Ship John Shoal",
     "state": "NJ",
     "lat": 39.30539,
-    "lng": -75.37668
+    "lng": -75.37668,
+    "established": "1997-10-30"
   },
   {
     "id": "8539094",
     "name": "Burlington, Delaware River",
     "state": "NJ",
     "lat": 40.0817,
-    "lng": -74.8697
+    "lng": -74.8697,
+    "established": "1977-02-21"
   },
   {
     "id": "8540433",
     "name": "Marcus Hook",
     "state": "PA",
     "lat": 39.811806,
-    "lng": -75.4095
+    "lng": -75.4095,
+    "established": "1981-09-10"
   },
   {
     "id": "8545240",
     "name": "Philadelphia",
     "state": "PA",
     "lat": 39.933056,
-    "lng": -75.14198
+    "lng": -75.14198,
+    "established": "1989-02-28"
   },
   {
     "id": "8546252",
     "name": "Bridesburg",
     "state": "PA",
     "lat": 39.979683,
-    "lng": -75.079315
+    "lng": -75.079315,
+    "established": "1979-07-23"
   },
   {
     "id": "8548989",
     "name": "Newbold",
     "state": "PA",
     "lat": 40.137333,
-    "lng": -74.75183
+    "lng": -74.75183,
+    "established": "2001-10-27"
   },
   {
     "id": "8551762",
     "name": "Delaware City",
     "state": "DE",
     "lat": 39.582195,
-    "lng": -75.588974
+    "lng": -75.588974,
+    "established": "2001-10-08"
   },
   {
     "id": "8551910",
     "name": "Reedy Point",
     "state": "DE",
     "lat": 39.558334,
-    "lng": -75.571945
+    "lng": -75.571945,
+    "established": "1956-07-30"
   },
   {
     "id": "8555889",
     "name": "Brandywine Shoal Light",
     "state": "DE",
     "lat": 38.986668,
-    "lng": -75.113335
+    "lng": -75.113335,
+    "established": "1984-03-18"
   },
   {
     "id": "8557380",
     "name": "Lewes",
     "state": "DE",
     "lat": 38.782833,
-    "lng": -75.11928
+    "lng": -75.11928,
+    "established": "1919-01-14"
   },
   {
     "id": "8570283",
     "name": "Ocean City Inlet",
     "state": "MD",
     "lat": 38.32833,
-    "lng": -75.09167
+    "lng": -75.09167,
+    "established": "1978-06-05"
   },
   {
     "id": "8571421",
     "name": "Bishops Head",
     "state": "MD",
     "lat": 38.22,
-    "lng": -76.0383
+    "lng": -76.0383,
+    "established": "2005-03-22"
   },
   {
     "id": "8571892",
     "name": "Cambridge",
     "state": "MD",
     "lat": 38.5725,
-    "lng": -76.06167
+    "lng": -76.06167,
+    "established": "1980-10-21"
   },
   {
     "id": "8573364",
     "name": "Tolchester Beach",
     "state": "MD",
     "lat": 39.213444,
-    "lng": -76.24455
+    "lng": -76.24455,
+    "established": "1971-06-24"
   },
   {
     "id": "8573927",
     "name": "Chesapeake City",
     "state": "MD",
     "lat": 39.52667,
-    "lng": -75.81
+    "lng": -75.81,
+    "established": "1972-11-15"
   },
   {
     "id": "8574680",
     "name": "Baltimore",
     "state": "MD",
     "lat": 39.266693,
-    "lng": -76.57831
+    "lng": -76.57831,
+    "established": "1902-07-01"
   },
   {
     "id": "8575512",
     "name": "Annapolis",
     "state": "MD",
     "lat": 38.983883,
-    "lng": -76.480034
+    "lng": -76.480034,
+    "established": "1978-09-14"
   },
   {
     "id": "8577330",
     "name": "Solomons Island",
     "state": "MD",
     "lat": 38.3167,
-    "lng": -76.4517
+    "lng": -76.4517,
+    "established": "1937-11-05"
   },
   {
     "id": "8594900",
     "name": "Washington",
     "state": "DC",
     "lat": 38.873333,
-    "lng": -77.02167
+    "lng": -77.02167,
+    "established": "1924-11-10"
   },
   {
     "id": "8631044",
     "name": "Wachapreague",
     "state": "VA",
     "lat": 37.607777,
-    "lng": -75.68584
+    "lng": -75.68584,
+    "established": "1978-06-28"
   },
   {
     "id": "8632200",
     "name": "Kiptopeke",
     "state": "VA",
     "lat": 37.1652,
-    "lng": -75.9884
+    "lng": -75.9884,
+    "established": "1951-08-22"
   },
   {
     "id": "8635027",
     "name": "Dahlgren",
     "state": "VA",
     "lat": 38.31975,
-    "lng": -77.0366
+    "lng": -77.0366,
+    "established": "1970-04-09"
   },
   {
     "id": "8635750",
     "name": "Lewisetta",
     "state": "VA",
     "lat": 37.9961,
-    "lng": -76.4644
+    "lng": -76.4644,
+    "established": "1970-10-20"
   },
   {
     "id": "8636580",
     "name": "Windmill Point",
     "state": "VA",
     "lat": 37.6155,
-    "lng": -76.28978
+    "lng": -76.28978,
+    "established": "1970-06-24"
   },
   {
     "id": "8637689",
     "name": "Yorktown USCG Training Center",
     "state": "VA",
     "lat": 37.2265,
-    "lng": -76.478806
+    "lng": -76.478806,
+    "established": "2004-01-22"
   },
   {
     "id": "8638610",
     "name": "Sewells Point",
     "state": "VA",
     "lat": 36.94278,
-    "lng": -76.32861
+    "lng": -76.32861,
+    "established": "1927-07-01"
   },
   {
     "id": "8638901",
     "name": "CBBT, Chesapeake Channel",
     "state": "VA",
     "lat": 37.0329,
-    "lng": -76.0833
+    "lng": -76.0833,
+    "established": "2016-10-15"
   },
   {
     "id": "8639348",
     "name": "Money Point",
     "state": "VA",
     "lat": 36.778194,
-    "lng": -76.301865
+    "lng": -76.301865,
+    "established": "1997-12-17"
   },
   {
     "id": "8651370",
     "name": "Duck",
     "state": "NC",
     "lat": 36.1833,
-    "lng": -75.7467
+    "lng": -75.7467,
+    "established": "1977-12-01"
   },
   {
     "id": "8652587",
     "name": "Oregon Inlet Marina",
     "state": "NC",
     "lat": 35.795696,
-    "lng": -75.548195
+    "lng": -75.548195,
+    "established": "1974-08-14"
   },
   {
     "id": "8654467",
     "name": "USCG Station Hatteras",
     "state": "NC",
     "lat": 35.2086,
-    "lng": -75.7042
+    "lng": -75.7042,
+    "established": "2010-04-22"
   },
   {
     "id": "8656483",
     "name": "Beaufort, Duke Marine Lab",
     "state": "NC",
     "lat": 34.71733,
-    "lng": -76.67066
+    "lng": -76.67066,
+    "established": "1964-06-04"
   },
   {
     "id": "8658120",
     "name": "Wilmington",
     "state": "NC",
     "lat": 34.2267,
-    "lng": -77.9533
+    "lng": -77.9533,
+    "established": "1908-01-01"
   },
   {
     "id": "8658163",
     "name": "Wrightsville Beach",
     "state": "NC",
     "lat": 34.213306,
-    "lng": -77.7867
+    "lng": -77.7867,
+    "established": "2004-04-27"
   },
   {
     "id": "8661070",
     "name": "Springmaid Pier",
     "state": "SC",
     "lat": 33.655,
-    "lng": -78.9183
+    "lng": -78.9183,
+    "established": "1976-09-28"
   },
   {
     "id": "8665530",
     "name": "Charleston",
     "state": "SC",
     "lat": 32.780834,
-    "lng": -79.923615
+    "lng": -79.923615,
+    "established": "1899-09-13"
   },
   {
     "id": "8670870",
     "name": "Fort Pulaski",
     "state": "GA",
     "lat": 32.034695,
-    "lng": -80.90303
+    "lng": -80.90303,
+    "established": "1935-07-01"
   },
   {
     "id": "8679598",
     "name": "Kings Bay MSF Pier",
     "state": "GA",
     "lat": 30.7781,
-    "lng": -81.4914
+    "lng": -81.4914,
+    "established": "1978-11-01"
   },
   {
     "id": "8720030",
     "name": "Fernandina Beach",
     "state": "FL",
     "lat": 30.671356,
-    "lng": -81.46584
+    "lng": -81.46584,
+    "established": "1897-05-08"
   },
   {
     "id": "8720218",
     "name": "Mayport (Bar Pilots Dock)",
     "state": "FL",
     "lat": 30.398167,
-    "lng": -81.42789
+    "lng": -81.42789,
+    "established": "1995-08-01"
   },
   {
     "id": "8720219",
     "name": "Dames Point",
     "state": "FL",
     "lat": 30.3867,
-    "lng": -81.5583
+    "lng": -81.5583,
+    "established": "1977-08-12"
   },
   {
     "id": "8720226",
     "name": "Southbank Riverwalk, St Johns River",
     "state": "FL",
     "lat": 30.32,
-    "lng": -81.6583
+    "lng": -81.6583,
+    "established": "1995-04-26"
   },
   {
     "id": "8720357",
     "name": "I-295 Buckman Bridge",
     "state": "FL",
     "lat": 30.192417,
-    "lng": -81.68889
+    "lng": -81.68889,
+    "established": "1995-04-25"
   },
   {
     "id": "8721604",
     "name": "Trident Pier, Port Canaveral",
     "state": "FL",
     "lat": 28.4158,
-    "lng": -80.5931
+    "lng": -80.5931,
+    "established": "1994-10-13"
   },
   {
     "id": "8722670",
     "name": "Lake Worth Pier, Atlantic Ocean",
     "state": "FL",
     "lat": 26.612778,
-    "lng": -80.034164
+    "lng": -80.034164,
+    "established": "1970-04-14"
   },
   {
     "id": "8722956",
     "name": "South Port Everglades",
     "state": "FL",
     "lat": 26.081667,
-    "lng": -80.11667
+    "lng": -80.11667,
+    "established": "1973-07-20"
   },
   {
     "id": "8723214",
     "name": "Virginia Key",
     "state": "FL",
     "lat": 25.7314,
-    "lng": -80.1618
+    "lng": -80.1618,
+    "established": "1994-01-26"
   },
   {
     "id": "8723970",
     "name": "Vaca Key, Florida Bay",
     "state": "FL",
     "lat": 24.711,
-    "lng": -81.1065
+    "lng": -81.1065,
+    "established": "1970-12-04"
   },
   {
     "id": "8724580",
     "name": "Key West",
     "state": "FL",
     "lat": 24.5557,
-    "lng": -81.8079
+    "lng": -81.8079,
+    "established": "1913-01-18"
   },
   {
     "id": "8725114",
     "name": "Naples Bay, North",
     "state": "FL",
     "lat": 26.1367,
-    "lng": -81.7883
+    "lng": -81.7883,
+    "established": "1978-03-13"
   },
   {
     "id": "8725520",
     "name": "Fort Myers",
     "state": "FL",
     "lat": 26.647778,
-    "lng": -81.87111
+    "lng": -81.87111,
+    "established": "1965-03-08"
   },
   {
     "id": "8726384",
     "name": "Port Manatee",
     "state": "FL",
     "lat": 27.6387,
-    "lng": -82.5621
+    "lng": -82.5621,
+    "established": "1976-03-24"
   },
   {
     "id": "8726520",
     "name": "St. Petersburg",
     "state": "FL",
     "lat": 27.7606,
-    "lng": -82.6269
+    "lng": -82.6269,
+    "established": "1946-12-14"
   },
   {
     "id": "8726607",
     "name": "Old Port Tampa",
     "state": "FL",
     "lat": 27.8578,
-    "lng": -82.5528
+    "lng": -82.5528,
+    "established": "1991-07-17"
   },
   {
     "id": "8726674",
     "name": "East Bay",
     "state": "FL",
     "lat": 27.9231,
-    "lng": -82.4214
+    "lng": -82.4214,
+    "established": "2019-09-09"
   },
   {
     "id": "8726724",
     "name": "Clearwater Beach",
     "state": "FL",
     "lat": 27.9783,
-    "lng": -82.8317
+    "lng": -82.8317,
+    "established": "1973-04-19"
   },
   {
     "id": "8727520",
     "name": "Cedar Key",
     "state": "FL",
     "lat": 29.135,
-    "lng": -83.0317
+    "lng": -83.0317,
+    "established": "1914-03-12"
   },
   {
     "id": "8728690",
     "name": "Apalachicola",
     "state": "FL",
     "lat": 29.724445,
-    "lng": -84.98055
+    "lng": -84.98055,
+    "established": "1967-05-01"
   },
   {
     "id": "8729108",
     "name": "Panama City",
     "state": "FL",
     "lat": 30.149723,
-    "lng": -85.664444
+    "lng": -85.664444,
+    "established": "1973-02-11"
   },
   {
     "id": "8729210",
     "name": "Panama City Beach",
     "state": "FL",
     "lat": 30.21375,
-    "lng": -85.878586
+    "lng": -85.878586,
+    "established": "1989-09-20"
   },
   {
     "id": "8729840",
     "name": "Pensacola",
     "state": "FL",
     "lat": 30.4044,
-    "lng": -87.2112
+    "lng": -87.2112,
+    "established": "1923-04-30"
   },
   {
     "id": "8735180",
     "name": "Dauphin Island",
     "state": "AL",
     "lat": 30.25,
-    "lng": -88.075
+    "lng": -88.075,
+    "established": "1966-03-30"
   },
   {
     "id": "8735391",
     "name": "Dog River Bridge",
     "state": "AL",
     "lat": 30.5652,
-    "lng": -88.088
+    "lng": -88.088,
+    "established": "2010-09-08"
   },
   {
     "id": "8735523",
     "name": "East Fowl River Bridge",
     "state": "AL",
     "lat": 30.4437,
-    "lng": -88.1139
+    "lng": -88.1139,
+    "established": "1980-03-24"
   },
   {
     "id": "8736897",
     "name": "Coast Guard Sector Mobile",
     "state": "AL",
     "lat": 30.6495,
-    "lng": -88.05811
+    "lng": -88.05811,
+    "established": "2007-08-03"
   },
   {
     "id": "8737048",
     "name": "Mobile State Docks",
     "state": "AL",
     "lat": 30.70461,
-    "lng": -88.03961
+    "lng": -88.03961,
+    "established": "1980-03-24"
   },
   {
     "id": "8737138",
     "name": "Chickasaw Creek",
     "state": "AL",
     "lat": 30.7819,
-    "lng": -88.0736
+    "lng": -88.0736,
+    "established": "2011-04-22"
   },
   {
     "id": "8738043",
     "name": "West Fowl River Bridge",
     "state": "AL",
     "lat": 30.3766,
-    "lng": -88.1586
+    "lng": -88.1586,
+    "established": "2011-04-22"
   },
   {
     "id": "8739803",
     "name": "Bayou La Batre Bridge",
     "state": "AL",
     "lat": 30.4057,
-    "lng": -88.2477
+    "lng": -88.2477,
+    "established": "2011-04-22"
   },
   {
     "id": "8741533",
     "name": "Pascagoula NOAA Lab",
     "state": "MS",
     "lat": 30.367777,
-    "lng": -88.56306
+    "lng": -88.56306,
+    "established": "2005-09-13"
   },
   {
     "id": "8747437",
     "name": "Bay Waveland Yacht Club",
     "state": "MS",
     "lat": 30.326342,
-    "lng": -89.3258
+    "lng": -89.3258,
+    "established": "1978-05-31"
   },
   {
     "id": "8760721",
     "name": "Pilottown",
     "state": "LA",
     "lat": 29.179306,
-    "lng": -89.258835
+    "lng": -89.258835,
+    "established": "1980-12-19"
   },
   {
     "id": "8760922",
     "name": "Pilots Station East, S.W. Pass",
     "state": "LA",
     "lat": 28.9322,
-    "lng": -89.4075
+    "lng": -89.4075,
+    "established": "2004-03-08"
   },
   {
     "id": "8761305",
     "name": "Shell Beach",
     "state": "LA",
     "lat": 29.86811,
-    "lng": -89.67325
+    "lng": -89.67325,
+    "established": "1979-11-07"
   },
   {
     "id": "8761724",
     "name": "Grand Isle",
     "state": "LA",
     "lat": 29.2633,
-    "lng": -89.9567
+    "lng": -89.9567,
+    "established": "1979-11-09"
   },
   {
     "id": "8761927",
     "name": "New Canal Station",
     "state": "LA",
     "lat": 30.027222,
-    "lng": -90.113335
+    "lng": -90.113335,
+    "established": "1982-11-21"
   },
   {
     "id": "8761955",
     "name": "Carrollton",
     "state": "LA",
     "lat": 29.932888,
-    "lng": -90.135475
+    "lng": -90.135475,
+    "established": "1996-05-15"
   },
   {
     "id": "8762075",
     "name": "Port Fourchon, Belle Pass",
     "state": "LA",
     "lat": 29.1142,
-    "lng": -90.1993
+    "lng": -90.1993,
+    "established": "2003-07-19"
   },
   {
     "id": "8762482",
     "name": "West Bank 1, Bayou Gauche",
     "state": "LA",
     "lat": 29.78861,
-    "lng": -90.42028
+    "lng": -90.42028,
+    "established": "2003-05-02"
   },
   {
     "id": "8764044",
     "name": "Berwick, Atchafalaya River",
     "state": "LA",
     "lat": 29.6675,
-    "lng": -91.23761
+    "lng": -91.23761,
+    "established": "2003-07-24"
   },
   {
     "id": "8764227",
     "name": "LAWMA, Amerada Pass",
     "state": "LA",
     "lat": 29.4496,
-    "lng": -91.3381
+    "lng": -91.3381,
+    "established": "2005-11-01"
   },
   {
     "id": "8764314",
     "name": "Eugene Island, North of, Atchafalaya Bay",
     "state": "LA",
     "lat": 29.3675,
-    "lng": -91.3839
+    "lng": -91.3839,
+    "established": "2014-11-15"
   },
   {
     "id": "8766072",
     "name": "Freshwater Canal Locks",
     "state": "LA",
     "lat": 29.551695,
-    "lng": -92.30519
+    "lng": -92.30519,
+    "established": "2005-08-03"
   },
   {
     "id": "8767816",
     "name": "Lake Charles",
     "state": "LA",
     "lat": 30.223612,
-    "lng": -93.221664
+    "lng": -93.221664,
+    "established": "1932-03-01"
   },
   {
     "id": "8767961",
     "name": "Bulk Terminal",
     "state": "LA",
     "lat": 30.1903,
-    "lng": -93.3007
+    "lng": -93.3007,
+    "established": "2009-02-10"
   },
   {
     "id": "8768094",
     "name": "Calcasieu Pass",
     "state": "LA",
     "lat": 29.768167,
-    "lng": -93.34289
+    "lng": -93.34289,
+    "established": "1933-02-21"
   },
   {
     "id": "8770475",
     "name": "Port Arthur",
     "state": "TX",
     "lat": 29.8667,
-    "lng": -93.93
+    "lng": -93.93,
+    "established": "1996-04-01"
   },
   {
     "id": "8770520",
     "name": "Rainbow Bridge",
     "state": "TX",
     "lat": 29.98,
-    "lng": -93.8817
+    "lng": -93.8817,
+    "established": "1993-08-04"
   },
   {
     "id": "8770613",
     "name": "Morgans Point, Barbours Cut",
     "state": "TX",
     "lat": 29.681667,
-    "lng": -94.985
+    "lng": -94.985,
+    "established": "1973-06-18"
   },
   {
     "id": "8770777",
     "name": "Manchester",
     "state": "TX",
     "lat": 29.7263,
-    "lng": -95.2658
+    "lng": -95.2658,
+    "established": "1995-01-01"
   },
   {
     "id": "8770808",
     "name": "High Island",
     "state": "TX",
     "lat": 29.5947,
-    "lng": -94.3903
+    "lng": -94.3903,
+    "established": "2012-11-25"
   },
   {
     "id": "8770822",
     "name": "Texas Point, Sabine Pass",
     "state": "TX",
     "lat": 29.6893,
-    "lng": -93.8418
+    "lng": -93.8418,
+    "established": "2011-06-28"
   },
   {
     "id": "8770971",
     "name": "Rollover Pass",
     "state": "TX",
     "lat": 29.515,
-    "lng": -94.5133
+    "lng": -94.5133,
+    "established": "2004-02-24"
   },
   {
     "id": "8771013",
     "name": "Eagle Point, Galveston Bay",
     "state": "TX",
     "lat": 29.481306,
-    "lng": -94.91725
+    "lng": -94.91725,
+    "established": "1973-06-14"
   },
   {
     "id": "8771341",
     "name": "Galveston Bay Entrance, North Jetty",
     "state": "TX",
     "lat": 29.357462,
-    "lng": -94.724724
+    "lng": -94.724724,
+    "established": "2000-04-17"
   },
   {
     "id": "8771367",
     "name": "Sabine Offshore Light",
     "state": "TX",
     "lat": 29.469,
-    "lng": -93.72
+    "lng": -93.72,
+    "established": "2020-01-01"
   },
   {
     "id": "8771450",
     "name": "Galveston Pier 21",
     "state": "TX",
     "lat": 29.31,
-    "lng": -94.7933
+    "lng": -94.7933,
+    "established": "1904-01-01"
   },
   {
     "id": "8771486",
     "name": "Galveston Railroad Bridge",
     "state": "TX",
     "lat": 29.3026,
-    "lng": -94.8971
+    "lng": -94.8971,
+    "established": "2012-09-01"
   },
   {
     "id": "8771972",
     "name": "San Luis Pass",
     "state": "TX",
     "lat": 29.095,
-    "lng": -95.1133
+    "lng": -95.1133,
+    "established": "1998-01-29"
   },
   {
     "id": "8772471",
     "name": "Freeport Harbor",
     "state": "TX",
     "lat": 28.9357,
-    "lng": -95.2942
+    "lng": -95.2942,
+    "established": "2016-06-24"
   },
   {
     "id": "8772985",
     "name": "Sargent",
     "state": "TX",
     "lat": 28.771639,
-    "lng": -95.61684
+    "lng": -95.61684,
+    "established": "2012-11-08"
   },
   {
     "id": "8773037",
     "name": "Seadrift",
     "state": "TX",
     "lat": 28.4069,
-    "lng": -96.7124
+    "lng": -96.7124,
+    "established": "2004-02-09"
   },
   {
     "id": "8773146",
     "name": "Matagorda City",
     "state": "TX",
     "lat": 28.71,
-    "lng": -95.9139
+    "lng": -95.9139,
+    "established": "2012-10-11"
   },
   {
     "id": "8773259",
     "name": "Port Lavaca",
     "state": "TX",
     "lat": 28.6406,
-    "lng": -96.6098
+    "lng": -96.6098,
+    "established": "1989-01-28"
   },
   {
     "id": "8773701",
     "name": "Port O'Connor",
     "state": "TX",
     "lat": 28.4517,
-    "lng": -96.3883
+    "lng": -96.3883,
+    "established": "1989-01-28"
   },
   {
     "id": "8773767",
     "name": "Matagorda Bay Entrance Channel",
     "state": "TX",
     "lat": 28.4269,
-    "lng": -96.3301
+    "lng": -96.3301,
+    "established": "2014-09-18"
   },
   {
     "id": "8774230",
     "name": "Aransas Wildlife Refuge",
     "state": "TX",
     "lat": 28.2283,
-    "lng": -96.795
+    "lng": -96.795,
+    "established": "2012-10-09"
   },
   {
     "id": "8774513",
     "name": "Copano Bay",
     "state": "TX",
     "lat": 28.118305,
-    "lng": -97.0217
+    "lng": -97.0217,
+    "established": "2004-01-08"
   },
   {
     "id": "8774770",
     "name": "Rockport",
     "state": "TX",
     "lat": 28.021667,
-    "lng": -97.04667
+    "lng": -97.04667,
+    "established": "1937-02-25"
   },
   {
     "id": "8775132",
     "name": "La Quinta Channel North",
     "state": "TX",
     "lat": 27.8804,
-    "lng": -97.2735
+    "lng": -97.2735,
+    "established": "2020-04-27"
   },
   {
     "id": "8775222",
     "name": "Viola Turning Basin",
     "state": "TX",
     "lat": 27.8461,
-    "lng": -97.5207
+    "lng": -97.5207,
+    "established": "2007-04-18"
   },
   {
     "id": "8775237",
     "name": "Port Aransas",
     "state": "TX",
     "lat": 27.8397,
-    "lng": -97.0725
+    "lng": -97.0725,
+    "established": "1990-05-25"
   },
   {
     "id": "8775241",
     "name": "Aransas, Aransas Pass",
     "state": "TX",
     "lat": 27.8366,
-    "lng": -97.0391
+    "lng": -97.0391,
+    "established": "2016-08-01"
   },
   {
     "id": "8775283",
     "name": "Enbridge, Ingleside",
     "state": "TX",
     "lat": 27.818611,
-    "lng": -97.20895
+    "lng": -97.20895,
+    "established": "1989-11-07"
   },
   {
     "id": "8775296",
     "name": "USS Lexington, Corpus Christi Bay",
     "state": "TX",
     "lat": 27.8149,
-    "lng": -97.3892
+    "lng": -97.3892,
+    "established": "2004-01-08"
   },
   {
     "id": "8775792",
     "name": "Packery Channel",
     "state": "TX",
     "lat": 27.6333,
-    "lng": -97.2367
+    "lng": -97.2367,
+    "established": "1988-11-30"
+  },
+  {
+    "id": "8775870",
+    "name": "Bob Hall Pier, Corpus Christi",
+    "state": "TX",
+    "lat": 27.58,
+    "lng": -97.2167,
+    "established": "1983-05-09"
   },
   {
     "id": "8776139",
     "name": "S. Bird Island",
     "state": "TX",
     "lat": 27.484362,
-    "lng": -97.31811
+    "lng": -97.31811,
+    "established": "2003-12-17"
   },
   {
     "id": "8776604",
     "name": "Baffin Bay",
     "state": "TX",
     "lat": 27.297,
-    "lng": -97.40517
+    "lng": -97.40517,
+    "established": "1998-11-17"
   },
   {
     "id": "8777812",
     "name": "Rincon Del San Jose",
     "state": "TX",
     "lat": 26.801195,
-    "lng": -97.47056
+    "lng": -97.47056,
+    "established": "1990-03-04"
   },
   {
     "id": "8778490",
     "name": "Port Mansfield",
     "state": "TX",
     "lat": 26.557638,
-    "lng": -97.42572
+    "lng": -97.42572,
+    "established": "1962-08-11"
   },
   {
     "id": "8779280",
     "name": "Realitos Peninsula",
     "state": "TX",
     "lat": 26.2624,
-    "lng": -97.2853
+    "lng": -97.2853,
+    "established": "2009-02-23"
   },
   {
     "id": "8779748",
     "name": "South Padre Island CG Station",
     "state": "TX",
     "lat": 26.0731,
-    "lng": -97.1675
+    "lng": -97.1675,
+    "established": "1993-04-15"
   },
   {
     "id": "8779749",
     "name": "SPI Brazos Santiago",
     "state": "TX",
     "lat": 26.0675,
-    "lng": -97.1548
+    "lng": -97.1548,
+    "established": "2016-08-01"
   },
   {
     "id": "8779770",
     "name": "Port Isabel",
     "state": "TX",
     "lat": 26.061167,
-    "lng": -97.21553
+    "lng": -97.21553,
+    "established": "1944-03-31"
   },
   {
     "id": "9014070",
     "name": "Algonac",
     "state": "MI",
     "lat": 42.621113,
-    "lng": -82.526665
+    "lng": -82.526665,
+    "established": "1926-07-01"
   },
   {
     "id": "9014080",
     "name": "St. Clair State Police",
     "state": "MI",
     "lat": 42.81222,
-    "lng": -82.48556
+    "lng": -82.48556,
+    "established": "1971-01-01"
   },
   {
     "id": "9014087",
     "name": "Dry Dock",
     "state": "MI",
     "lat": 42.94528,
-    "lng": -82.44334
+    "lng": -82.44334,
+    "established": "1899-03-01"
   },
   {
     "id": "9014090",
     "name": "Mouth of the Black River",
     "state": "MI",
     "lat": 42.9738,
-    "lng": -82.4204
+    "lng": -82.4204,
+    "established": "1900-01-01"
   },
   {
     "id": "9014098",
     "name": "Fort Gratiot",
     "state": "MI",
     "lat": 43.0069,
-    "lng": -82.4225
+    "lng": -82.4225,
+    "established": "1970-01-01"
   },
   {
     "id": "9034052",
     "name": "St Clair Shores",
     "state": "MI",
     "lat": 42.47322,
-    "lng": -82.87925
+    "lng": -82.87925,
+    "established": "1968-03-01"
   },
   {
     "id": "9044020",
     "name": "Gibraltar",
     "state": "MI",
     "lat": 42.090862,
-    "lng": -83.186
+    "lng": -83.186,
+    "established": "1989-11-08"
   },
   {
     "id": "9044030",
     "name": "Wyandotte",
     "state": "MI",
     "lat": 42.202305,
-    "lng": -83.1475
+    "lng": -83.1475,
+    "established": "1930-05-01"
   },
   {
     "id": "9044036",
     "name": "Fort Wayne",
     "state": "MI",
     "lat": 42.298912,
-    "lng": -83.092636
+    "lng": -83.092636,
+    "established": "1970-01-01"
   },
   {
     "id": "9044049",
     "name": "Windmill Point",
     "state": "MI",
     "lat": 42.357777,
-    "lng": -82.92995
+    "lng": -82.92995,
+    "established": "1897-06-01"
   },
   {
     "id": "9052000",
     "name": "Cape Vincent",
     "state": "NY",
     "lat": 44.13028,
-    "lng": -76.33222
+    "lng": -76.33222,
+    "established": "1916-01-01"
   },
   {
     "id": "9052030",
     "name": "Oswego",
     "state": "NY",
     "lat": 43.46417,
-    "lng": -76.51183
+    "lng": -76.51183,
+    "established": "1860-01-01"
   },
   {
     "id": "9052058",
     "name": "Rochester",
     "state": "NY",
     "lat": 43.26903,
-    "lng": -77.62575
+    "lng": -77.62575,
+    "established": "1860-01-01"
   },
   {
     "id": "9052076",
     "name": "Olcott",
     "state": "NY",
     "lat": 43.33839,
-    "lng": -78.72733
+    "lng": -78.72733,
+    "established": "1967-01-01"
   },
   {
     "id": "9063007",
     "name": "Ashland Ave",
     "state": "NY",
     "lat": 43.09992,
-    "lng": -79.05991
+    "lng": -79.05991,
+    "established": "1957-06-01"
   },
   {
     "id": "9063009",
     "name": "American Falls",
     "state": "NY",
     "lat": 43.08106,
-    "lng": -79.06136
+    "lng": -79.06136,
+    "established": "1900-01-01"
   },
   {
     "id": "9063012",
     "name": "Niagara Intake",
     "state": "NY",
     "lat": 43.07689,
-    "lng": -79.01403
+    "lng": -79.01403,
+    "established": "1963-01-01"
   },
   {
     "id": "9063020",
     "name": "Buffalo",
     "state": "NY",
     "lat": 42.877445,
-    "lng": -78.89047
+    "lng": -78.89047,
+    "established": "1860-04-01"
   },
   {
     "id": "9063028",
     "name": "Sturgeon Point",
     "state": "NY",
     "lat": 42.691307,
-    "lng": -79.04733
+    "lng": -79.04733,
+    "established": "1989-12-05"
   },
   {
     "id": "9063038",
     "name": "Erie, Lake Erie",
     "state": "PA",
     "lat": 42.15389,
-    "lng": -80.075836
+    "lng": -80.075836,
+    "established": "1959-04-01"
   },
   {
     "id": "9063053",
     "name": "Fairport",
     "state": "OH",
     "lat": 41.75975,
-    "lng": -81.28106
+    "lng": -81.28106,
+    "established": "1935-05-04"
   },
   {
     "id": "9063063",
     "name": "Cleveland",
     "state": "OH",
     "lat": 41.54086,
-    "lng": -81.635475
+    "lng": -81.635475,
+    "established": "1859-12-31"
   },
   {
     "id": "9063079",
     "name": "Marblehead",
     "state": "OH",
     "lat": 41.54364,
-    "lng": -82.73139
+    "lng": -82.73139,
+    "established": "1959-05-01"
   },
   {
     "id": "9063085",
     "name": "Toledo",
     "state": "OH",
     "lat": 41.693554,
-    "lng": -83.472275
+    "lng": -83.472275,
+    "established": "1904-08-01"
   },
   {
     "id": "9063090",
     "name": "Fermi Power Plant",
     "state": "MI",
     "lat": 41.96,
-    "lng": -83.25667
+    "lng": -83.25667,
+    "established": "1963-09-01"
   },
   {
     "id": "9075002",
     "name": "Lakeport",
     "state": "MI",
     "lat": 43.141693,
-    "lng": -82.49331
+    "lng": -82.49331,
+    "established": "1955-09-01"
   },
   {
     "id": "9075014",
     "name": "Harbor Beach",
     "state": "MI",
     "lat": 43.84639,
-    "lng": -82.64306
+    "lng": -82.64306,
+    "established": "1860-01-01"
   },
   {
     "id": "9075035",
     "name": "Essexville",
     "state": "MI",
     "lat": 43.6404,
-    "lng": -83.8468
+    "lng": -83.8468,
+    "established": "1977-08-01"
   },
   {
     "id": "9075065",
     "name": "Alpena",
     "state": "MI",
     "lat": 45.063,
-    "lng": -83.4286
+    "lng": -83.4286,
+    "established": "2006-04-26"
   },
   {
     "id": "9075080",
     "name": "Mackinaw City",
     "state": "MI",
     "lat": 45.77722,
-    "lng": -84.72111
+    "lng": -84.72111,
+    "established": "1900-01-01"
   },
   {
     "id": "9075099",
     "name": "De Tour Village",
     "state": "MI",
     "lat": 45.9925,
-    "lng": -83.8982
+    "lng": -83.8982,
+    "established": "1977-11-01"
   },
   {
     "id": "9076024",
     "name": "Rock Cut",
     "state": "MI",
     "lat": 46.264805,
-    "lng": -84.19119
+    "lng": -84.19119,
+    "established": "2001-10-26"
   },
   {
     "id": "9076027",
     "name": "West Neebish Island",
     "state": "MI",
     "lat": 46.28469,
-    "lng": -84.20981
+    "lng": -84.20981,
+    "established": "2006-10-19"
   },
   {
     "id": "9076033",
     "name": "Little Rapids",
     "state": "MI",
     "lat": 46.485832,
-    "lng": -84.30167
+    "lng": -84.30167,
+    "established": "2008-12-17"
   },
   {
     "id": "9076060",
     "name": "U.S. Slip",
     "state": "MI",
     "lat": 46.500805,
-    "lng": -84.34036
+    "lng": -84.34036,
+    "established": "1903-04-01"
   },
   {
     "id": "9076070",
     "name": "S.W. Pier, St. Marys River",
     "state": "MI",
     "lat": 46.50111,
-    "lng": -84.37261
+    "lng": -84.37261,
+    "established": "1860-05-01"
   },
   {
     "id": "9087023",
     "name": "Ludington",
     "state": "MI",
     "lat": 43.94736,
-    "lng": -86.4415
+    "lng": -86.4415,
+    "established": "1895-11-01"
   },
   {
     "id": "9087031",
     "name": "Holland",
     "state": "MI",
     "lat": 42.773335,
-    "lng": -86.212776
+    "lng": -86.212776,
+    "established": "1894-06-01"
   },
   {
     "id": "9087044",
     "name": "Calumet Harbor",
     "state": "IL",
     "lat": 41.72972,
-    "lng": -87.53833
+    "lng": -87.53833,
+    "established": "1905-02-01"
   },
   {
     "id": "9087057",
     "name": "Milwaukee",
     "state": "WI",
     "lat": 43.001972,
-    "lng": -87.88764
+    "lng": -87.88764,
+    "established": "1989-09-01"
   },
   {
     "id": "9087068",
     "name": "Kewaunee, Lake Michigan",
     "state": "WI",
     "lat": 44.46389,
-    "lng": -87.50103
+    "lng": -87.50103,
+    "established": "1974-01-01"
   },
   {
     "id": "9087072",
     "name": "Sturgeon Bay Canal",
     "state": "WI",
     "lat": 44.794693,
-    "lng": -87.31392
+    "lng": -87.31392,
+    "established": "1905-01-01"
   },
   {
     "id": "9087077",
     "name": "Green Bay East",
     "state": "WI",
     "lat": 44.539024,
-    "lng": -88.00106
+    "lng": -88.00106,
+    "established": "2009-05-27"
   },
   {
     "id": "9087088",
     "name": "Menominee",
     "state": "MI",
     "lat": 45.09589,
-    "lng": -87.58994
+    "lng": -87.58994,
+    "established": "2005-08-19"
   },
   {
     "id": "9087096",
     "name": "Port Inland",
     "state": "MI",
     "lat": 45.96989,
-    "lng": -85.8715
+    "lng": -85.8715,
+    "established": "1964-12-01"
   },
   {
     "id": "9099004",
     "name": "Point Iroquois",
     "state": "MI",
     "lat": 46.484444,
-    "lng": -84.63084
+    "lng": -84.63084,
+    "established": "1930-11-01"
   },
   {
     "id": "9099018",
     "name": "Marquette C.G.",
     "state": "MI",
     "lat": 46.545555,
-    "lng": -87.37861
+    "lng": -87.37861,
+    "established": "1991-09-23"
   },
   {
     "id": "9099044",
     "name": "Ontonagon",
     "state": "MI",
     "lat": 46.874443,
-    "lng": -89.324165
+    "lng": -89.324165,
+    "established": "1959-08-01"
   },
   {
     "id": "9099064",
     "name": "Duluth",
     "state": "MN",
     "lat": 46.77575,
-    "lng": -92.092026
+    "lng": -92.092026,
+    "established": "1860-04-01"
   },
   {
     "id": "9099090",
     "name": "Grand Marais, Lake Superior",
     "state": "MN",
     "lat": 47.748554,
-    "lng": -90.34128
+    "lng": -90.34128,
+    "established": "1966-01-01"
   },
   {
     "id": "9410170",
     "name": "San Diego",
     "state": "CA",
     "lat": 32.715557,
-    "lng": -117.17667
+    "lng": -117.17667,
+    "established": "1906-01-26"
   },
   {
     "id": "9410230",
     "name": "La Jolla",
     "state": "CA",
     "lat": 32.86689,
-    "lng": -117.25714
+    "lng": -117.25714,
+    "established": "1924-08-01"
   },
   {
     "id": "9410660",
     "name": "Los Angeles",
     "state": "CA",
     "lat": 33.72,
-    "lng": -118.272
+    "lng": -118.272,
+    "established": "1923-11-28"
   },
   {
     "id": "9410678",
     "name": "Long Beach Fire Boat Pier",
     "state": "CA",
     "lat": 33.7478,
-    "lng": -118.2158
+    "lng": -118.2158,
+    "established": null
   },
   {
     "id": "9410840",
     "name": "Santa Monica",
     "state": "CA",
     "lat": 34.0083,
-    "lng": -118.5
+    "lng": -118.5,
+    "established": "1932-10-01"
   },
   {
     "id": "9411340",
     "name": "Santa Barbara",
     "state": "CA",
     "lat": 34.40459,
-    "lng": -119.6925
+    "lng": -119.6925,
+    "established": "1974-02-26"
   },
   {
     "id": "9412110",
     "name": "Port San Luis",
     "state": "CA",
     "lat": 35.168888,
-    "lng": -120.754166
+    "lng": -120.754166,
+    "established": "1933-10-01"
   },
   {
     "id": "9413450",
     "name": "Monterey",
     "state": "CA",
     "lat": 36.60889,
-    "lng": -121.89139
+    "lng": -121.89139,
+    "established": "1973-11-04"
   },
   {
     "id": "9414290",
     "name": "San Francisco",
     "state": "CA",
     "lat": 37.806305,
-    "lng": -122.46589
+    "lng": -122.46589,
+    "established": "1854-06-29"
   },
   {
     "id": "9414523",
     "name": "Redwood City",
     "state": "CA",
     "lat": 37.506813,
-    "lng": -122.21191
+    "lng": -122.21191,
+    "established": "1974-10-09"
   },
   {
     "id": "9414750",
     "name": "Alameda",
     "state": "CA",
     "lat": 37.771954,
-    "lng": -122.30026
+    "lng": -122.30026,
+    "established": "1939-03-08"
   },
   {
     "id": "9414863",
     "name": "Richmond",
     "state": "CA",
     "lat": 37.9283,
-    "lng": -122.4
+    "lng": -122.4,
+    "established": "1947-07-15"
   },
   {
     "id": "9415020",
     "name": "Point Reyes",
     "state": "CA",
     "lat": 37.994167,
-    "lng": -122.97361
+    "lng": -122.97361,
+    "established": "1975-01-10"
   },
   {
     "id": "9415102",
     "name": "Martinez-Amorco Pier",
     "state": "CA",
     "lat": 38.0346,
-    "lng": -122.1252
+    "lng": -122.1252,
+    "established": "2009-03-01"
   },
   {
     "id": "9415144",
     "name": "Port Chicago",
     "state": "CA",
     "lat": 38.056,
-    "lng": -122.0395
+    "lng": -122.0395,
+    "established": "1976-06-28"
   },
   {
     "id": "9416131",
     "name": "Port of West Sacramento, Washington Lake",
     "state": "CA",
     "lat": 38.56225,
-    "lng": -121.5463
+    "lng": -121.5463,
+    "established": "2024-12-17"
   },
   {
     "id": "9416841",
     "name": "Arena Cove",
     "state": "CA",
     "lat": 38.914555,
-    "lng": -123.71108
+    "lng": -123.71108,
+    "established": "1978-04-09"
   },
   {
     "id": "9418767",
     "name": "North Spit",
     "state": "CA",
     "lat": 40.766907,
-    "lng": -124.21735
+    "lng": -124.21735,
+    "established": "1977-08-16"
   },
   {
     "id": "9419750",
     "name": "Crescent City",
     "state": "CA",
     "lat": 41.74561,
-    "lng": -124.18439
+    "lng": -124.18439,
+    "established": "1933-04-10"
   },
   {
     "id": "9431647",
     "name": "Port Orford",
     "state": "OR",
     "lat": 42.739,
-    "lng": -124.4983
+    "lng": -124.4983,
+    "established": "1924-08-07"
   },
   {
     "id": "9432780",
     "name": "Charleston",
     "state": "OR",
     "lat": 43.345,
-    "lng": -124.322
+    "lng": -124.322,
+    "established": "1964-08-27"
   },
   {
     "id": "9435380",
     "name": "South Beach",
     "state": "OR",
     "lat": 44.625446,
-    "lng": -124.044945
+    "lng": -124.044945,
+    "established": "1967-01-28"
   },
   {
     "id": "9437540",
     "name": "Garibaldi",
     "state": "OR",
     "lat": 45.55453,
-    "lng": -123.918945
+    "lng": -123.918945,
+    "established": "1866-08-11"
   },
   {
     "id": "9439040",
     "name": "Astoria",
     "state": "OR",
     "lat": 46.207306,
-    "lng": -123.7683
+    "lng": -123.7683,
+    "established": "1853-07-09"
   },
   {
     "id": "9439099",
     "name": "Wauna",
     "state": "OR",
     "lat": 46.16,
-    "lng": -123.405
+    "lng": -123.405,
+    "established": "1940-11-05"
   },
   {
     "id": "9439201",
     "name": "St Helens",
     "state": "OR",
     "lat": 45.865,
-    "lng": -122.797
+    "lng": -122.797,
+    "established": "1877-09-10"
   },
   {
     "id": "9440083",
     "name": "Vancouver",
     "state": "WA",
     "lat": 45.631172,
-    "lng": -122.69577
+    "lng": -122.69577,
+    "established": "1938-09-14"
   },
   {
     "id": "9440357",
     "name": "TEMCO Kalama Terminal",
     "state": "WA",
     "lat": 45.9867,
-    "lng": -122.8367
+    "lng": -122.8367,
+    "established": "2016-07-19"
   },
   {
     "id": "9440422",
     "name": "Longview",
     "state": "WA",
     "lat": 46.1061,
-    "lng": -122.9542
+    "lng": -122.9542,
+    "established": "1985-03-23"
   },
   {
     "id": "9440569",
     "name": "Skamokawa",
     "state": "WA",
     "lat": 46.270306,
-    "lng": -123.4565
+    "lng": -123.4565,
+    "established": "1981-07-01"
   },
   {
     "id": "9440581",
     "name": "Cape Disappointment",
     "state": "WA",
     "lat": 46.28103,
-    "lng": -124.04628
+    "lng": -124.04628,
+    "established": "2015-04-07"
   },
   {
     "id": "9440910",
     "name": "Toke Point",
     "state": "WA",
     "lat": 46.7075,
-    "lng": -123.96694
+    "lng": -123.96694,
+    "established": "1922-02-20"
   },
   {
     "id": "9441102",
     "name": "Westport",
     "state": "WA",
     "lat": 46.90431,
-    "lng": -124.10508
+    "lng": -124.10508,
+    "established": "1982-06-07"
   },
   {
     "id": "9442396",
     "name": "La Push, Quillayute River",
     "state": "WA",
     "lat": 47.912838,
-    "lng": -124.63574
+    "lng": -124.63574,
+    "established": "1924-12-19"
   },
   {
     "id": "9443090",
     "name": "Neah Bay",
     "state": "WA",
     "lat": 48.370724,
-    "lng": -124.601585
+    "lng": -124.601585,
+    "established": "1934-07-23"
   },
   {
     "id": "9444090",
     "name": "Port Angeles",
     "state": "WA",
     "lat": 48.125,
-    "lng": -123.44
+    "lng": -123.44,
+    "established": "1975-08-30"
   },
   {
     "id": "9444900",
     "name": "Port Townsend",
     "state": "WA",
     "lat": 48.11122,
-    "lng": -122.759674
+    "lng": -122.759674,
+    "established": "1971-12-31"
   },
   {
     "id": "9445958",
     "name": "Bremerton",
     "state": "WA",
     "lat": 47.5617,
-    "lng": -122.623
+    "lng": -122.623,
+    "established": "1977-04-06"
   },
   {
     "id": "9446484",
     "name": "Tacoma",
     "state": "WA",
     "lat": 47.2667,
-    "lng": -122.4133
+    "lng": -122.4133,
+    "established": "1996-07-22"
   },
   {
     "id": "9447130",
     "name": "Seattle",
     "state": "WA",
     "lat": 47.60264,
-    "lng": -122.3393
+    "lng": -122.3393,
+    "established": "1899-01-01"
   },
   {
     "id": "9449424",
     "name": "Cherry Point",
     "state": "WA",
     "lat": 48.862717,
-    "lng": -122.75858
+    "lng": -122.75858,
+    "established": "1971-11-07"
   },
   {
     "id": "9449880",
     "name": "Friday Harbor",
     "state": "WA",
     "lat": 48.545277,
-    "lng": -123.0125
+    "lng": -123.0125,
+    "established": "1932-01-25"
   },
   {
     "id": "9450460",
     "name": "Ketchikan",
     "state": "AK",
     "lat": 55.331944,
-    "lng": -131.62611
+    "lng": -131.62611,
+    "established": "1918-10-01"
   },
   {
     "id": "9451054",
     "name": "Port Alexander",
     "state": "AK",
     "lat": 56.2467,
-    "lng": -134.647
+    "lng": -134.647,
+    "established": "1924-04-10"
   },
   {
     "id": "9451600",
     "name": "Sitka",
     "state": "AK",
     "lat": 57.051056,
-    "lng": -135.34412
+    "lng": -135.34412,
+    "established": "1938-05-19"
   },
   {
     "id": "9452210",
     "name": "Juneau",
     "state": "AK",
     "lat": 58.2988,
-    "lng": -134.4106
+    "lng": -134.4106,
+    "established": "1936-05-14"
   },
   {
     "id": "9452400",
     "name": "Skagway, Taiya Inlet",
     "state": "AK",
     "lat": 59.4508,
-    "lng": -135.328
+    "lng": -135.328,
+    "established": "1943-08-16"
   },
   {
     "id": "9452634",
     "name": "Elfin Cove",
     "state": "AK",
     "lat": 58.19472,
-    "lng": -136.34694
+    "lng": -136.34694,
+    "established": "1938-05-13"
   },
   {
     "id": "9453220",
     "name": "Yakutat, Yakutat Bay",
     "state": "AK",
     "lat": 59.5485,
-    "lng": -139.7334
+    "lng": -139.7334,
+    "established": "1940-04-24"
   },
   {
     "id": "9454050",
     "name": "Cordova",
     "state": "AK",
     "lat": 60.5583,
-    "lng": -145.753
+    "lng": -145.753,
+    "established": "1949-05-14"
   },
   {
     "id": "9454240",
     "name": "Valdez",
     "state": "AK",
     "lat": 61.125,
-    "lng": -146.362
+    "lng": -146.362,
+    "established": "1964-08-15"
   },
   {
     "id": "9455090",
     "name": "Seward",
     "state": "AK",
     "lat": 60.1193,
-    "lng": -149.42812
+    "lng": -149.42812,
+    "established": "1925-05-01"
   },
   {
     "id": "9455500",
     "name": "Seldovia",
     "state": "AK",
     "lat": 59.4405,
-    "lng": -151.7199
+    "lng": -151.7199,
+    "established": "1964-05-24"
   },
   {
     "id": "9455760",
     "name": "Nikiski",
     "state": "AK",
     "lat": 60.6833,
-    "lng": -151.398
+    "lng": -151.398,
+    "established": "1971-05-21"
   },
   {
     "id": "9455920",
     "name": "Anchorage",
     "state": "AK",
     "lat": 61.2375,
-    "lng": -149.8904
+    "lng": -149.8904,
+    "established": "1964-04-24"
   },
   {
     "id": "9457292",
     "name": "Kodiak Island",
     "state": "AK",
     "lat": 57.7317,
-    "lng": -152.512
+    "lng": -152.512,
+    "established": "1984-07-10"
   },
   {
     "id": "9457804",
     "name": "Alitak",
     "state": "AK",
     "lat": 56.89739,
-    "lng": -154.248
+    "lng": -154.248,
+    "established": "1929-05-31"
   },
   {
     "id": "9459450",
     "name": "Sand Point",
     "state": "AK",
     "lat": 55.331722,
-    "lng": -160.50433
+    "lng": -160.50433,
+    "established": "1972-09-10"
   },
   {
     "id": "9459881",
     "name": "King Cove",
     "state": "AK",
     "lat": 55.05989,
-    "lng": -162.32611
+    "lng": -162.32611,
+    "established": "1917-08-14"
   },
   {
     "id": "9461380",
     "name": "Adak Island",
     "state": "AK",
     "lat": 51.860638,
-    "lng": -176.63759
+    "lng": -176.63759,
+    "established": "1943-08-21"
   },
   {
     "id": "9461710",
     "name": "Atka",
     "state": "AK",
     "lat": 52.231945,
-    "lng": -174.1725
+    "lng": -174.1725,
+    "established": "2006-08-01"
   },
   {
     "id": "9462450",
     "name": "Nikolski",
     "state": "AK",
     "lat": 52.94061,
-    "lng": -168.8713
+    "lng": -168.8713,
+    "established": "2006-06-28"
   },
   {
     "id": "9462620",
     "name": "Unalaska",
     "state": "AK",
     "lat": 53.879196,
-    "lng": -166.5403
+    "lng": -166.5403,
+    "established": "1955-05-07"
   },
   {
     "id": "9463502",
     "name": "Port Moller",
     "state": "AK",
     "lat": 55.985832,
-    "lng": -160.57361
+    "lng": -160.57361,
+    "established": "1960-09-11"
   },
   {
     "id": "9464212",
     "name": "Village Cove, St Paul Island",
     "state": "AK",
     "lat": 57.1253,
-    "lng": -170.2852
+    "lng": -170.2852,
+    "established": "1977-06-08"
   },
   {
     "id": "9468333",
     "name": "Unalakleet",
     "state": "AK",
     "lat": 63.875,
-    "lng": -160.788
+    "lng": -160.788,
+    "established": "1977-06-30"
   },
   {
     "id": "9468756",
     "name": "Nome, Norton Sound",
     "state": "AK",
     "lat": 64.49461,
-    "lng": -165.43964
+    "lng": -165.43964,
+    "established": "1944-06-30"
   },
   {
     "id": "9491094",
     "name": "Red Dog Dock",
     "state": "AK",
     "lat": 67.575806,
-    "lng": -164.06439
+    "lng": -164.06439,
+    "established": "2003-08-21"
   },
   {
     "id": "9497645",
     "name": "Prudhoe Bay",
     "state": "AK",
     "lat": 70.41139,
-    "lng": -148.53166
+    "lng": -148.53166,
+    "established": "1990-07-17"
   },
   {
     "id": "9751364",
     "name": "Christiansted Harbor, St Croix",
     "state": "VI",
     "lat": 17.747694,
-    "lng": -64.69839
+    "lng": -64.69839,
+    "established": "1981-02-10"
   },
   {
     "id": "9751381",
     "name": "Lameshur Bay, St John",
     "state": "VI",
     "lat": 18.31825,
-    "lng": -64.72422
+    "lng": -64.72422,
+    "established": "1983-02-21"
   },
   {
     "id": "9751401",
     "name": "Limetree Bay",
     "state": "VI",
     "lat": 17.6947,
-    "lng": -64.7538
+    "lng": -64.7538,
+    "established": "1977-10-13"
   },
   {
     "id": "9751639",
     "name": "Charlotte Amalie",
     "state": "VI",
     "lat": 18.330584,
-    "lng": -64.925804
+    "lng": -64.925804,
+    "established": "1975-01-27"
   },
   {
     "id": "9752235",
     "name": "Culebra",
     "state": "PR",
     "lat": 18.300861,
-    "lng": -65.302475
+    "lng": -65.302475,
+    "established": "2005-08-19"
   },
   {
     "id": "9752621",
     "name": "Isabel Segunda, Vieques Island",
     "state": "PR",
     "lat": 18.152527,
-    "lng": -65.4438
+    "lng": -65.4438,
+    "established": "2023-03-20"
   },
   {
     "id": "9752695",
     "name": "Esperanza, Vieques Island",
     "state": "PR",
     "lat": 18.09386,
-    "lng": -65.47136
+    "lng": -65.47136,
+    "established": "2005-08-11"
   },
   {
     "id": "9753216",
     "name": "Fajardo",
     "state": "PR",
     "lat": 18.335278,
-    "lng": -65.63111
+    "lng": -65.63111,
+    "established": "1964-02-17"
   },
   {
     "id": "9754229",
     "name": "Yabucoa Harbor",
     "state": "PR",
     "lat": 18.055084,
-    "lng": -65.833
+    "lng": -65.833,
+    "established": "2023-03-20"
   },
   {
     "id": "9755371",
     "name": "San Juan, La Puntilla, San Juan Bay",
     "state": "PR",
     "lat": 18.458944,
-    "lng": -66.11642
+    "lng": -66.11642,
+    "established": "1962-03-04"
   },
   {
     "id": "9755968",
     "name": "Salinas, Bahia de Jobos",
     "state": "PR",
     "lat": 17.949083,
-    "lng": -66.225945
+    "lng": -66.225945,
+    "established": "2022-12-01"
   },
   {
     "id": "9757811",
     "name": "Arecibo",
     "state": "PR",
     "lat": 18.480528,
-    "lng": -66.70236
+    "lng": -66.70236,
+    "established": "2023-03-20"
   },
   {
     "id": "9758066",
     "name": "Guayanilla, Bahia de Guayanilla",
     "state": "PR",
     "lat": 18.005861,
-    "lng": -66.76661
+    "lng": -66.76661,
+    "established": "2022-12-01"
   },
   {
     "id": "9759110",
     "name": "Magueyes Island",
     "state": "PR",
     "lat": 17.970112,
-    "lng": -67.04639
+    "lng": -67.04639,
+    "established": "1954-12-01"
   },
   {
     "id": "9759394",
     "name": "Mayaguez",
     "state": "PR",
     "lat": 18.218834,
-    "lng": -67.162445
+    "lng": -67.162445,
+    "established": "1975-12-09"
   },
   {
     "id": "9759413",
     "name": "Aguadilla, Crashboat Beach",
     "state": "PR",
     "lat": 18.456638,
-    "lng": -67.16458
+    "lng": -67.16458,
+    "established": "2023-03-20"
   },
   {
     "id": "9759938",
     "name": "Mona Island",
     "state": "PR",
     "lat": 18.089289,
-    "lng": -67.93821
+    "lng": -67.93821,
+    "established": "2006-09-15"
   }
 ]

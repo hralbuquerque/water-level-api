@@ -14,6 +14,9 @@ export const STATIONS = Object.fromEntries(
     state: s.state,
     lat: s.lat,
     lng: s.lng,
+    // YYYY-MM-DD NOAA lists as the station's start, or null. Approximate: some
+    // stations have a little data from before it (see probeStartFor in noaa.js).
+    established: s.established ?? null,
   }])
 );
 
@@ -42,3 +45,14 @@ export function getStationsForLocation(loc) {
   return key ? LOCATION_STATIONS[key].stations.map((id) => STATIONS[id]).filter(Boolean) : [];
 }
 
+
+/**
+ * Every named location with its gauges, in display order.
+ */
+export function listLocations() {
+  return Object.entries(LOCATION_STATIONS).map(([id, loc]) => ({
+    id,
+    name: loc.label,
+    stations: loc.stations.map((sid) => STATIONS[sid]).filter(Boolean),
+  }));
+}
