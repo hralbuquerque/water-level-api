@@ -176,6 +176,10 @@
 .hx-tick { fill: var(--app-muted); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-variant-numeric: tabular-nums; }
 .hx-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .hx-trigger { stroke: var(--app-danger); stroke-width: 1.5; stroke-dasharray: 6 4; }
+/* Status tones for a movable trigger (landing panel): calm, near (within a foot), hit */
+.hx-trigger.tone-calm { stroke: var(--app-muted); stroke-width: 1; }
+.hx-trigger.tone-near { stroke: var(--app-warning); stroke-width: 2; }
+.hx-trigger.tone-hit { stroke: var(--app-danger); stroke-width: 2; }
 .hx-trigger-label, .hx-peak-label {
   fill: var(--app-ink);
   font-family: 'IBM Plex Mono', monospace;
@@ -204,6 +208,28 @@
 .hx-tooltip-row { display: grid; grid-template-columns: 14px auto; column-gap: 8px; align-items: center; margin-top: 4px; }
 .hx-tooltip-row strong { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
 .hx-tooltip-name { grid-column: 2; color: var(--app-muted); }
+.hx-tooltip-units { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--app-line); font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--app-muted); }
+
+/* Zoom: toolbar above the chart, drag selection, overview strip, hint below */
+.hx-chart-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 0 8px; }
+.hx-chart-note { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--app-muted); font-variant-numeric: tabular-nums; }
+.hx-chart-peak { color: var(--app-ink); }
+.hx-chart-hint { margin: 6px 0 0; font-size: 0.75rem; color: var(--app-muted); }
+.hx-hint-coarse { display: none; }
+@media (pointer: coarse) {
+  .hx-hint-fine { display: none; }
+  .hx-hint-coarse { display: inline; }
+}
+.hx-chart svg { cursor: crosshair; user-select: none; -webkit-user-select: none; }
+.hx-chart svg:focus-visible { outline: 2px solid var(--app-accent); outline-offset: -2px; }
+.hx-plot-hit { fill: transparent; }
+.hx-selection { fill: var(--app-accent); fill-opacity: 0.12; stroke: var(--app-accent); stroke-width: 1; stroke-dasharray: 3 3; shape-rendering: crispEdges; }
+.hx-brush-bg { fill: rgba(30, 42, 71, 0.04); stroke: rgba(30, 42, 71, 0.18); stroke-width: 1; shape-rendering: crispEdges; }
+.hx-brush-line { fill: none; stroke-width: 1; stroke-opacity: 0.8; }
+.hx-brush-shade { fill: rgba(30, 42, 71, 0.14); pointer-events: none; }
+.hx-brush-window { fill: var(--app-accent); fill-opacity: 0.08; stroke: var(--app-accent); stroke-width: 1.5; cursor: grab; shape-rendering: crispEdges; }
+.hx-brush-handle { fill: #FFFFFF; stroke: var(--app-accent); stroke-width: 1.5; cursor: ew-resize; }
+.hx-brush-bg, .hx-brush-line { cursor: pointer; }
 .hx-empty { padding: 32px; text-align: center; color: var(--app-muted); background: var(--app-plot); border: 1px solid var(--app-field-border); border-radius: var(--app-radius); }
 
 /* ---- Table ---- */

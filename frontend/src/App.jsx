@@ -11,17 +11,21 @@
 import { useEffect, useMemo, useState } from "react";
 import "./global.css";
 import ReadingsPage from "./historical/ReadingsPage.jsx";
+import ReadingsChart from "./historical/ReadingsChart.jsx";
 import { ActionButton, Surface, Tag } from "./theme/Primitives.jsx";
 import ThemeSwitcher from "./theme/ThemeSwitcher.jsx";
 import Section from "./components/Section.jsx";
 import { API_BASE } from "./api.js";
 
-// Gauges shown as tabs in the landing page's live panel, in tab order.
+// Gauges shown as tabs in the landing page's live panel, in tab order. Each keeps the
+// chart color it has on the readings page, which follows the nyc location's gauge order.
 const STATIONS = [
-  { id: "8518750", name: "The Battery" },
-  { id: "8516945", name: "Kings Point" },
-  { id: "8531680", name: "Sandy Hook" },
+  { id: "8518750", name: "The Battery", color: "var(--series-1)" },
+  { id: "8516945", name: "Kings Point", color: "var(--series-3)" },
+  { id: "8531680", name: "Sandy Hook", color: "var(--series-2)" },
 ];
+
+const SIX_MIN_MS = 6 * 60 * 1000;
 
 const CONTACT_HREF = "mailto:hello@example.com"; // TODO: real contact link
 
@@ -88,20 +92,18 @@ function GaugePanel() {
   const [trigger, setTrigger] = useState(7);
   const { status, rows, message } = useGauge(stationId);
 
-  // Chart geometry in a fixed 600x170 viewBox (the SVG scales to its container).
-  // The y range always includes the trigger so its line stays on screen, plus
-  // half a foot of padding above and below.
-  const view = useMemo(() => {
+  // The rows as one series for the shared chart (same component as the readings page).
+  // NOAA's GMT times ("2026-11-11 21:00") become ISO UTC strings ending in Z.
+  const chart = useMemo(() => {
     if (!rows.length) return null;
-    const W = 600, H = 170;
-    const vals = rows.map((r) => r.v);
-    const lo = Math.min(...vals, trigger) - 0.5;
-    const hi = Math.max(...vals, trigger) + 0.5;
-    const x = (i) => (i / (rows.length - 1)) * W;
-    const y = (v) => H - ((v - lo) / (hi - lo)) * H;
-    const path = rows.map((r, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(r.v).toFixed(1)}`).join(" ");
-    return { W, H, path, ty: y(trigger), peak: Math.max(...vals) };
-  }, [rows, trigger]);
+    const station = STATIONS.find((s) => s.id === stationId);
+    const readings = rows.map((r) => ({ ...r, t: `${r.t.replace(" ", "T")}:00Z` }));
+    const times = readings.map((r) => Date.parse(r.t));
+    return {
+      series: [{ id: stationId, name: station.name, color: station.color, readings, times, values: readings.map((r) => r.v) }],
+      domain: [times[0], times[times.length - 1]],
+    };
+  }, [rows, stationId]);
 
   // How far the latest reading is below the trigger: "hit" at or above it,
   // "near" within a foot. These classes color the trigger line and status text.
@@ -132,7 +134,7 @@ function GaugePanel() {
         </p>
       )}
 
-      {latest && view && (
+      {latest && chart && (
         <>
           <div className="hp-reading">
             <span className="app-num hp-big">{latest.v.toFixed(2)}</span>
@@ -150,11 +152,17 @@ function GaugePanel() {
           </div>
           <p className="app-muted app-num" style={{ fontSize: "0.8rem" }}>{latest.t} UTC · station {stationId}</p>
 
-          <svg viewBox={`0 0 ${view.W} ${view.H}`} className="hp-chart" role="img"
-               aria-label={`Water level over the last 24 hours, peak ${view.peak.toFixed(1)} feet`}>
-            <line x1="0" x2={view.W} y1={view.ty} y2={view.ty} className={`hp-trigger ${tone}`} />
-            <path d={view.path} className="hp-line" />
-          </svg>
+          <div className="hp-chart">
+            <ReadingsChart
+              series={chart.series}
+              domain={chart.domain}
+              trigger={trigger}
+              stepMs={SIX_MIN_MS}
+              valueLabel="Water level, last 24 hours"
+              height={220}
+              triggerClassName={`tone-${tone || "calm"}`}
+            />
+          </div>
 
           <label className="hp-slider">
             <span className="app-eyebrow">Trigger level</span>
