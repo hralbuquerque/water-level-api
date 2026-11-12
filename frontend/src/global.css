@@ -146,11 +146,7 @@
 .hp-reading { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .hp-big { font-size: 3rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
 .hp-reading .hp-badge { margin-left: auto; }
-.hp-chart { width: 100%; height: auto; margin: 16px 0 8px; overflow: visible; }
-.hp-line { fill: none; stroke: var(--app-accent); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
-.hp-trigger { stroke: var(--app-muted); stroke-width: 1; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; transition: stroke 200ms; }
-.hp-trigger.near { stroke: var(--app-warning); stroke-width: 2; }
-.hp-trigger.hit { stroke: var(--app-danger); stroke-width: 2; }
+.hp-chart { margin: 16px 0 8px; }
 .hp-slider { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; font-size: 0.85rem; }
 .hp-slider input { accent-color: var(--app-accent); }
 .hp-status { margin: 10px 0 0; font-weight: 600; }
