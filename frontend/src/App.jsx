@@ -2,7 +2,7 @@
  * App shell: the landing page, the shared site header, and a tiny hash router.
  *
  * Routes
- *   #/historical?...  -> HistoricalPage (search and chart NOAA readings via our API)
+ *   #/historical?...  -> ReadingsPage (search and chart NOAA readings via our API)
  *   anything else     -> Home (marketing page with a live NOAA gauge panel)
  *
  * Hash routing keeps this a static site (no server rewrites, no router library),
@@ -10,10 +10,11 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import "./global.css";
-import HistoricalPage from "./historical/HistoricalPage.jsx";
+import ReadingsPage from "./historical/ReadingsPage.jsx";
 import { ActionButton, Surface, Tag } from "./theme/Primitives.jsx";
 import ThemeSwitcher from "./theme/ThemeSwitcher.jsx";
 import Section from "./components/Section.jsx";
+import { API_BASE } from "./api.js";
 
 // Gauges shown as tabs in the landing page's live panel, in tab order.
 const STATIONS = [
@@ -22,14 +23,15 @@ const STATIONS = [
   { id: "8531680", name: "Sandy Hook" },
 ];
 
-const CONTACT_HREF = "mailto:hello@example.com"; // TODO: your real contact link
+const CONTACT_HREF = "mailto:hello@example.com"; // TODO: real contact link
 
-// Rows in the landing page's "Endpoints" section. Entries with `href` exist and
-// link to a live example on the historical page; the rest are planned (docs/plan.md).
+// Rows in the landing page's "Endpoints" section. Entries with `href` exist and link
+// to a live example (the readings page, or the raw JSON for /latest); the rest are
+// planned (docs/plan.md).
 const ENDPOINTS = [
   { route: "/locations/nyc/historical", does: "Readings for a location over any date range, paged for you", href: "#/historical" },
   { route: "/stations/8518750/historical", does: "The same for any single NOAA gauge, by station ID", href: "#/historical?target=station:8518750&start=2012-10-22&end=2012-11-05&resolution=auto" },
-  { route: "/locations/nyc/latest", does: "The most recent reading, with NOAA forecasts alongside" },
+  { route: "/locations/nyc/latest", does: "The most recent reading from each gauge", href: `${API_BASE}/locations/nyc/latest` },
   { route: "/locations/nyc/risk", does: "How often an area reaches risky water levels" },
   { route: "/locations/nyc/forecast", does: "Forecasted readings for the location" },
 ];
@@ -199,7 +201,7 @@ function SiteHeader({ route }) {
       <div className="app-nav-right">
         <nav>
           <a href="#live">Live gauge</a>
-          <a href="#/historical" aria-current={route === "historical" ? "page" : undefined}>Historical</a>
+          <a href="#/historical" aria-current={route === "historical" ? "page" : undefined}>Readings</a>
           <a href="#how">How it works</a>
           <a href="#endpoints">Endpoints</a>
           <a href="#record">Data</a>
@@ -222,7 +224,7 @@ export default function App() {
     <div className="app-root">
       <div className="app-wrap">
         <SiteHeader route={route} />
-        {route === "historical" ? <HistoricalPage /> : <Home />}
+        {route === "historical" ? <ReadingsPage /> : <Home />}
       </div>
     </div>
   );

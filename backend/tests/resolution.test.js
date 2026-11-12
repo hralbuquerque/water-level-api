@@ -33,7 +33,8 @@ describe('resolutions', () => {
       const params = new URL(url).searchParams;
       calls.push(Object.fromEntries(params));
       const product = params.get('product') === 'daily_max_min' && !params.get('interval') ? 'daily_hourly' : params.get('product');
-      let body = { water_level: sixMin, hourly_height: hourly, daily_max_min: daily, daily_hourly: dailyHourly }[product];
+      const oneMin = { data: [{ t: '2012-10-29 12:00', v: '7.1' }, { t: '2012-10-29 12:01', v: '7.2' }] };
+      let body = { one_minute_water_level: oneMin, water_level: sixMin, hourly_height: hourly, daily_max_min: daily, daily_hourly: dailyHourly }[product];
       if (params.get('product') === 'daily_max_min') {
         // Like NOAA, only return days inside the requested window
         const [from, to] = [params.get('begin_date'), params.get('end_date')];
@@ -58,6 +59,8 @@ describe('resolutions', () => {
     expect(pickResolution('2000-01-01', '2012-12-31')).toBe('daily');
     expect(pickResolution('2000-01-01', '2012-12-31', '6min')).toBe('6min');
     expect(pickResolution('2000-01-01', '2012-12-31', 'weekly')).toBeNull();
+    expect(pickResolution('2012-10-29', '2012-10-29')).toBe('6min'); // auto never picks 1min
+    expect(pickResolution('2012-10-29', '2012-10-29', '1min')).toBe('1min');
   });
 
   test('defaults to 6-minute data so API callers get full detail', async () => {
@@ -104,6 +107,59 @@ describe('resolutions', () => {
     expect(res.body.stations).toHaveLength(3);
   });
 
+  test('1min is paged 4 days per request and marked preliminary', async () => {
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-22&end=2012-10-31&resolution=1min');
+    expect(res.status).toBe(200);
+    expect(res.body.resolution).toBe('1min');
+    expect(calls.map((c) => [c.product, c.begin_date, c.end_date])).toEqual([
+      ['one_minute_water_level', '20121022', '20121025'],
+      ['one_minute_water_level', '20121026', '20121029'],
+      ['one_minute_water_level', '20121030', '20121031'],
+    ]);
+    expect(res.body.readings[0]).toMatchObject({ v: 7.1, q: 'p', s: null, f: null });
+  });
+
+  test('times narrow the first and last NOAA requests', async () => {
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-22T20:00&end=2012-10-29T03:30&resolution=1min');
+    expect(res.status).toBe(200);
+    expect(res.body.start).toBe('2012-10-22T20:00');
+    expect(calls.map((c) => [c.begin_date, c.end_date])).toEqual([
+      ['20121022 20:00', '20121025'],
+      ['20121026', '20121029 03:30'],
+    ]);
+  });
+
+  test('a time range within one day is a single request', async () => {
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-29T12:00&end=2012-10-29T13:00&resolution=1min');
+    expect(res.status).toBe(200);
+    expect(calls.map((c) => [c.begin_date, c.end_date])).toEqual([['20121029 12:00', '20121029 13:00']]);
+  });
+
+  test('daily ignores times', async () => {
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-29T12:00&end=2012-10-30T13:00&resolution=daily');
+    expect(res.status).toBe(200);
+    expect(calls.every((c) => !c.begin_date.includes(' ') && !c.end_date.includes(' '))).toBe(true);
+  });
+
+  test('400 for bad times or a start after the end', async () => {
+    for (const [start, end, message] of [
+      ['2012-10-29T24:00', '2012-10-29T12:00', /invalid time/],
+      ['2012-10-29T13:00', '2012-10-29T12:00', /start must be on or before end/],
+      ['2012-10-29T1:00', '2012-10-29', /YYYY-MM-DDTHH:mm/],
+    ]) {
+      const res = await request(app).get(`/stations/8518750/historical?start=${start}&end=${end}&resolution=1min`);
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(message);
+    }
+    expect(calls).toHaveLength(0);
+  });
+
+  test('400 when a 1min range is longer than 31 days', async () => {
+    const res = await request(app).get('/stations/8518750/historical?start=2012-10-01&end=2012-11-01&resolution=1min');
+    expect(res.status).toBe(400);
+    expect(calls).toHaveLength(0);
+  });
+
   test('400 when a range is too long for the chosen resolution', async () => {
     const res = await request(app).get('/stations/8518750/historical?start=2000-01-01&end=2012-12-31&resolution=hourly');
     expect(res.status).toBe(400);
@@ -114,7 +170,7 @@ describe('resolutions', () => {
   test('400 for an unknown resolution', async () => {
     const res = await request(app).get('/stations/8518750/historical?start=2012-10-29&end=2012-10-30&resolution=weekly');
     expect(res.status).toBe(400);
-    expect(res.body.error).toMatch(/resolution must be one of: auto, 6min, hourly, daily/);
+    expect(res.body.error).toMatch(/resolution must be one of: auto, 1min, 6min, hourly, daily/);
   });
 
   test('date errors win over resolution errors', async () => {

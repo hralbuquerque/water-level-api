@@ -19,11 +19,16 @@ water-level-api/
 ├── backend/                  # Express 5 API (ESM, Node built-in fetch)
 │   ├── src/
 │   │   ├── server.js         # Entry point; listens on $PORT (default 3000)
-│   │   ├── app.js            # buildApp(): helmet, cors, JSON body parsing, /health, mounts routes
-│   │   ├── routes/index.js   # setupRoutes(app): all /locations and /stations endpoints
-│   │   ├── noaa.js           # fetchReadings, parseReadings, validateDateRange
-│   │   ├── stations.js       # STATIONS directory + LOCATION_STATIONS (location → gauge IDs)
-│   │   └── recordings.js     # LEGACY, not mounted (older POST endpoint); do not build on it
+│   │   ├── app.js            # buildApp(): helmet, cors, JSON body parsing, then setupRoutes
+│   │   ├── routes/           # EVERY HTTP route lives here, one Express Router per feature
+│   │   │   ├── index.js      # setupRoutes(app): mounts the routers below
+│   │   │   ├── health.js     # /health
+│   │   │   ├── directory.js  # /locations, /stations
+│   │   │   ├── historical.js # /locations/:loc/historical, /stations/:id/historical
+│   │   │   ├── latest.js     # /locations/:loc/latest, /stations/:id/latest
+│   │   │   └── shared.js     # meta(): response fields shared by readings endpoints
+│   │   ├── noaa.js           # fetchReadings, fetchLatest, parseReadings, validateDateRange
+│   │   └── stations.js       # STATIONS directory + LOCATION_STATIONS (location → gauge IDs)
 │   ├── data/stations.json    # All NOAA water-level stations (id, name, state, lat, lng)
 │   ├── scripts/
 │   │   ├── cli.js            # Command-line client; runs the app in-process
@@ -78,11 +83,18 @@ No linter or formatter is configured.
 | `GET /stations` | Every station in `data/stations.json` (id, name, state, lat, lng, established) |
 | `GET /locations/:loc/historical?start=YYYY-MM-DD&end=YYYY-MM-DD[&resolution=]` | Readings for every gauge in a location. `:loc` is case-insensitive. |
 | `GET /stations/:id/historical?start=YYYY-MM-DD&end=YYYY-MM-DD[&resolution=]` | Readings for a single NOAA station ID (any station in `data/stations.json`) |
+| `GET /locations/:loc/latest` | Most recent 1-minute reading from every gauge in a location; a failing gauge gets `error` instead of `reading` |
+| `GET /stations/:id/latest` | Most recent 1-minute reading from one gauge; 502 on a NOAA error |
+
+- **Time ranges:** `start`/`end` accept `YYYY-MM-DD` or `YYYY-MM-DDTHH:mm` (UTC). A date-only start is 00:00 and a date-only end is the whole day. `fetchReadings` splits the range into whole-day chunks, then puts the times back on the first and last NOAA request (`begin_date=20121029 20:00`). Daily data ignores times. The end may be later today, but not a future day.
+- **Adding a route:** create a Router module in `src/routes/` (full paths, e.g. `/locations/:loc/risk`) and mount it in `routes/index.js`. Don't define routes in `app.js` or outside `routes/`.
+- **Latest** (`fetchLatest` in `noaa.js`): NOAA `one_minute_water_level` with `date=latest` (`LATEST_RESOLUTION = '1min'`). 1-minute rows have only `t` and `v`, so `s`/`f` are null and `q` is set to `'p'`: NOAA never verifies 1-minute data. Gauges transmit in 6-minute batches, so the latest minute can be up to ~6 minutes old. `reading` is `null` when the gauge reported nothing recently (outage or decommissioned), which is a 200, not an error. NOAA forecasts and DeepMind data from the plan are not included yet.
 
 - **Resolution** (`RESOLUTIONS` in `noaa.js`): set with `resolution`. The default is `6min`, so API callers get full detail unless they opt out. The response's `resolution` field says which one was used.
 
   | `resolution` | NOAA product | Max range per call | Notes |
   |---|---|---|---|
+  | `1min` | `one_minute_water_level` | 31 days (4 per NOAA request) | Never verified, so always preliminary. Starts around 2008. Opt-in only: `auto` never picks it. |
   | `6min` (default) | `water_level` | 366 days | Preliminary within days, verified later |
   | `hourly` | `hourly_height` | 3,660 days | Verified only, so it lags real time by about a month |
   | `daily` | `daily_max_min` | No limit | Verified only, lags by one to two months. One reading per day. |
@@ -182,12 +194,14 @@ test('returns readings', async () => {
 - **Historical page** (`src/historical/`):
   - **Sections:** 01 Request (the form; the location picker is an option box), 02 Readings (summary, gauge cards, chart, trigger sentence, source, CSV), and 03 Readings table (collapsed, and only built when opened).
   - Calls the backend through `src/api.js`.
-  - Its form lives in the URL (`target=location:nyc|station:<id>`, `start`, `end`, `resolution`, `trigger`), so a link reopens the same view.
+  - Its form lives in the URL (`target=location:nyc|station:<id>`, `start`, `end`, `resolution`, `trigger`, `latest=1`), so a link reopens the same view. With a time range, `start`/`end` carry the time (`2026-11-11T21:00`).
+  - **Time range:** the time inputs under the dates are dimmed and disabled unless the "Time range" checkbox or the "Latest" chip is on (`timesOn(form)`). Otherwise requests are whole days. Editing a time switches on the checkbox; a whole-day preset switches it off.
+  - **Latest chip:** the last 60 minutes up to the moment the request runs (`latestWindow()` in `time.js`), at `1min`, with the resolution locked. It fetches through `/historical` with a time range, not `/latest`. Cards lead with each gauge's latest value and list the hour's peak. A `latest=1` link always means the last hour when opened.
   - `time.js` mirrors the backend's resolution limits so the form can explain them before a request. The API's 400 messages are still shown as-is.
   - `ReadingsChart.jsx` keeps the lowest and highest reading per pixel column, so peaks survive at any range. Lines break at gaps longer than 2.5 reading intervals.
   - Colors come from the dataviz reference palette; each gauge's color is fixed by its position in the location.
 - **Landing page:** the live-gauge panel in `App.jsx` still calls NOAA directly (last 24h for the three NYC gauges), not the backend.
-- **Planned endpoints:** the landing page's endpoint list includes `/latest`, `/risk` and `/forecast`. Those are planned; only `/historical` exists.
+- **Planned endpoints:** the landing page's endpoint list includes `/risk` and `/forecast`. Those are planned; `/historical` and `/latest` exist (`/latest` without forecasts so far).
 
 ## Theme (`frontend/src/theme/`)
 

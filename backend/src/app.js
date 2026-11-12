@@ -11,13 +11,6 @@ export function buildApp() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  app.get('/health', (req, res) => {
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-    });
-  });
-
   setupRoutes(app);
 
   return app;

@@ -1,11 +1,11 @@
 /**
- * Client for the water-level backend (backend/src/routes/index.js).
+ * Client for the water-level backend (routes in backend/src/routes/).
  *
  * In development every call goes to /api/..., which the Vite dev server proxies to
  * the Express API (see vite.config.js). A production build can point somewhere else
  * by setting VITE_API_BASE at build time, e.g. VITE_API_BASE=https://api.example.com.
  */
-const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
+export const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
 
 /**
  * GET a backend path and return its JSON. Throws an Error carrying the API's own
@@ -40,11 +40,13 @@ export function fetchDirectory({ signal } = {}) {
  * Readings for a location (all its gauges) or a single station over a date range.
  *
  * @param {{ type: 'location'|'station', id: string }} target
- * @param {{ start: string, end: string, resolution: string }} range - YYYY-MM-DD dates (UTC, inclusive)
- *   and 'auto' | '6min' | 'hourly' | 'daily'
+ * @param {{ start: string, end: string, resolution: string }} range - YYYY-MM-DD dates, or
+ *   YYYY-MM-DDTHH:mm for a time range (UTC, inclusive)
+ *   and 'auto' | '1min' | '6min' | 'hourly' | 'daily'
  */
 export function fetchHistorical(target, { start, end, resolution }, { signal } = {}) {
   const base = target.type === 'location' ? `/locations/${encodeURIComponent(target.id)}` : `/stations/${encodeURIComponent(target.id)}`;
   const query = new URLSearchParams({ start, end, resolution });
   return getJson(`${base}/historical?${query}`, { signal });
 }
+
