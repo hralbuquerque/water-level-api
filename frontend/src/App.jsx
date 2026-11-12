@@ -251,8 +251,8 @@ function Home() {
               and the risk behind a trigger. When a gauge crosses the line, the payout follows the data.
             </p>
             <div className="hp-actions">
-              <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Request access</ActionButton>
-              <ActionButton as="a" href="#/historical" tone="ghost" size="px-5 py-3 text-xs">Explore historical readings</ActionButton>
+              <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Contact us</ActionButton>
+              <ActionButton as="a" href="#/historical" tone="ghost" size="px-5 py-3 text-xs">Explore readings</ActionButton>
             </div>
           </div>
           <GaugePanel />
@@ -305,7 +305,7 @@ function Home() {
         <Surface as="section" className="hp-section hp-cta">
           <h2>Build on the water-level API</h2>
           <p className="hp-lead">Tell us the coastline and the sponsor. We'll tell you which gauges can carry the deal.</p>
-          <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Request access</ActionButton>
+          <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Contact us</ActionButton>
         </Surface>
       </main>
 
