@@ -18,6 +18,8 @@ const NO_DATA = /no data was found/i;
  * date inclusive); `maxDays` is our cap on one API call, chosen so a response
  * stays around 90k readings per station at most.
  *
+ * - 1min:   observed 1-minute data. Always preliminary: NOAA never verifies it.
+ *           Starts around 2008. NOAA serves at most 4 days per request.
  * - 6min:   observed 6-minute data. Preliminary within days, verified later.
  * - hourly: verified hourly heights. Lags real time by roughly a month.
  * - daily:  verified daily max and min. NOAA computes these from 6-minute data
@@ -26,12 +28,15 @@ const NO_DATA = /no data was found/i;
  *           day that has one. Lags real time by one to two months.
  */
 export const RESOLUTIONS = {
+  '1min': { product: 'one_minute_water_level', chunkDays: 4, maxDays: 31 },
   '6min': { product: 'water_level', chunkDays: 31, maxDays: 366 },
   hourly: { product: 'hourly_height', chunkDays: 365, maxDays: 3660 },
   daily: { product: 'daily_max_min', chunkDays: 3650, maxDays: Infinity },
 };
 
 // Ranges `auto` serves at each resolution before stepping down to the next.
+// `auto` never picks 1min: it doesn't exist before ~2008 and is never verified,
+// so it's opt-in (resolution=1min) and used by fetchLatest.
 const AUTO_6MIN_MAX_DAYS = 92;
 const AUTO_HOURLY_MAX_DAYS = 1100;
 
@@ -39,9 +44,15 @@ const AUTO_HOURLY_MAX_DAYS = 1100;
 export const CHUNK_DAYS = RESOLUTIONS['6min'].chunkDays;
 export const MAX_RANGE_DAYS = RESOLUTIONS['6min'].maxDays;
 
-const toNoaaDate = (d) => d.replaceAll('-', '');
+// Range bounds are a date ("2012-10-29") or a date and UTC time ("2012-10-29T14:30").
+// A date-only start means 00:00 and a date-only end means the whole day (23:59).
+const DATE_TIME = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/;
+const datePart = (d) => d.slice(0, 10);
+const timePart = (d) => (d.length > 10 ? d.slice(11, 16) : null);
+// "2012-10-29" -> "20121029"; "2012-10-29T14:30" -> "20121029 14:30" (NOAA's format)
+const toNoaaDate = (d) => d.replace('T', ' ').replaceAll('-', '');
 const toIsoDate = (date) => date.toISOString().slice(0, 10);
-const parseIsoDate = (d) => new Date(`${d}T00:00:00Z`);
+const parseIsoDate = (d) => new Date(`${datePart(d)}T00:00:00Z`);
 
 /** `start=earliest` asks for each station's full record instead of a fixed start date. */
 export const EARLIEST = 'earliest';
@@ -67,7 +78,7 @@ export function probeStartFor(established) {
   return toIsoDate(date);
 }
 
-/** Inclusive number of calendar days in a YYYY-MM-DD range. */
+/** Inclusive number of calendar days in a range (times are ignored). */
 export function countDays(startDate, endDate) {
   return (parseIsoDate(endDate) - parseIsoDate(startDate)) / DAY_MS + 1;
 }
@@ -94,7 +105,7 @@ export function pickResolution(startDate, endDate, requested = 'auto') {
  */
 export function splitDateRange(startDate, endDate, chunkDays = CHUNK_DAYS) {
   const chunks = [];
-  const last = parseIsoDate(endDate);
+  const last = parseIsoDate(endDate); // parseIsoDate drops any time; fetchReadings puts the times back on
   for (let cur = parseIsoDate(startDate); cur <= last; cur = new Date(cur.getTime() + chunkDays * DAY_MS)) {
     const chunkEnd = new Date(Math.min(cur.getTime() + (chunkDays - 1) * DAY_MS, last.getTime()));
     chunks.push([toIsoDate(cur), toIsoDate(chunkEnd)]);
@@ -103,17 +114,16 @@ export function splitDateRange(startDate, endDate, chunkDays = CHUNK_DAYS) {
 }
 
 /**
- * Make one NOAA request (a single chunk) and return its `data` field.
- * Returns null when NOAA reports no data for the window (gauge outage, before the
- * station existed, not yet verified); throws on any other NOAA error.
+ * Make one NOAA datagetter request and return its `data` field. `params` holds the
+ * request-specific fields (product, and begin_date/end_date or date); the station,
+ * datum, units, time zone and format are always added here.
+ * Returns null when NOAA reports no data (gauge outage, before the station existed,
+ * not yet verified); throws on any other NOAA error.
  */
-async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
-  const params = new URLSearchParams({
+async function callNoaa(stationId, params) {
+  const query = new URLSearchParams({
     station: stationId,
-    product: config.product,
-    ...extra,
-    begin_date: toNoaaDate(startDate),
-    end_date: toNoaaDate(endDate),
+    ...params,
     datum: DATUM,
     time_zone: 'gmt',
     units: UNITS,
@@ -121,7 +131,7 @@ async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
     application: 'rhodex-water-level-api',
   });
 
-  const response = await fetch(`${NOAA_API_URL}?${params.toString()}`);
+  const response = await fetch(`${NOAA_API_URL}?${query.toString()}`);
 
   // NOAA can return an error as a non-2xx status or as a 200 with an `error` field.
   // The body may not be JSON at all (e.g. an HTML gateway page), so never let parsing throw.
@@ -137,6 +147,16 @@ async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
   return data.data;
 }
 
+/** One date-range chunk of a product (see RESOLUTIONS). */
+async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
+  return callNoaa(stationId, {
+    product: config.product,
+    ...extra,
+    begin_date: toNoaaDate(startDate),
+    end_date: toNoaaDate(endDate),
+  });
+}
+
 /**
  * Fetch historical water level readings from NOAA for a station, paging past
  * NOAA's per-request limits. Chunks are fetched sequentially to stay polite to
@@ -144,11 +164,19 @@ async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
  * partial data.
  *
  * @param {string|number} stationId - The NOAA tide gauge ID
- * @param {string} startDate - Start date in YYYY-MM-DD format (inclusive)
- * @param {string} endDate - End date in YYYY-MM-DD format (inclusive, through end of day UTC)
+ * @param {string} startDate - YYYY-MM-DD, or YYYY-MM-DDTHH:mm (UTC) to start at a time (inclusive)
+ * @param {string} endDate - YYYY-MM-DD (through end of day UTC), or YYYY-MM-DDTHH:mm (inclusive)
  * @param {string} [resolution='6min'] - A key of RESOLUTIONS
  * @returns {Promise<Array>} - Parsed readings, oldest first
  */
+// Quality flag for rows that don't carry their own `q`. 6-minute rows always do.
+const QUALITY_DEFAULTS = {
+  '1min': 'p', // one_minute_water_level is never verified
+  '6min': null,
+  hourly: 'v', // hourly_height and daily_max_min are verified-only products
+  daily: 'v',
+};
+
 export async function fetchReadings(stationId, startDate, endDate, resolution = '6min') {
   const config = RESOLUTIONS[resolution];
   if (!config) throw new Error(`Unknown resolution: ${resolution}`);
@@ -157,10 +185,17 @@ export async function fetchReadings(stationId, startDate, endDate, resolution = 
     station: String(stationId),
     datum: DATUM,
     units: UNITS,
-    defaultQuality: resolution === '6min' ? null : 'v', // hourly/daily are verified-only products
+    defaultQuality: QUALITY_DEFAULTS[resolution],
   };
   const readings = [];
-  for (const [chunkStart, chunkEnd] of splitDateRange(startDate, endDate, config.chunkDays)) {
+  const chunks = splitDateRange(startDate, endDate, config.chunkDays);
+  // Chunks are whole days; put the requested times back on the first and last.
+  // Daily data has one value per day, so times don't apply to it.
+  if (resolution !== 'daily') {
+    if (timePart(startDate)) chunks[0][0] = startDate;
+    if (timePart(endDate)) chunks.at(-1)[1] = endDate;
+  }
+  for (const [chunkStart, chunkEnd] of chunks) {
     if (resolution === 'daily') {
       readings.push(...(await fetchDailyChunk(stationId, chunkStart, chunkEnd, config, meta)));
       continue;
@@ -172,6 +207,31 @@ export async function fetchReadings(stationId, startDate, endDate, resolution = 
     throw new Error(`NOAA API error: No data was found for station ${stationId} between ${startDate} and ${endDate}`);
   }
   return readings;
+}
+
+/**
+ * The station's most recent 1-minute reading (one_minute_water_level with
+ * `date=latest`). 1-minute data is never verified, so it is always preliminary
+ * (q: 'p') and has no sigma or flags (s and f are null).
+ * Resolves to null when the gauge has reported nothing recently (outage or
+ * decommissioned station); throws on any other NOAA error.
+ *
+ * @param {string|number} stationId - The NOAA tide gauge ID
+ * @returns {Promise<Object|null>} - One reading in the same shape as fetchReadings
+ */
+/** The resolution fetchLatest reads; routes report it as the response's `resolution`. */
+export const LATEST_RESOLUTION = '1min';
+
+export async function fetchLatest(stationId) {
+  const latestData = await callNoaa(stationId, { product: RESOLUTIONS[LATEST_RESOLUTION].product, date: 'latest' });
+  if (latestData === null) return null;
+  const [reading] = parseReadings(latestData, {
+    station: String(stationId),
+    datum: DATUM,
+    units: UNITS,
+    defaultQuality: QUALITY_DEFAULTS[LATEST_RESOLUTION],
+  });
+  return reading ?? null;
 }
 
 /**
@@ -265,7 +325,7 @@ function parseValue(val) {
 
 /**
  * Explain why a date range is invalid, or return null if it is valid.
- * Dates are inclusive YYYY-MM-DD in UTC.
+ * Bounds are inclusive YYYY-MM-DD or YYYY-MM-DDTHH:mm, in UTC.
  *
  * @param {string} from - Start date
  * @param {string} to - End date
@@ -274,18 +334,23 @@ function parseValue(val) {
  */
 export function getDateRangeError(from, to, resolution = '6min') {
   if (!from || !to) return 'start and end are required';
-  const format = /^\d{4}-\d{2}-\d{2}$/;
-  if (!format.test(from) || !format.test(to)) return 'dates must be YYYY-MM-DD';
+  if (!DATE_TIME.test(from) || !DATE_TIME.test(to)) return 'dates must be YYYY-MM-DD or YYYY-MM-DDTHH:mm (UTC)';
 
-  const fromDate = parseIsoDate(from);
-  const toDate = parseIsoDate(to);
-  // Catches impossible dates like 2012-13-45 and rollovers like 2012-02-30
-  if (Number.isNaN(fromDate.getTime()) || toIsoDate(fromDate) !== from) return `invalid date: ${from}`;
-  if (Number.isNaN(toDate.getTime()) || toIsoDate(toDate) !== to) return `invalid date: ${to}`;
+  for (const d of [from, to]) {
+    const date = parseIsoDate(d);
+    // Catches impossible dates like 2012-13-45 and rollovers like 2012-02-30
+    if (Number.isNaN(date.getTime()) || toIsoDate(date) !== datePart(d)) return `invalid date: ${d}`;
+    const time = timePart(d);
+    if (time && (Number(time.slice(0, 2)) > 23 || Number(time.slice(3)) > 59)) return `invalid time: ${d}`;
+  }
 
-  if (fromDate > toDate) return 'start must be on or before end';
-  const now = new Date();
-  if (fromDate > now || toDate > now) return 'dates cannot be in the future';
+  // Compare instants: a date-only start is 00:00, a date-only end is 23:59
+  const startAt = Date.parse(`${datePart(from)}T${timePart(from) ?? '00:00'}:00Z`);
+  const endAt = Date.parse(`${datePart(to)}T${timePart(to) ?? '23:59'}:00Z`);
+  if (startAt > endAt) return 'start must be on or before end';
+  const now = Date.now();
+  // The end may be later today (NOAA returns what exists so far), but not a future day
+  if (startAt > now || parseIsoDate(to).getTime() > now) return 'dates cannot be in the future';
 
   const { maxDays } = RESOLUTIONS[resolution];
   const days = countDays(from, to);

@@ -66,6 +66,15 @@
 :root[data-theme="ghost"] .hx-chip[aria-checked="true"] { background: var(--app-accent); border-color: var(--app-accent); color: var(--rhodex-text-white); }
 .hx-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .hx-dates label { display: flex; flex-direction: column; gap: 4px; }
+/* "Time range" checkbox and the time inputs under the dates. The times are dimmed
+   (and disabled) until the checkbox or "Latest" turns them on. */
+.hx-check { display: inline-flex; align-items: center; gap: 8px; margin: 12px 0 8px; font-size: 0.85rem; color: var(--app-muted); cursor: pointer; }
+.hx-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--app-accent); cursor: pointer; }
+.hx-check:has(input:disabled) { cursor: default; }
+.hx-check input:disabled { cursor: default; }
+.hx-times { transition: opacity 0.15s ease; }
+.hx-times.is-off { opacity: 0.4; }
+.hx-times .hx-input:disabled { cursor: not-allowed; }
 .hx-suffix { position: relative; }
 .hx-suffix .hx-input { padding-right: 32px; }
 .hx-suffix span { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--app-muted); font-size: 0.85rem; }

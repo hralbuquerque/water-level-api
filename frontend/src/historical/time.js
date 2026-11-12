@@ -17,6 +17,38 @@ export function countDays(start, end) {
   return Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / DAY_MS) + 1;
 }
 
+// ---- Times of day. Times are "HH:mm" in UTC; a range bound with a time is "YYYY-MM-DDTHH:mm".
+
+/** Minutes the "Latest" preset looks back from now. */
+export const LATEST_WINDOW_MIN = 60;
+
+/** The last LATEST_WINDOW_MIN minutes up to now, as form fields (may start yesterday, UTC). */
+export function latestWindow(now = new Date()) {
+  const from = new Date(now.getTime() - LATEST_WINDOW_MIN * 60 * 1000).toISOString();
+  const to = now.toISOString();
+  return { start: from.slice(0, 10), startTime: from.slice(11, 16), end: to.slice(0, 10), endTime: to.slice(11, 16) };
+}
+
+const isValidTime = (t) => /^([01]\d|2[0-3]):[0-5]\d$/.test(t ?? '');
+
+/** The form's start and end as API bounds: dates, or dates with times when `withTimes`. */
+export function rangeBounds({ start, end, startTime, endTime }, withTimes) {
+  return withTimes ? [`${start}T${startTime}`, `${end}T${endTime}`] : [start, end];
+}
+
+/** A range bound as epoch ms. A date-only end means the end of that day. */
+export function boundMs(bound, isEnd = false) {
+  if (bound.length > 10) return Date.parse(`${bound}:00Z`);
+  return Date.parse(`${bound}T00:00:00Z`) + (isEnd ? DAY_MS : 0);
+}
+
+/** Problems with the time inputs (dates are checked by rangeProblem). Returns a message or null. */
+export function timeProblem({ start, end, startTime, endTime }) {
+  if (!isValidTime(startTime) || !isValidTime(endTime)) return 'Enter a valid start and end time.';
+  if (start === end && startTime > endTime) return 'The start time must be before the end time.';
+  return null;
+}
+
 /** True for a real calendar date in YYYY-MM-DD form (rejects "2012-02-30", which JS would roll over). */
 export function isValidIsoDate(d) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d ?? '')) return false;
@@ -32,6 +64,7 @@ export function isValidIsoDate(d) {
 // `stepMs` is the normal spacing between readings: the chart uses it to spot gaps,
 // and the summary uses it to turn "readings above trigger" into a duration.
 export const RESOLUTIONS = {
+  '1min': { label: '1-minute', maxDays: 31, stepMs: 60 * 1000, unitNoun: 'reading' },
   '6min': { label: '6-minute', maxDays: 366, stepMs: 6 * 60 * 1000, unitNoun: 'reading' },
   hourly: { label: 'Hourly', maxDays: 3660, stepMs: 60 * 60 * 1000, unitNoun: 'hour' },
   daily: { label: 'Daily max', maxDays: Infinity, stepMs: DAY_MS, unitNoun: 'day' },
@@ -89,6 +122,9 @@ export const formatDate = (d) => dateFmt.format(new Date(d.length === 10 ? `${d}
 /** "Oct 29, 2012, 23:36 UTC" */
 export const formatDateTime = (iso) => `${dateTimeFmt.format(new Date(iso))} UTC`;
 
+/** A range bound for display: "Nov 11, 2026", or "Nov 11, 2026, 22:51 UTC" when it has a time. */
+export const formatBound = (d) => (d.length > 10 ? formatDateTime(`${d}:00Z`) : formatDate(d));
+
 /** Human length of a duration, e.g. "2 h 24 min", "3 days" */
 export function formatDuration(ms) {
   const minutes = Math.round(ms / 60000);
@@ -108,7 +144,14 @@ export function formatDuration(ms) {
 // that fits. Steps of a month or more are counted in calendar months (months differ
 // in length), shorter ones in milliseconds.
 const HOUR = 60 * 60 * 1000;
+const MINUTE = 60 * 1000;
 const STEPS = [
+  // Minute steps for short time ranges such as "Latest" (the last hour)
+  { ms: MINUTE, kind: 'ms' },
+  { ms: 5 * MINUTE, kind: 'ms' },
+  { ms: 10 * MINUTE, kind: 'ms' },
+  { ms: 15 * MINUTE, kind: 'ms' },
+  { ms: 30 * MINUTE, kind: 'ms' },
   { ms: HOUR, kind: 'ms' },
   { ms: 3 * HOUR, kind: 'ms' },
   { ms: 6 * HOUR, kind: 'ms' },
@@ -123,6 +166,7 @@ const STEPS = [
 const approxMs = (s) => s.ms ?? s.months * 30.44 * DAY_MS;
 
 const tickFormats = {
+  minute: fmt({ hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }),
   hour: fmt({ month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }),
   day: fmt({ month: 'short', day: 'numeric' }),
   month: fmt({ month: 'short', year: 'numeric' }),
@@ -141,7 +185,9 @@ export function timeTicks(t0, t1, maxTicks) {
     // Align to the step in UTC (days and weeks align to midnight)
     let t = Math.ceil(t0 / step.ms) * step.ms;
     for (; t <= t1; t += step.ms) ticks.push(t);
-    const format = step.ms < DAY_MS ? tickFormats.hour : tickFormats.day;
+    // Under an hour per tick, the date is noise unless the range crosses midnight
+    const sameDay = new Date(t0).toISOString().slice(0, 10) === new Date(t1).toISOString().slice(0, 10);
+    const format = step.ms < HOUR && sameDay ? tickFormats.minute : step.ms < DAY_MS ? tickFormats.hour : tickFormats.day;
     return { ticks, format: (t) => format.format(new Date(t)) };
   }
   // Month-based steps: start at the first month boundary on or after t0 whose

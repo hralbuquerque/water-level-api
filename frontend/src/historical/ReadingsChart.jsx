@@ -1,5 +1,5 @@
 /**
- * The historical page's line chart: one line per gauge, drawn as plain SVG.
+ * The readings page's line chart: one line per gauge, drawn as plain SVG.
  *
  * Built by hand rather than with a chart library because it has to stay fast with
  * ~260k points (a year of 6-minute data at three gauges) and must never smooth away

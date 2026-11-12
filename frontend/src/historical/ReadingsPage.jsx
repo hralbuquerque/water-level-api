@@ -10,7 +10,7 @@
  * then numbered section cards (01 Request, 02 Readings, 03 Readings table).
  *
  * Components in this file
- *   HistoricalPage  header, sections, form, request lifecycle (loading / cancel / errors), URL state
+ *   ReadingsPage  header, sections, form, request lifecycle (loading / cancel / errors), URL state
  *   Results         section 02's content for one response
  *   Summary         the per-gauge card: peak, status mix, coverage, trigger hits
  *   ReadingsTable   section 03, paged in the browser
@@ -22,24 +22,33 @@ import Section, { SubLabel } from '../components/Section.jsx';
 import ReadingsChart from './ReadingsChart.jsx';
 import TargetPicker from './TargetPicker.jsx';
 import {
-  DAY_MS,
   EARLIEST,
   RESOLUTIONS,
   addDays,
+  boundMs,
+  formatBound,
   formatDate,
   formatDateTime,
   formatDuration,
+  latestWindow,
+  rangeBounds,
   rangeProblem,
   resolveResolution,
+  timeProblem,
   todayUtc,
 } from './time.js';
-import './historical.css';
+import './readings.css';
 
-const SERIES_SLOTS = 8; // number of --series-N colors defined in historical.css
+const SERIES_SLOTS = 8; // number of --series-N colors defined in readings.css
+// Resolution the "Latest" preset always uses
+const LATEST_RESOLUTION = '1min';
 const TABLE_PAGE = 500; // table rows per page; a year of data can be ~260k rows
 
 // Quick date ranges. `range` receives today's UTC date and returns [start, end].
+// "Latest" has no `range`: it is the last hour of 1-minute data up to the moment
+// it runs (latestWindow in time.js), so its dates and times are filled in then.
 const PRESETS = [
+  { id: 'latest', label: 'Latest', latest: true },
   { id: '7d', label: 'Last 7 days', range: (t) => [addDays(t, -6), t] },
   { id: '30d', label: 'Last 30 days', range: (t) => [addDays(t, -29), t] },
   { id: '1y', label: 'Last 12 months', range: (t) => [addDays(t, -364), t] },
@@ -52,15 +61,37 @@ const PRESETS = [
 
 const RESOLUTION_OPTIONS = [
   { id: 'auto', label: 'Auto' },
+  { id: '1min', label: '1-minute, preliminary (up to 31 days)' },
   { id: '6min', label: '6-minute (up to 1 year)' },
   { id: 'hourly', label: 'Hourly, verified (up to 10 years)' },
   { id: 'daily', label: 'Daily max, verified (any range)' },
 ];
 
-// What a fresh visit shows: NYC during Hurricane Sandy, the project's proof point
-const DEFAULT_FORM = { target: 'location:nyc', start: '2012-10-22', end: '2012-11-05', resolution: 'auto', trigger: '' };
+// Times of day used while the time inputs are off: whole days
+const DAY_START = '00:00';
+const DAY_END = '23:59';
+
+// What a fresh visit shows: NYC during Hurricane Sandy, the project's proof point.
+// `latest` is true while the "Latest" chip is selected; `useTime` is the "Time range"
+// checkbox. The time inputs only apply when one of them is on (see timesOn).
+const DEFAULT_FORM = {
+  target: 'location:nyc',
+  start: '2012-10-22',
+  end: '2012-11-05',
+  startTime: DAY_START,
+  endTime: DAY_END,
+  useTime: false,
+  resolution: 'auto',
+  trigger: '',
+  latest: false,
+};
+
+/** Whether the form's time inputs are active (and sent to the API). */
+const timesOn = (form) => form.latest || form.useTime;
 
 // ---- URL state: #/historical?target=location:nyc&start=...&end=...&resolution=auto&trigger=10
+// With a time range, start/end carry the time too (start=2026-11-11T21:00); "Latest"
+// is stored as latest=1 and always means the last hour when the link is opened.
 // Keeping the form in the URL means any view can be bookmarked or shared as a link.
 
 /** The form encoded in the current URL, or null if the URL doesn't hold a complete one. */
@@ -69,12 +100,21 @@ function readFormFromHash() {
   if (!query) return null;
   const p = new URLSearchParams(query);
   if (!p.get('target') || !p.get('start') || !p.get('end')) return null;
+  const latest = p.get('latest') === '1';
+  const [start, startTime] = p.get('start').split('T');
+  const [end, endTime] = p.get('end').split('T');
   return {
     target: p.get('target'),
-    start: p.get('start'),
-    end: p.get('end'),
+    start,
+    end,
+    startTime: startTime ?? DAY_START,
+    endTime: endTime ?? DAY_END,
+    useTime: Boolean(startTime || endTime),
     resolution: RESOLUTION_OPTIONS.some((o) => o.id === p.get('resolution')) ? p.get('resolution') : 'auto',
     trigger: p.get('trigger') ?? '',
+    latest,
+    // A "Latest" link means the last hour now, whenever it was saved
+    ...(latest && { ...latestWindow(), useTime: false, resolution: LATEST_RESOLUTION }),
   };
 }
 
@@ -84,8 +124,10 @@ function readFormFromHash() {
  * for every search.
  */
 function writeFormToHash(form) {
-  const p = new URLSearchParams({ target: form.target, start: form.start, end: form.end, resolution: form.resolution });
+  const [start, end] = rangeBounds(form, timesOn(form));
+  const p = new URLSearchParams({ target: form.target, start, end, resolution: form.resolution });
   if (form.trigger !== '') p.set('trigger', form.trigger);
+  if (form.latest) p.set('latest', '1');
   window.history.replaceState(null, '', `#/historical?${p}`);
 }
 
@@ -95,9 +137,12 @@ const parseTarget = (key) => {
   return { type, id: rest.join(':') };
 };
 
-// Which preset chip a date range corresponds to, so a shared link highlights the right one
-const presetFor = (start, end) =>
+// Which preset chip a form corresponds to, so a shared link highlights the right one.
+// "Latest" matches by its flag; the others by their whole-day dates, without times.
+const presetFor = ({ start, end, latest, useTime }) =>
   PRESETS.find((p) => {
+    if (p.latest) return latest;
+    if (latest || useTime) return false;
     const [s, e] = p.range(todayUtc());
     return s === start && e === end;
   })?.id ?? 'custom';
@@ -154,10 +199,12 @@ function summarize(series, { resolution, start, end, trigger }) {
   let verified = 0;
   let above = 0;
   let firstAbove = null;
+  let latest = null; // most recent reading with a value
   for (const r of series.readings) {
     if (r.q === 'v') verified++;
     if (r.v === null) continue;
     withValue++;
+    latest = r;
     if (!peak || r.v > peak.v) peak = r;
     if (trigger !== null && r.v >= trigger) {
       above++;
@@ -170,11 +217,12 @@ function summarize(series, { resolution, start, end, trigger }) {
   const last = n ? series.readings[n - 1].t.slice(0, 10) : null;
   return {
     peak,
+    latest,
     count: n,
     missing: n - withValue,
     verifiedShare: n ? verified / n : 0,
-    startsLate: first && first > start ? first : null,
-    endsEarly: last && last < end ? last : null,
+    startsLate: first && first > start.slice(0, 10) ? first : null, // dates only, so a time range doesn't count
+    endsEarly: last && last < end.slice(0, 10) ? last : null,
     above,
     aboveLabel: resolution === 'daily' ? `${above.toLocaleString()} ${above === 1 ? 'day' : 'days'}` : formatDuration(above * stepMs),
     firstAbove,
@@ -214,18 +262,19 @@ function downloadCsv(result) {
   const a = document.createElement('a');
   const target = parseTarget(result.form.target);
   a.href = url;
-  a.download = `water-levels_${target.id}_${result.data.start}_${result.data.end}_${result.data.resolution}.csv`;
+  const fileSafe = (bound) => bound.replace(':', ''); // "2026-11-11T21:00" -> "2026-11-11T2100"
+  a.download = `water-levels_${target.id}_${fileSafe(result.data.start)}_${fileSafe(result.data.end)}_${result.data.resolution}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
 // ---- Page
 
-export default function HistoricalPage() {
+export default function ReadingsPage() {
   // The form to start from: a shared link's settings, or the default. Read once.
   const initial = useRef(readFormFromHash() ?? DEFAULT_FORM).current;
   const [form, setForm] = useState(initial); // what the inputs show (not yet submitted)
-  const [preset, setPreset] = useState(() => presetFor(initial.start, initial.end)); // highlighted chip, or 'custom'
+  const [preset, setPreset] = useState(() => presetFor(initial)); // highlighted chip, or 'custom'
   const [directory, setDirectory] = useState({ status: 'loading', locations: [], stations: [] });
   const [request, setRequest] = useState({ status: 'idle' }); // idle | loading | error
   // The last successful response, with the form that produced it. It stays on
@@ -263,7 +312,12 @@ export default function HistoricalPage() {
    * form in the URL, then fetch. Responses from cancelled requests are ignored.
    */
   const run = (f) => {
-    const problem = rangeProblem(f.start, f.end, f.resolution);
+    // "Latest" is always the hour up to the moment it runs, at 1-minute resolution
+    if (f.latest) {
+      f = { ...f, ...latestWindow(), resolution: LATEST_RESOLUTION };
+      setForm(f); // show the window that was actually requested
+    }
+    const problem = rangeProblem(f.start, f.end, f.resolution) ?? (timesOn(f) ? timeProblem(f) : null);
     if (problem) {
       setRequest({ status: 'error', message: problem });
       return;
@@ -273,7 +327,8 @@ export default function HistoricalPage() {
     abortRef.current = ctl;
     writeFormToHash(f);
     setRequest({ status: 'loading', resolution: resolveResolution(f.start, f.end, f.resolution) });
-    fetchHistorical(parseTarget(f.target), f, { signal: ctl.signal })
+    const [start, end] = rangeBounds(f, timesOn(f));
+    fetchHistorical(parseTarget(f.target), { start, end, resolution: f.resolution }, { signal: ctl.signal })
       .then((data) => {
         setResult({ form: f, data, series: toSeries(data) });
         setRequest({ status: 'idle' });
@@ -297,9 +352,12 @@ export default function HistoricalPage() {
   const choosePreset = (id) => {
     setPreset(id);
     const p = PRESETS.find((x) => x.id === id);
-    if (p) {
+    if (p?.latest) {
+      update({ ...latestWindow(), latest: true, useTime: false, resolution: LATEST_RESOLUTION });
+    } else if (p) {
       const [start, end] = p.range(todayUtc());
-      update({ start, end });
+      // Presets are whole days, so they switch the time range off
+      update({ start, end, latest: false, useTime: false, startTime: DAY_START, endTime: DAY_END });
     }
   };
 
@@ -326,7 +384,7 @@ export default function HistoricalPage() {
             Highlight key fields
           </label>
         </div>
-        <h1 className="page-title">Historical readings</h1>
+        <h1 className="page-title">Readings</h1>
         <p className="page-sub">Pick a place and a date range, read every gauge, check it against a trigger.</p>
       </header>
 
@@ -390,7 +448,7 @@ export default function HistoricalPage() {
                       title="Each gauge starts at its first reading. Click to pick a date instead."
                       onFocus={() => {
                         setPreset('custom');
-                        update({ start: establishedFor(form.target, directory) ?? '1900-01-01' });
+                        update({ start: establishedFor(form.target, directory) ?? '1900-01-01', latest: false, useTime: timesOn(form) });
                         setFocusStart(true);
                       }}
                     />
@@ -405,7 +463,7 @@ export default function HistoricalPage() {
                       onBlur={() => setFocusStart(false)}
                       onChange={(e) => {
                         setPreset('custom');
-                        update({ start: e.target.value });
+                        update({ start: e.target.value, latest: false, useTime: timesOn(form) });
                       }}
                     />
                   )}
@@ -420,7 +478,52 @@ export default function HistoricalPage() {
                     required
                     onChange={(e) => {
                       setPreset('custom');
-                      update({ end: e.target.value });
+                      update({ end: e.target.value, latest: false, useTime: timesOn(form) });
+                    }}
+                  />
+                </label>
+              </div>
+              {/* Times of day under the dates. Dimmed (disabled) unless "Latest" or the
+                  "Time range" checkbox is on; otherwise each range is whole days. */}
+              <label className="hx-check">
+                <input
+                  type="checkbox"
+                  checked={timesOn(form)}
+                  disabled={form.latest}
+                  title={form.latest ? 'Latest always uses a time range' : undefined}
+                  onChange={(e) => {
+                    setPreset('custom');
+                    update({ useTime: e.target.checked });
+                  }}
+                />
+                Time range
+              </label>
+              <div className={`hx-dates hx-times${timesOn(form) ? '' : ' is-off'}`}>
+                <label>
+                  <span>From time (UTC)</span>
+                  <input
+                    type="time"
+                    className="hx-input hl"
+                    value={form.startTime}
+                    disabled={!timesOn(form)}
+                    required={timesOn(form)}
+                    onChange={(e) => {
+                      setPreset('custom');
+                      update({ startTime: e.target.value, latest: false, useTime: true });
+                    }}
+                  />
+                </label>
+                <label>
+                  <span>To time (UTC)</span>
+                  <input
+                    type="time"
+                    className="hx-input hl"
+                    value={form.endTime}
+                    disabled={!timesOn(form)}
+                    required={timesOn(form)}
+                    onChange={(e) => {
+                      setPreset('custom');
+                      update({ endTime: e.target.value, latest: false, useTime: true });
                     }}
                   />
                 </label>
@@ -430,7 +533,7 @@ export default function HistoricalPage() {
 
           <div className="sec-col">
             <SubLabel as="label" htmlFor="hx-resolution">Resolution</SubLabel>
-            <select id="hx-resolution" className="hx-input" value={form.resolution} onChange={(e) => update({ resolution: e.target.value })}>
+            <select id="hx-resolution" className="hx-input" value={form.latest ? LATEST_RESOLUTION : form.resolution} disabled={form.latest} onChange={(e) => update({ resolution: e.target.value })}>
               {RESOLUTION_OPTIONS.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.id === 'auto' && !formProblem ? `Auto (${RESOLUTIONS[resolved].label.toLowerCase()})` : o.label}
@@ -455,7 +558,10 @@ export default function HistoricalPage() {
 
             {/* Live hints about the form, shown before submitting */}
             {formProblem && !loading && request.status !== 'error' && <p className="hx-hint">{formProblem}</p>}
-            {resolved !== '6min' && !formProblem && (
+            {form.latest && (
+              <p className="hx-hint">Latest fetches the last hour of 1-minute readings, up to when you press Get readings. 1-minute data is preliminary.</p>
+            )}
+            {!form.latest && (resolved === 'hourly' || resolved === 'daily') && !formProblem && (
               <p className="hx-hint">
                 {RESOLUTIONS[resolved].label} data is verified only and runs one to two months behind. Use 6-minute for recent days.
               </p>
@@ -526,18 +632,16 @@ export default function HistoricalPage() {
  */
 function Results({ result, trigger, directory, onEdit }) {
   const { form, data, series } = result;
+  const latest = Boolean(form.latest); // the "Latest" preset: the last hour of 1-minute data
   const resolution = data.resolution;
   const config = RESOLUTIONS[resolution];
   const ok = series.filter((s) => !s.error); // gauges with readings; failed ones only get a card
   // The range as the API reports it. Same as requested for fixed dates; for "All
   // history" `start` is the oldest reading found across the gauges.
   const { start, end } = data;
-  // The chart's x range is that range (end date inclusive, so + 1 day), not each
-  // gauge's own data, so a gauge with a shorter record shows empty space before it
-  const domain = useMemo(
-    () => [Date.parse(`${start}T00:00:00Z`), Date.parse(`${end}T00:00:00Z`) + DAY_MS],
-    [start, end],
-  );
+  // The chart's x range is that range (a date-only end runs to the end of the day),
+  // not each gauge's own data, so a gauge with a shorter record shows empty space before it
+  const domain = useMemo(() => [boundMs(start), boundMs(end, true)], [start, end]);
   const summaries = useMemo(
     () => series.map((s) => (s.error ? null : summarize(s, { resolution, start, end, trigger }))),
     [series, resolution, start, end, trigger],
@@ -561,7 +665,8 @@ function Results({ result, trigger, directory, onEdit }) {
           {/* Mono summary box with "Edit", like "Layer 1 · Economic loss · $4B trigger …" */}
           <div className="sec-summary hl">
             <p>
-              {targetName} · {formatDate(start)} to {formatDate(end)}
+              {targetName} ·{' '}
+              {latest ? 'last hour' : `${formatBound(start)} to ${formatBound(end)}`}
               {form.start === EARLIEST && ' (full record)'} · {config.label.toLowerCase()}
               {trigger !== null && ` · trigger ${trigger.toFixed(2)} ft`}
             </p>
@@ -569,16 +674,16 @@ function Results({ result, trigger, directory, onEdit }) {
           </div>
         </div>
         <div className="sec-col">
-          <SubLabel>Highest reading</SubLabel>
+          <SubLabel>{latest ? 'Highest in the last hour' : 'Highest reading'}</SubLabel>
           {top ? (
             <p className="hx-headline">
               <strong className="hl-text">{top.peak.v.toFixed(2)} ft</strong> at {top.name}, {formatDateTime(top.peak.t)}.
             </p>
           ) : (
-            <p className="hx-muted">No readings with a value in this range.</p>
+            <p className="hx-muted">{latest ? 'No gauge has reported in the last hour.' : 'No readings with a value in this range.'}</p>
           )}
           <p className="hx-muted hx-small">
-            {totalReadings.toLocaleString()} readings from {ok.length} of {series.length} {series.length === 1 ? 'gauge' : 'gauges'}.
+            {totalReadings.toLocaleString()} {totalReadings === 1 ? 'reading' : 'readings'} from {ok.length} of {series.length} {series.length === 1 ? 'gauge' : 'gauges'}.
           </p>
         </div>
       </div>
@@ -595,7 +700,7 @@ function Results({ result, trigger, directory, onEdit }) {
             {s.error ? (
               <p className="hx-error">{s.error}</p>
             ) : (
-              <Summary summary={summaries[i]} resolution={resolution} trigger={trigger} />
+              <Summary summary={summaries[i]} resolution={resolution} trigger={trigger} latest={latest} />
             )}
           </li>
         ))}
@@ -621,7 +726,7 @@ function Results({ result, trigger, directory, onEdit }) {
       {/* Headline sentence with the key number in bold, like "Events above your level: 10 in 10 years." */}
       {trigger !== null && ok.length > 0 && (
         <p className="hx-headline">
-          At or above your level ({trigger.toFixed(2)} ft):{' '}
+          {latest ? 'At or above your level in the last hour' : 'At or above your level'} ({trigger.toFixed(2)} ft):{' '}
           {ok
             .map((s) => ({ s, sm: summaries[series.indexOf(s)] }))
             .map(({ s, sm }, i, all) => (
@@ -647,18 +752,26 @@ function Results({ result, trigger, directory, onEdit }) {
 }
 
 /** One gauge's card contents (the gauge name is rendered by Results). */
-function Summary({ summary, resolution, trigger }) {
-  const { peak, count, missing, verifiedShare, startsLate, endsEarly, above, aboveLabel, firstAbove } = summary;
+function Summary({ summary, resolution, trigger, latest = false }) {
+  const { peak, latest: last, count, missing, verifiedShare, startsLate, endsEarly, above, aboveLabel, firstAbove } = summary;
+  // "Latest" leads with the gauge's current level; other ranges lead with the peak
+  const lead = latest ? last : peak;
   const quality =
     verifiedShare === 1 ? 'All verified' : verifiedShare === 0 ? 'All preliminary' : `${Math.round(verifiedShare * 100)}% verified, rest preliminary`;
   return (
     <>
       <p className="hx-card-value hl-text">
-        {peak ? `${peak.v.toFixed(2)} ft` : 'No values'}
-        <span className="hx-muted"> {resolution === 'daily' ? 'highest daily max' : 'peak'}</span>
+        {lead ? `${lead.v.toFixed(2)} ft` : latest ? 'No reading in the last hour' : 'No values'}
+        {lead && <span className="hx-muted"> {latest ? 'latest' : resolution === 'daily' ? 'highest daily max' : 'peak'}</span>}
       </p>
-      {peak && <p className="hx-muted">{formatDateTime(peak.t)}</p>}
+      {lead && <p className="hx-muted">{formatDateTime(lead.t)}</p>}
       <dl className="hx-facts">
+        {latest && peak && (
+          <div>
+            <dt>Peak</dt>
+            <dd>{peak.v.toFixed(2)} ft at {peak.t.slice(11, 16)} UTC</dd>
+          </div>
+        )}
         <div>
           <dt>Readings</dt>
           <dd>
@@ -675,7 +788,7 @@ function Summary({ summary, resolution, trigger }) {
             <dt>Coverage</dt>
             <dd>
               {startsLate && `Starts ${formatDate(startsLate)}. `}
-              {endsEarly && `Ends ${formatDate(endsEarly)}${resolution !== '6min' ? ' (verified data lags real time)' : ''}.`}
+              {endsEarly && `Ends ${formatDate(endsEarly)}${resolution === 'hourly' || resolution === 'daily' ? ' (verified data lags real time)' : ''}.`}
             </dd>
           </div>
         )}

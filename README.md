@@ -131,14 +131,16 @@ Base URL when running locally: `http://localhost:3000`
 | `GET /stations` | Every NOAA water-level station (id, name, state, lat, lng, established) |
 | `GET /locations/:location/historical` | Readings for every gauge in a location |
 | `GET /stations/:stationId/historical` | Readings for one gauge |
+| `GET /locations/:location/latest` | The most recent reading from every gauge in a location |
+| `GET /stations/:stationId/latest` | The most recent reading from one gauge |
 
 ### Query parameters for `/historical`
 
 | Parameter | Required | Example | Notes |
 |---|---|---|---|
-| `start` | yes | `2012-10-22` | `YYYY-MM-DD`, UTC, inclusive. Or `earliest` for each gauge's whole record (see below). |
-| `end` | yes | `2012-11-05` | `YYYY-MM-DD`, UTC, inclusive (covers the whole day) |
-| `resolution` | no | `auto` | `6min` (default), `hourly`, `daily` or `auto` |
+| `start` | yes | `2012-10-22` | `YYYY-MM-DD`, or `YYYY-MM-DDTHH:mm` to start at a time. UTC, inclusive. Or `earliest` for each gauge's whole record (see below). |
+| `end` | yes | `2012-11-05` | `YYYY-MM-DD` (covers the whole day), or `YYYY-MM-DDTHH:mm` to stop at a time. UTC, inclusive. |
+| `resolution` | no | `auto` | `1min`, `6min` (default), `hourly`, `daily` or `auto`. `1min` is preliminary only, up to 31 days, from about 2008; `auto` never picks it. |
 
 ### Examples
 
@@ -154,6 +156,12 @@ curl "http://localhost:3000/stations/8518750/historical?start=earliest&end=2026-
 
 # Let the API choose the resolution
 curl "http://localhost:3000/locations/nyc/historical?start=2020-01-01&end=2024-12-31&resolution=auto"
+
+# A time range: The Battery from 20:00 to 04:00 UTC around Sandy's peak
+curl "http://localhost:3000/stations/8518750/historical?start=2012-10-29T20:00&end=2012-10-30T04:00"
+
+# The latest reading at each NYC gauge
+curl "http://localhost:3000/locations/nyc/latest"
 ```
 
 ### Whole records: `start=earliest`
@@ -260,8 +268,8 @@ water-level-api/
 ├── backend/                     Express API (Node.js, ES modules)
 │   ├── src/
 │   │   ├── server.js            Starts the server (PORT, default 3000)
-│   │   ├── app.js               Express setup: security headers, CORS, /health
-│   │   ├── routes/index.js      All /locations and /stations endpoints
+│   │   ├── app.js               Express setup: security headers, CORS, JSON parsing
+│   │   ├── routes/              Every endpoint, one file per feature (health, directory, historical, latest)
 │   │   ├── noaa.js              NOAA requests, paging, parsing, date validation
 │   │   └── stations.js          Station list + location → gauge mapping
 │   ├── data/stations.json       NOAA's water-level station list
@@ -351,4 +359,4 @@ VITE_API_BASE=https://your-api.example.com npm run build   # if the API lives el
 
 ## Roadmap
 
-Historical readings are done. Next up, per [`docs/plan.md`](docs/plan.md): latest readings with forecasts, risk profiles (how often an area reaches risky levels), forecasts, internal alerts, and deployment to AWS Lambda behind API Gateway.
+Historical and latest readings are done. Next up, per [`docs/plan.md`](docs/plan.md): NOAA and DeepMind forecasts alongside the latest readings, risk profiles (how often an area reaches risky levels), forecasts, internal alerts, and deployment to AWS Lambda behind API Gateway.
