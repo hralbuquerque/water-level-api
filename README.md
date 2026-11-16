@@ -6,8 +6,6 @@ An API and web page for NOAA tide-gauge water levels, built so parametric (catas
 - **Any date or time range:** the API pages past NOAA's per-request limits and steps down to hourly or daily data for long ranges.
 - **A settlement-grade record:** every reading keeps its gauge, UTC time, value, and whether NOAA marked it *preliminary* or *verified*.
 
-Waiting for approval to acces googles WeatherNext 3
-
 Data comes live from the [NOAA CO-OPS Data API](https://api.tidesandcurrents.noaa.gov/api/prod/). No API key is needed.
 
 ## Run it
@@ -74,10 +72,10 @@ Responses also carry `resolution`, `datum`, `units` and `retrievedAt`. Daily rea
 
 ## Things worth knowing
 
-- **Datum:** levels are feet above **MLLW** (mean lower low water). A 14 ft reading means 14 ft above that baseline, not 14 ft of flooding.
+- **Datum:** MSL (Mean Sea Level) or NAVD88 (North American Vertical Datum of 1988), standard for surge models.
 - **Preliminary vs verified:** NOAA revises preliminary readings when it verifies them. A bond's terms decide which counts, so every reading carries `q` and every response records `retrievedAt`.
 - **Gaps are real:** gauges go offline. Sandy Hook stopped reporting during Hurricane Sandy. Missing data is skipped, but any other NOAA error fails that gauge rather than returning partial data.
-- **Great Lakes stations** don't use MLLW, so requests for them currently fail.
+- **Great Lakes, Niagra Falls, & Puerto Rico stations** Requests for them currently fail as they do not have MSL or NAVD88 Data.
 
 ## Project layout
 
