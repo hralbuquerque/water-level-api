@@ -355,7 +355,22 @@ describe('historical ranges longer than NOAA\'s 31-day limit', () => {
   test('response records datum, units, time zone and when the data was retrieved', async () => {
     stub(ok);
     const res = await request(app).get('/locations/nyc/historical?start=2012-10-29&end=2012-10-30');
-    expect(res.body).toMatchObject({ datum: 'MLLW', units: 'english', timeZone: 'GMT' });
+    expect(res.body).toMatchObject({ datum: 'MSL', units: 'english', timeZone: 'GMT' });
+    expect(res.body.stations.every((s) => s.datum === 'MSL')).toBe(true);
     expect(Number.isNaN(Date.parse(res.body.retrievedAt))).toBe(false);
+  });
+
+  test('?datum=NAVD88 is sent to NOAA for every chunk and stamped on every reading', async () => {
+    const datums = [];
+    stub((params) => {
+      datums.push(params.get('datum'));
+      return ok(params);
+    });
+    const res = await request(app).get('/stations/8518750/historical?start=2012-09-01&end=2012-10-30&datum=NAVD88');
+    expect(res.status).toBe(200);
+    expect(datums.length).toBeGreaterThan(1);
+    expect(datums.every((d) => d === 'NAVD')).toBe(true); // NOAA's data API spelling
+    expect(res.body.datum).toBe('NAVD88');
+    expect(res.body.readings.every((r) => r.datum === 'NAVD88')).toBe(true);
   });
 });

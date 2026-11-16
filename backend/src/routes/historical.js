@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { EARLIEST, fetchReadings, getDateRangeError, pickResolution, probeStartFor, RESOLUTIONS } from '../noaa.js';
-import { STATIONS, getStationsForLocation } from '../stations.js';
-import { meta } from './shared.js';
+import { STATIONS, getStationsForLocation, unsupportedStationError } from '../stations.js';
+import { meta, parseDatumQuery } from './shared.js';
 
 const router = Router();
 
@@ -63,6 +63,10 @@ router.get('/locations/:loc/historical', async (req, res) => {
   if (stations.length === 0) {
     return res.status(404).json({ error: 'unknown location' });
   }
+  const datum = parseDatumQuery(req.query, stations);
+  if (datum.error) {
+    return res.status(400).json({ error: datum.error });
+  }
 
   const range = parseRangeQuery(req.query, stations);
   if (range.error) {
@@ -71,26 +75,34 @@ router.get('/locations/:loc/historical', async (req, res) => {
   const { end, resolution, starts } = range;
 
   const settled = await Promise.allSettled(
-    stations.map((s, i) => fetchReadings(s.id, starts[i], end, resolution))
+    stations.map((s, i) => fetchReadings(s.id, starts[i], end, resolution, datum.requested))
   );
 
   const results = settled.map((outcome, i) => ({
     station: stations[i].id,
     name: stations[i].name,
+    datum: datum.datumOf(stations[i]),
     ...(outcome.status === 'fulfilled'
       ? { readings: outcome.value }
       : { error: outcome.reason.message }),
   }));
 
   const start = reportedStart(range, req.query, results.map((r) => r.readings));
-  res.json({ location: req.params.loc, start, end, ...meta(resolution), stations: results });
+  res.json({ location: req.params.loc, start, end, ...meta(resolution, datum.shared), stations: results });
 });
 
 // A single gauge by NOAA station ID
 router.get('/stations/:id/historical', async (req, res) => {
   const station = STATIONS[req.params.id];
   if (!station) {
-    return res.status(404).json({ error: 'unknown station' });
+    return res.status(404).json({ error: unsupportedStationError(req.params.id) });
+  }
+  const datum = parseDatumQuery(req.query, [station]);
+  if (datum.error) {
+    return res.status(400).json({ error: datum.error });
+  }
+  if (!station.datums.includes(datum.datumOf(station))) {
+    return res.status(400).json({ error: `station ${station.id} has no ${datum.requested} datum (available: ${station.datums.join(', ')})` });
   }
 
   const range = parseRangeQuery(req.query, [station]);
@@ -100,9 +112,9 @@ router.get('/stations/:id/historical', async (req, res) => {
   const { end, resolution, starts } = range;
 
   try {
-    const readings = await fetchReadings(station.id, starts[0], end, resolution);
+    const readings = await fetchReadings(station.id, starts[0], end, resolution, datum.requested);
     const start = reportedStart(range, req.query, [readings]);
-    res.json({ station: station.id, name: station.name, start, end, ...meta(resolution), readings });
+    res.json({ station: station.id, name: station.name, start, end, ...meta(resolution, datum.shared), readings });
   } catch (err) {
     res.status(502).json({ error: err.message });
   }

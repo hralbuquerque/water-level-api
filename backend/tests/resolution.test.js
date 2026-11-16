@@ -188,12 +188,16 @@ describe('directory endpoints', () => {
     expect(nyc.stations.map((s) => s.name)).toEqual(['The Battery', 'Sandy Hook', 'Kings Point']);
   });
 
-  test('GET /stations lists every station with id, name, state, coordinates and established date', async () => {
+  test('GET /stations lists every station with id, name, state, coordinates, established date and datum', async () => {
     const res = await request(buildApp()).get('/stations');
     expect(res.status).toBe(200);
-    expect(res.body.stations.length).toBeGreaterThan(250);
+    expect(res.body.stations.length).toBeGreaterThan(200);
+    // Stations with neither MSL nor NAVD88 (e.g. Great Lakes) aren't served
+    expect(res.body.stations.find((s) => s.id === '9063020')).toBeUndefined();
+    expect(res.body.stations.every((s) => ['MSL', 'NAVD88'].includes(s.datum))).toBe(true);
     expect(res.body.stations.find((s) => s.id === '8518750')).toEqual({
       id: '8518750', name: 'The Battery', state: 'NY', lat: 40.700554, lng: -74.01417, established: '1920-05-24',
+      datum: 'MSL', datums: ['MSL', 'NAVD88'],
     });
   });
 });

@@ -40,13 +40,15 @@ export function fetchDirectory({ signal } = {}) {
  * Readings for a location (all its gauges) or a single station over a date range.
  *
  * @param {{ type: 'location'|'station', id: string }} target
- * @param {{ start: string, end: string, resolution: string }} range - YYYY-MM-DD dates, or
- *   YYYY-MM-DDTHH:mm for a time range (UTC, inclusive)
- *   and 'auto' | '1min' | '6min' | 'hourly' | 'daily'
+ * @param {{ start: string, end: string, resolution: string, datum?: string }} range - YYYY-MM-DD dates, or
+ *   YYYY-MM-DDTHH:mm for a time range (UTC, inclusive),
+ *   'auto' | '1min' | '6min' | 'hourly' | 'daily', and optionally 'MSL' | 'NAVD88'
+ *   (omitted: each gauge's default, MSL)
  */
-export function fetchHistorical(target, { start, end, resolution }, { signal } = {}) {
+export function fetchHistorical(target, { start, end, resolution, datum }, { signal } = {}) {
   const base = target.type === 'location' ? `/locations/${encodeURIComponent(target.id)}` : `/stations/${encodeURIComponent(target.id)}`;
   const query = new URLSearchParams({ start, end, resolution });
+  if (datum) query.set('datum', datum);
   return getJson(`${base}/historical?${query}`, { signal });
 }
 
