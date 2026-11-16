@@ -8,6 +8,8 @@
  * (with a safety margin; see probeStartFor in src/noaa.js).
  */
 
+// TODO: Add predictions variables
+
 import { writeFileSync } from 'node:fs';
 
 const url = 'https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=waterlevels&expand=details';
