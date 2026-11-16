@@ -6,9 +6,11 @@
  * Tests mock the global `fetch`, so nothing here calls NOAA during tests.
  */
 
+// TODO: calculate storm surge
+
 const NOAA_API_URL = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter';
 
-export const DATUM = 'MLLW';
+export const DATUM = 'MSL'; // Or use NAVD (not availible for all stations) both are standards for parametric triggers, MLLW isn't really useful here
 export const UNITS = 'english';
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NO_DATA = /no data was found/i;
@@ -31,7 +33,7 @@ export const RESOLUTIONS = {
   '1min': { product: 'one_minute_water_level', chunkDays: 4, maxDays: 31 },
   '6min': { product: 'water_level', chunkDays: 31, maxDays: 366 },
   hourly: { product: 'hourly_height', chunkDays: 365, maxDays: 3660 },
-  daily: { product: 'daily_max_min', chunkDays: 3650, maxDays: Infinity },
+   daily: { product: 'daily_max_min', chunkDays: 3650, maxDays: Infinity },
 };
 
 // Ranges `auto` serves at each resolution before stepping down to the next.
