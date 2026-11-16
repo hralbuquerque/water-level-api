@@ -19,10 +19,11 @@ import { API_BASE } from "./api.js";
 
 // Gauges shown as tabs in the landing page's live panel, in tab order. Each keeps the
 // chart color it has on the readings page, which follows the nyc location's gauge order.
+// `datum` matches what the API reports for the station (MSL preferred, then NAVD88).
 const STATIONS = [
-  { id: "8518750", name: "The Battery", color: "var(--series-1)" },
-  { id: "8516945", name: "Kings Point", color: "var(--series-3)" },
-  { id: "8531680", name: "Sandy Hook", color: "var(--series-2)" },
+  { id: "8518750", name: "The Battery", color: "var(--series-1)", datum: "MSL" },
+  { id: "8516945", name: "Kings Point", color: "var(--series-3)", datum: "MSL" },
+  { id: "8531680", name: "Sandy Hook", color: "var(--series-2)", datum: "MSL" },
 ];
 
 const SIX_MIN_MS = 6 * 60 * 1000;
@@ -57,14 +58,14 @@ const HOW = [
  *
  * @returns {{ status: "loading"|"ok"|"error", rows: Array<{t, v, q}>, message?: string }}
  */
-function useGauge(stationId) {
+function useGauge(stationId, datum) {
   const [state, setState] = useState({ status: "loading", rows: [] });
   useEffect(() => {
     const ctl = new AbortController();
     setState({ status: "loading", rows: [] });
     const url =
       "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter" +
-      `?product=water_level&range=24&station=${stationId}&datum=MLLW` +
+      `?product=water_level&range=24&station=${stationId}&datum=${datum}` +
       "&units=english&time_zone=gmt&format=json&application=rhodex";
     fetch(url, { signal: ctl.signal })
       .then((r) => r.json())
@@ -79,7 +80,7 @@ function useGauge(stationId) {
       // An abort just means the user switched gauges; it is not an error to show
       .catch((e) => e.name !== "AbortError" && setState({ status: "error", rows: [], message: e.message }));
     return () => ctl.abort();
-  }, [stationId]);
+  }, [stationId, datum]);
   return state;
 }
 
@@ -89,21 +90,21 @@ function useGauge(stationId) {
  */
 function GaugePanel() {
   const [stationId, setStationId] = useState(STATIONS[0].id);
-  const [trigger, setTrigger] = useState(7);
-  const { status, rows, message } = useGauge(stationId);
+  const [trigger, setTrigger] = useState(4); // ft above MSL: a moderate storm-tide level for NYC
+  const station = STATIONS.find((s) => s.id === stationId);
+  const { status, rows, message } = useGauge(stationId, station.datum);
 
   // The rows as one series for the shared chart (same component as the readings page).
   // NOAA's GMT times ("2026-11-11 21:00") become ISO UTC strings ending in Z.
   const chart = useMemo(() => {
     if (!rows.length) return null;
-    const station = STATIONS.find((s) => s.id === stationId);
     const readings = rows.map((r) => ({ ...r, t: `${r.t.replace(" ", "T")}:00Z` }));
     const times = readings.map((r) => Date.parse(r.t));
     return {
       series: [{ id: stationId, name: station.name, color: station.color, readings, times, values: readings.map((r) => r.v) }],
       domain: [times[0], times[times.length - 1]],
     };
-  }, [rows, stationId]);
+  }, [rows, stationId, station]);
 
   // How far the latest reading is below the trigger: "hit" at or above it,
   // "near" within a foot. These classes color the trigger line and status text.
@@ -138,7 +139,7 @@ function GaugePanel() {
         <>
           <div className="hp-reading">
             <span className="app-num hp-big">{latest.v.toFixed(2)}</span>
-            <span className="app-eyebrow">ft above MLLW</span>
+            <span className="app-eyebrow">ft above {station.datum}</span>
             {/* Verified readings get the brand accent; preliminary stays neutral */}
             <Tag
               className={`hp-badge ${
@@ -159,6 +160,7 @@ function GaugePanel() {
               trigger={trigger}
               stepMs={SIX_MIN_MS}
               valueLabel="Water level, last 24 hours"
+              unitsLabel={`ft above ${station.datum}`}
               height={220}
               triggerClassName={`tone-${tone || "calm"}`}
             />
@@ -167,7 +169,7 @@ function GaugePanel() {
           <label className="hp-slider">
             <span className="app-eyebrow">Trigger level</span>
             <input
-              type="range" min="0" max="15" step="0.1" value={trigger}
+              type="range" min="-4" max="12" step="0.1" value={trigger}
               onChange={(e) => setTrigger(parseFloat(e.target.value))}
             />
             <span className="app-num">{trigger.toFixed(1)} ft</span>
@@ -305,7 +307,7 @@ function Home() {
           <dl className="hp-record app-num">
             <div><dt>gauge</dt><dd>8518750</dd></div>
             <div><dt>time</dt><dd>2026-11-03 12:00 UTC</dd></div>
-            <div><dt>reading</dt><dd>7.42 ft MLLW</dd></div>
+            <div><dt>reading</dt><dd>7.42 ft MSL</dd></div>
             <div><dt>status</dt><dd>preliminary</dd></div>
           </dl>
         </Section>

@@ -5,7 +5,10 @@
     "state": "HI",
     "lat": 21.9544,
     "lng": -159.3561,
-    "established": "1954-11-24"
+    "established": "1954-11-24",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1612340",
@@ -13,7 +16,10 @@
     "state": "HI",
     "lat": 21.303333,
     "lng": -157.86453,
-    "established": "1905-01-01"
+    "established": "1905-01-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1612401",
@@ -21,7 +27,10 @@
     "state": "HI",
     "lat": 21.3675,
     "lng": -157.9639,
-    "established": "2023-05-31"
+    "established": "2023-05-31",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1612480",
@@ -29,7 +38,10 @@
     "state": "HI",
     "lat": 21.433056,
     "lng": -157.79,
-    "established": "1957-05-03"
+    "established": "1957-05-03",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1615680",
@@ -37,7 +49,10 @@
     "state": "HI",
     "lat": 20.894945,
     "lng": -156.469,
-    "established": "1946-12-19"
+    "established": "1946-12-19",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1617433",
@@ -45,7 +60,10 @@
     "state": "HI",
     "lat": 20.0366,
     "lng": -155.8294,
-    "established": "1988-02-06"
+    "established": "1988-02-06",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1617760",
@@ -53,7 +71,10 @@
     "state": "HI",
     "lat": 19.730278,
     "lng": -155.05556,
-    "established": "1946-11-30"
+    "established": "1946-11-30",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1619910",
@@ -61,7 +82,10 @@
     "state": "United States of America",
     "lat": 28.211666,
     "lng": -177.36,
-    "established": "1947-02-02"
+    "established": "1947-02-02",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1630000",
@@ -69,7 +93,10 @@
     "state": "United States of America",
     "lat": 13.443389,
     "lng": 144.65636,
-    "established": "1948-03-11"
+    "established": "1948-03-11",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1631428",
@@ -77,7 +104,10 @@
     "state": "United States of America",
     "lat": 13.428333,
     "lng": 144.79889,
-    "established": "2004-04-22"
+    "established": "2004-04-22",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1770000",
@@ -85,7 +115,10 @@
     "state": "American Samoa",
     "lat": -14.28,
     "lng": -170.69,
-    "established": "1948-09-06"
+    "established": "1948-09-06",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1820000",
@@ -93,7 +126,10 @@
     "state": "United States of America",
     "lat": 8.731667,
     "lng": 167.73611,
-    "established": "1946-06-10"
+    "established": "1946-06-10",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "1890000",
@@ -101,7 +137,10 @@
     "state": "United States of America",
     "lat": 19.290556,
     "lng": 166.6175,
-    "established": "1950-05-29"
+    "established": "1950-05-29",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "2695535",
@@ -109,7 +148,10 @@
     "state": "Bermuda",
     "lat": 32.370224,
     "lng": -64.695724,
-    "established": "1932-01-01"
+    "established": "1932-01-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "2695540",
@@ -117,7 +159,10 @@
     "state": "Bermuda",
     "lat": 32.3734,
     "lng": -64.7033,
-    "established": "1989-05-29"
+    "established": "1989-05-29",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8311030",
@@ -125,7 +170,8 @@
     "state": "NY",
     "lat": 44.702778,
     "lng": -75.494446,
-    "established": "1900-09-01"
+    "established": "1900-09-01",
+    "datums": []
   },
   {
     "id": "8311062",
@@ -133,7 +179,8 @@
     "state": "NY",
     "lat": 44.33111,
     "lng": -75.934525,
-    "established": "1983-06-01"
+    "established": "1983-06-01",
+    "datums": []
   },
   {
     "id": "8410140",
@@ -141,7 +188,11 @@
     "state": "ME",
     "lat": 44.90461,
     "lng": -66.98289,
-    "established": "1929-09-12"
+    "established": "1929-09-12",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8411060",
@@ -149,7 +200,11 @@
     "state": "ME",
     "lat": 44.6567,
     "lng": -67.21,
-    "established": "1963-09-25"
+    "established": "1963-09-25",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8413320",
@@ -157,7 +212,10 @@
     "state": "ME",
     "lat": 44.392193,
     "lng": -68.20428,
-    "established": "1947-08-16"
+    "established": "1947-08-16",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8418150",
@@ -165,7 +223,11 @@
     "state": "ME",
     "lat": 43.658054,
     "lng": -70.24416,
-    "established": "1910-03-04"
+    "established": "1910-03-04",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8419870",
@@ -173,7 +235,11 @@
     "state": "ME",
     "lat": 43.079723,
     "lng": -70.74111,
-    "established": "1926-08-26"
+    "established": "1926-08-26",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8443970",
@@ -181,7 +247,11 @@
     "state": "MA",
     "lat": 42.35389,
     "lng": -71.05028,
-    "established": "1921-05-03"
+    "established": "1921-05-03",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8447386",
@@ -189,7 +259,11 @@
     "state": "MA",
     "lat": 41.7043,
     "lng": -71.1641,
-    "established": "1955-10-28"
+    "established": "1955-10-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8447435",
@@ -197,7 +271,11 @@
     "state": "MA",
     "lat": 41.6885,
     "lng": -69.9511,
-    "established": "1955-04-27"
+    "established": "1955-04-27",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8447636",
@@ -205,7 +283,10 @@
     "state": "MA",
     "lat": 41.6212,
     "lng": -70.9137,
-    "established": "2022-11-10"
+    "established": "2022-11-10",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8447930",
@@ -213,7 +294,11 @@
     "state": "MA",
     "lat": 41.523613,
     "lng": -70.67111,
-    "established": "1932-07-16"
+    "established": "1932-07-16",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8449130",
@@ -221,7 +306,10 @@
     "state": "MA",
     "lat": 41.285,
     "lng": -70.0967,
-    "established": "1963-10-04"
+    "established": "1963-10-04",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8452660",
@@ -229,7 +317,11 @@
     "state": "RI",
     "lat": 41.504333,
     "lng": -71.32614,
-    "established": "1930-09-11"
+    "established": "1930-09-11",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8452944",
@@ -237,7 +329,10 @@
     "state": "RI",
     "lat": 41.7167,
     "lng": -71.3433,
-    "established": "1999-09-28"
+    "established": "1999-09-28",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8454000",
@@ -245,7 +340,11 @@
     "state": "RI",
     "lat": 41.807167,
     "lng": -71.400665,
-    "established": "1938-06-03"
+    "established": "1938-06-03",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8461490",
@@ -253,7 +352,11 @@
     "state": "CT",
     "lat": 41.371666,
     "lng": -72.09556,
-    "established": "1938-06-11"
+    "established": "1938-06-11",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8465705",
@@ -261,7 +364,10 @@
     "state": "CT",
     "lat": 41.2833,
     "lng": -72.9083,
-    "established": "1999-08-11"
+    "established": "1999-08-11",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8467150",
@@ -269,7 +375,11 @@
     "state": "CT",
     "lat": 41.17582,
     "lng": -73.18397,
-    "established": "1932-06-10"
+    "established": "1932-06-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8510560",
@@ -277,7 +387,11 @@
     "state": "NY",
     "lat": 41.048332,
     "lng": -71.95944,
-    "established": "1947-09-05"
+    "established": "1947-09-05",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8516945",
@@ -285,7 +399,11 @@
     "state": "NY",
     "lat": 40.8103,
     "lng": -73.7649,
-    "established": "1998-10-27"
+    "established": "1998-10-27",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8518750",
@@ -293,7 +411,11 @@
     "state": "NY",
     "lat": 40.700554,
     "lng": -74.01417,
-    "established": "1920-05-24"
+    "established": "1920-05-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8518962",
@@ -301,7 +423,10 @@
     "state": "NY",
     "lat": 42.0139,
     "lng": -73.9392,
-    "established": "2017-06-20"
+    "established": "2017-06-20",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8518979",
@@ -309,7 +434,11 @@
     "state": "NY",
     "lat": 42.35264,
     "lng": -73.79486,
-    "established": "2025-05-22"
+    "established": "2025-05-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8531680",
@@ -317,7 +446,11 @@
     "state": "NJ",
     "lat": 40.4669,
     "lng": -74.0094,
-    "established": "1910-01-07"
+    "established": "1910-01-07",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8534720",
@@ -325,7 +458,11 @@
     "state": "NJ",
     "lat": 39.356667,
     "lng": -74.41805,
-    "established": "1911-08-15"
+    "established": "1911-08-15",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8536110",
@@ -333,7 +470,11 @@
     "state": "NJ",
     "lat": 38.9683,
     "lng": -74.96,
-    "established": "1965-10-25"
+    "established": "1965-10-25",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8537121",
@@ -341,7 +482,10 @@
     "state": "NJ",
     "lat": 39.30539,
     "lng": -75.37668,
-    "established": "1997-10-30"
+    "established": "1997-10-30",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8539094",
@@ -349,7 +493,10 @@
     "state": "NJ",
     "lat": 40.0817,
     "lng": -74.8697,
-    "established": "1977-02-21"
+    "established": "1977-02-21",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8540433",
@@ -357,7 +504,11 @@
     "state": "PA",
     "lat": 39.811806,
     "lng": -75.4095,
-    "established": "1981-09-10"
+    "established": "1981-09-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8545240",
@@ -365,7 +516,11 @@
     "state": "PA",
     "lat": 39.933056,
     "lng": -75.14198,
-    "established": "1989-02-28"
+    "established": "1989-02-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8546252",
@@ -373,7 +528,10 @@
     "state": "PA",
     "lat": 39.979683,
     "lng": -75.079315,
-    "established": "1979-07-23"
+    "established": "1979-07-23",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8548989",
@@ -381,7 +539,10 @@
     "state": "PA",
     "lat": 40.137333,
     "lng": -74.75183,
-    "established": "2001-10-27"
+    "established": "2001-10-27",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8551762",
@@ -389,7 +550,10 @@
     "state": "DE",
     "lat": 39.582195,
     "lng": -75.588974,
-    "established": "2001-10-08"
+    "established": "2001-10-08",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8551910",
@@ -397,7 +561,11 @@
     "state": "DE",
     "lat": 39.558334,
     "lng": -75.571945,
-    "established": "1956-07-30"
+    "established": "1956-07-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8555889",
@@ -405,7 +573,10 @@
     "state": "DE",
     "lat": 38.986668,
     "lng": -75.113335,
-    "established": "1984-03-18"
+    "established": "1984-03-18",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8557380",
@@ -413,7 +584,11 @@
     "state": "DE",
     "lat": 38.782833,
     "lng": -75.11928,
-    "established": "1919-01-14"
+    "established": "1919-01-14",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8570283",
@@ -421,7 +596,11 @@
     "state": "MD",
     "lat": 38.32833,
     "lng": -75.09167,
-    "established": "1978-06-05"
+    "established": "1978-06-05",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8571421",
@@ -429,7 +608,11 @@
     "state": "MD",
     "lat": 38.22,
     "lng": -76.0383,
-    "established": "2005-03-22"
+    "established": "2005-03-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8571892",
@@ -437,7 +620,11 @@
     "state": "MD",
     "lat": 38.5725,
     "lng": -76.06167,
-    "established": "1980-10-21"
+    "established": "1980-10-21",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8573364",
@@ -445,7 +632,11 @@
     "state": "MD",
     "lat": 39.213444,
     "lng": -76.24455,
-    "established": "1971-06-24"
+    "established": "1971-06-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8573927",
@@ -453,7 +644,11 @@
     "state": "MD",
     "lat": 39.52667,
     "lng": -75.81,
-    "established": "1972-11-15"
+    "established": "1972-11-15",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8574680",
@@ -461,7 +656,11 @@
     "state": "MD",
     "lat": 39.266693,
     "lng": -76.57831,
-    "established": "1902-07-01"
+    "established": "1902-07-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8575512",
@@ -469,7 +668,11 @@
     "state": "MD",
     "lat": 38.983883,
     "lng": -76.480034,
-    "established": "1978-09-14"
+    "established": "1978-09-14",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8577330",
@@ -477,7 +680,11 @@
     "state": "MD",
     "lat": 38.3167,
     "lng": -76.4517,
-    "established": "1937-11-05"
+    "established": "1937-11-05",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8594900",
@@ -485,7 +692,11 @@
     "state": "DC",
     "lat": 38.873333,
     "lng": -77.02167,
-    "established": "1924-11-10"
+    "established": "1924-11-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8631044",
@@ -493,7 +704,11 @@
     "state": "VA",
     "lat": 37.607777,
     "lng": -75.68584,
-    "established": "1978-06-28"
+    "established": "1978-06-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8632200",
@@ -501,7 +716,11 @@
     "state": "VA",
     "lat": 37.1652,
     "lng": -75.9884,
-    "established": "1951-08-22"
+    "established": "1951-08-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8635027",
@@ -509,7 +728,11 @@
     "state": "VA",
     "lat": 38.31975,
     "lng": -77.0366,
-    "established": "1970-04-09"
+    "established": "1970-04-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8635750",
@@ -517,7 +740,11 @@
     "state": "VA",
     "lat": 37.9961,
     "lng": -76.4644,
-    "established": "1970-10-20"
+    "established": "1970-10-20",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8636580",
@@ -525,7 +752,11 @@
     "state": "VA",
     "lat": 37.6155,
     "lng": -76.28978,
-    "established": "1970-06-24"
+    "established": "1970-06-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8637689",
@@ -533,7 +764,11 @@
     "state": "VA",
     "lat": 37.2265,
     "lng": -76.478806,
-    "established": "2004-01-22"
+    "established": "2004-01-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8638610",
@@ -541,7 +776,11 @@
     "state": "VA",
     "lat": 36.94278,
     "lng": -76.32861,
-    "established": "1927-07-01"
+    "established": "1927-07-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8638901",
@@ -549,7 +788,10 @@
     "state": "VA",
     "lat": 37.0329,
     "lng": -76.0833,
-    "established": "2016-10-15"
+    "established": "2016-10-15",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8639348",
@@ -557,7 +799,10 @@
     "state": "VA",
     "lat": 36.778194,
     "lng": -76.301865,
-    "established": "1997-12-17"
+    "established": "1997-12-17",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8651370",
@@ -565,7 +810,11 @@
     "state": "NC",
     "lat": 36.1833,
     "lng": -75.7467,
-    "established": "1977-12-01"
+    "established": "1977-12-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8652587",
@@ -573,7 +822,11 @@
     "state": "NC",
     "lat": 35.795696,
     "lng": -75.548195,
-    "established": "1974-08-14"
+    "established": "1974-08-14",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8654467",
@@ -581,7 +834,11 @@
     "state": "NC",
     "lat": 35.2086,
     "lng": -75.7042,
-    "established": "2010-04-22"
+    "established": "2010-04-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8656483",
@@ -589,7 +846,11 @@
     "state": "NC",
     "lat": 34.71733,
     "lng": -76.67066,
-    "established": "1964-06-04"
+    "established": "1964-06-04",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8658120",
@@ -597,7 +858,11 @@
     "state": "NC",
     "lat": 34.2267,
     "lng": -77.9533,
-    "established": "1908-01-01"
+    "established": "1908-01-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8658163",
@@ -605,7 +870,11 @@
     "state": "NC",
     "lat": 34.213306,
     "lng": -77.7867,
-    "established": "2004-04-27"
+    "established": "2004-04-27",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8661070",
@@ -613,7 +882,11 @@
     "state": "SC",
     "lat": 33.655,
     "lng": -78.9183,
-    "established": "1976-09-28"
+    "established": "1976-09-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8665530",
@@ -621,7 +894,11 @@
     "state": "SC",
     "lat": 32.780834,
     "lng": -79.923615,
-    "established": "1899-09-13"
+    "established": "1899-09-13",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8670870",
@@ -629,7 +906,11 @@
     "state": "GA",
     "lat": 32.034695,
     "lng": -80.90303,
-    "established": "1935-07-01"
+    "established": "1935-07-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8679598",
@@ -637,7 +918,10 @@
     "state": "GA",
     "lat": 30.7781,
     "lng": -81.4914,
-    "established": "1978-11-01"
+    "established": "1978-11-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8720030",
@@ -645,7 +929,11 @@
     "state": "FL",
     "lat": 30.671356,
     "lng": -81.46584,
-    "established": "1897-05-08"
+    "established": "1897-05-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8720218",
@@ -653,7 +941,11 @@
     "state": "FL",
     "lat": 30.398167,
     "lng": -81.42789,
-    "established": "1995-08-01"
+    "established": "1995-08-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8720219",
@@ -661,7 +953,11 @@
     "state": "FL",
     "lat": 30.3867,
     "lng": -81.5583,
-    "established": "1977-08-12"
+    "established": "1977-08-12",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8720226",
@@ -669,7 +965,11 @@
     "state": "FL",
     "lat": 30.32,
     "lng": -81.6583,
-    "established": "1995-04-26"
+    "established": "1995-04-26",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8720357",
@@ -677,7 +977,11 @@
     "state": "FL",
     "lat": 30.192417,
     "lng": -81.68889,
-    "established": "1995-04-25"
+    "established": "1995-04-25",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8721604",
@@ -685,7 +989,11 @@
     "state": "FL",
     "lat": 28.4158,
     "lng": -80.5931,
-    "established": "1994-10-13"
+    "established": "1994-10-13",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8722670",
@@ -693,7 +1001,11 @@
     "state": "FL",
     "lat": 26.612778,
     "lng": -80.034164,
-    "established": "1970-04-14"
+    "established": "1970-04-14",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8722956",
@@ -701,7 +1013,11 @@
     "state": "FL",
     "lat": 26.081667,
     "lng": -80.11667,
-    "established": "1973-07-20"
+    "established": "1973-07-20",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8723214",
@@ -709,7 +1025,11 @@
     "state": "FL",
     "lat": 25.7314,
     "lng": -80.1618,
-    "established": "1994-01-26"
+    "established": "1994-01-26",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8723970",
@@ -717,7 +1037,11 @@
     "state": "FL",
     "lat": 24.711,
     "lng": -81.1065,
-    "established": "1970-12-04"
+    "established": "1970-12-04",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8724580",
@@ -725,7 +1049,11 @@
     "state": "FL",
     "lat": 24.5557,
     "lng": -81.8079,
-    "established": "1913-01-18"
+    "established": "1913-01-18",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8725114",
@@ -733,7 +1061,11 @@
     "state": "FL",
     "lat": 26.1367,
     "lng": -81.7883,
-    "established": "1978-03-13"
+    "established": "1978-03-13",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8725520",
@@ -741,7 +1073,11 @@
     "state": "FL",
     "lat": 26.647778,
     "lng": -81.87111,
-    "established": "1965-03-08"
+    "established": "1965-03-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8726384",
@@ -749,7 +1085,11 @@
     "state": "FL",
     "lat": 27.6387,
     "lng": -82.5621,
-    "established": "1976-03-24"
+    "established": "1976-03-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8726520",
@@ -757,7 +1097,11 @@
     "state": "FL",
     "lat": 27.7606,
     "lng": -82.6269,
-    "established": "1946-12-14"
+    "established": "1946-12-14",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8726607",
@@ -765,7 +1109,11 @@
     "state": "FL",
     "lat": 27.8578,
     "lng": -82.5528,
-    "established": "1991-07-17"
+    "established": "1991-07-17",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8726674",
@@ -773,7 +1121,11 @@
     "state": "FL",
     "lat": 27.9231,
     "lng": -82.4214,
-    "established": "2019-09-09"
+    "established": "2019-09-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8726724",
@@ -781,7 +1133,11 @@
     "state": "FL",
     "lat": 27.9783,
     "lng": -82.8317,
-    "established": "1973-04-19"
+    "established": "1973-04-19",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8727520",
@@ -789,7 +1145,11 @@
     "state": "FL",
     "lat": 29.135,
     "lng": -83.0317,
-    "established": "1914-03-12"
+    "established": "1914-03-12",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8728690",
@@ -797,7 +1157,11 @@
     "state": "FL",
     "lat": 29.724445,
     "lng": -84.98055,
-    "established": "1967-05-01"
+    "established": "1967-05-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8729108",
@@ -805,7 +1169,11 @@
     "state": "FL",
     "lat": 30.149723,
     "lng": -85.664444,
-    "established": "1973-02-11"
+    "established": "1973-02-11",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8729210",
@@ -813,7 +1181,11 @@
     "state": "FL",
     "lat": 30.21375,
     "lng": -85.878586,
-    "established": "1989-09-20"
+    "established": "1989-09-20",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8729840",
@@ -821,7 +1193,11 @@
     "state": "FL",
     "lat": 30.4044,
     "lng": -87.2112,
-    "established": "1923-04-30"
+    "established": "1923-04-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8735180",
@@ -829,7 +1205,11 @@
     "state": "AL",
     "lat": 30.25,
     "lng": -88.075,
-    "established": "1966-03-30"
+    "established": "1966-03-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8735391",
@@ -837,7 +1217,10 @@
     "state": "AL",
     "lat": 30.5652,
     "lng": -88.088,
-    "established": "2010-09-08"
+    "established": "2010-09-08",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8735523",
@@ -845,7 +1228,11 @@
     "state": "AL",
     "lat": 30.4437,
     "lng": -88.1139,
-    "established": "1980-03-24"
+    "established": "1980-03-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8736897",
@@ -853,7 +1240,11 @@
     "state": "AL",
     "lat": 30.6495,
     "lng": -88.05811,
-    "established": "2007-08-03"
+    "established": "2007-08-03",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8737048",
@@ -861,7 +1252,11 @@
     "state": "AL",
     "lat": 30.70461,
     "lng": -88.03961,
-    "established": "1980-03-24"
+    "established": "1980-03-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8737138",
@@ -869,7 +1264,11 @@
     "state": "AL",
     "lat": 30.7819,
     "lng": -88.0736,
-    "established": "2011-04-22"
+    "established": "2011-04-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8738043",
@@ -877,7 +1276,11 @@
     "state": "AL",
     "lat": 30.3766,
     "lng": -88.1586,
-    "established": "2011-04-22"
+    "established": "2011-04-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8739803",
@@ -885,7 +1288,11 @@
     "state": "AL",
     "lat": 30.4057,
     "lng": -88.2477,
-    "established": "2011-04-22"
+    "established": "2011-04-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8741533",
@@ -893,7 +1300,11 @@
     "state": "MS",
     "lat": 30.367777,
     "lng": -88.56306,
-    "established": "2005-09-13"
+    "established": "2005-09-13",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8747437",
@@ -901,7 +1312,11 @@
     "state": "MS",
     "lat": 30.326342,
     "lng": -89.3258,
-    "established": "1978-05-31"
+    "established": "1978-05-31",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8760721",
@@ -909,7 +1324,10 @@
     "state": "LA",
     "lat": 29.179306,
     "lng": -89.258835,
-    "established": "1980-12-19"
+    "established": "1980-12-19",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8760922",
@@ -917,7 +1335,10 @@
     "state": "LA",
     "lat": 28.9322,
     "lng": -89.4075,
-    "established": "2004-03-08"
+    "established": "2004-03-08",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8761305",
@@ -925,7 +1346,11 @@
     "state": "LA",
     "lat": 29.86811,
     "lng": -89.67325,
-    "established": "1979-11-07"
+    "established": "1979-11-07",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8761724",
@@ -933,7 +1358,10 @@
     "state": "LA",
     "lat": 29.2633,
     "lng": -89.9567,
-    "established": "1979-11-09"
+    "established": "1979-11-09",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8761927",
@@ -941,7 +1369,11 @@
     "state": "LA",
     "lat": 30.027222,
     "lng": -90.113335,
-    "established": "1982-11-21"
+    "established": "1982-11-21",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8761955",
@@ -949,7 +1381,11 @@
     "state": "LA",
     "lat": 29.932888,
     "lng": -90.135475,
-    "established": "1996-05-15"
+    "established": "1996-05-15",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8762075",
@@ -957,7 +1393,10 @@
     "state": "LA",
     "lat": 29.1142,
     "lng": -90.1993,
-    "established": "2003-07-19"
+    "established": "2003-07-19",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8762482",
@@ -965,7 +1404,11 @@
     "state": "LA",
     "lat": 29.78861,
     "lng": -90.42028,
-    "established": "2003-05-02"
+    "established": "2003-05-02",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8764044",
@@ -973,7 +1416,11 @@
     "state": "LA",
     "lat": 29.6675,
     "lng": -91.23761,
-    "established": "2003-07-24"
+    "established": "2003-07-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8764227",
@@ -981,7 +1428,11 @@
     "state": "LA",
     "lat": 29.4496,
     "lng": -91.3381,
-    "established": "2005-11-01"
+    "established": "2005-11-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8764314",
@@ -989,7 +1440,10 @@
     "state": "LA",
     "lat": 29.3675,
     "lng": -91.3839,
-    "established": "2014-11-15"
+    "established": "2014-11-15",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8766072",
@@ -997,7 +1451,11 @@
     "state": "LA",
     "lat": 29.551695,
     "lng": -92.30519,
-    "established": "2005-08-03"
+    "established": "2005-08-03",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8767816",
@@ -1005,7 +1463,11 @@
     "state": "LA",
     "lat": 30.223612,
     "lng": -93.221664,
-    "established": "1932-03-01"
+    "established": "1932-03-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8767961",
@@ -1013,7 +1475,11 @@
     "state": "LA",
     "lat": 30.1903,
     "lng": -93.3007,
-    "established": "2009-02-10"
+    "established": "2009-02-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8768094",
@@ -1021,7 +1487,11 @@
     "state": "LA",
     "lat": 29.768167,
     "lng": -93.34289,
-    "established": "1933-02-21"
+    "established": "1933-02-21",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770475",
@@ -1029,7 +1499,11 @@
     "state": "TX",
     "lat": 29.8667,
     "lng": -93.93,
-    "established": "1996-04-01"
+    "established": "1996-04-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770520",
@@ -1037,7 +1511,11 @@
     "state": "TX",
     "lat": 29.98,
     "lng": -93.8817,
-    "established": "1993-08-04"
+    "established": "1993-08-04",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770613",
@@ -1045,7 +1523,11 @@
     "state": "TX",
     "lat": 29.681667,
     "lng": -94.985,
-    "established": "1973-06-18"
+    "established": "1973-06-18",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770777",
@@ -1053,7 +1535,11 @@
     "state": "TX",
     "lat": 29.7263,
     "lng": -95.2658,
-    "established": "1995-01-01"
+    "established": "1995-01-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770808",
@@ -1061,7 +1547,11 @@
     "state": "TX",
     "lat": 29.5947,
     "lng": -94.3903,
-    "established": "2012-11-25"
+    "established": "2012-11-25",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770822",
@@ -1069,7 +1559,11 @@
     "state": "TX",
     "lat": 29.6893,
     "lng": -93.8418,
-    "established": "2011-06-28"
+    "established": "2011-06-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8770971",
@@ -1077,7 +1571,11 @@
     "state": "TX",
     "lat": 29.515,
     "lng": -94.5133,
-    "established": "2004-02-24"
+    "established": "2004-02-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8771013",
@@ -1085,7 +1583,10 @@
     "state": "TX",
     "lat": 29.481306,
     "lng": -94.91725,
-    "established": "1973-06-14"
+    "established": "1973-06-14",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8771341",
@@ -1093,7 +1594,11 @@
     "state": "TX",
     "lat": 29.357462,
     "lng": -94.724724,
-    "established": "2000-04-17"
+    "established": "2000-04-17",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8771367",
@@ -1101,7 +1606,10 @@
     "state": "TX",
     "lat": 29.469,
     "lng": -93.72,
-    "established": "2020-01-01"
+    "established": "2020-01-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8771450",
@@ -1109,7 +1617,11 @@
     "state": "TX",
     "lat": 29.31,
     "lng": -94.7933,
-    "established": "1904-01-01"
+    "established": "1904-01-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8771486",
@@ -1117,7 +1629,11 @@
     "state": "TX",
     "lat": 29.3026,
     "lng": -94.8971,
-    "established": "2012-09-01"
+    "established": "2012-09-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8771972",
@@ -1125,7 +1641,11 @@
     "state": "TX",
     "lat": 29.095,
     "lng": -95.1133,
-    "established": "1998-01-29"
+    "established": "1998-01-29",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8772471",
@@ -1133,7 +1653,11 @@
     "state": "TX",
     "lat": 28.9357,
     "lng": -95.2942,
-    "established": "2016-06-24"
+    "established": "2016-06-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8772985",
@@ -1141,7 +1665,11 @@
     "state": "TX",
     "lat": 28.771639,
     "lng": -95.61684,
-    "established": "2012-11-08"
+    "established": "2012-11-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8773037",
@@ -1149,7 +1677,11 @@
     "state": "TX",
     "lat": 28.4069,
     "lng": -96.7124,
-    "established": "2004-02-09"
+    "established": "2004-02-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8773146",
@@ -1157,7 +1689,11 @@
     "state": "TX",
     "lat": 28.71,
     "lng": -95.9139,
-    "established": "2012-10-11"
+    "established": "2012-10-11",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8773259",
@@ -1165,7 +1701,10 @@
     "state": "TX",
     "lat": 28.6406,
     "lng": -96.6098,
-    "established": "1989-01-28"
+    "established": "1989-01-28",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8773701",
@@ -1173,7 +1712,11 @@
     "state": "TX",
     "lat": 28.4517,
     "lng": -96.3883,
-    "established": "1989-01-28"
+    "established": "1989-01-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8773767",
@@ -1181,7 +1724,11 @@
     "state": "TX",
     "lat": 28.4269,
     "lng": -96.3301,
-    "established": "2014-09-18"
+    "established": "2014-09-18",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8774230",
@@ -1189,7 +1736,11 @@
     "state": "TX",
     "lat": 28.2283,
     "lng": -96.795,
-    "established": "2012-10-09"
+    "established": "2012-10-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8774513",
@@ -1197,7 +1748,11 @@
     "state": "TX",
     "lat": 28.118305,
     "lng": -97.0217,
-    "established": "2004-01-08"
+    "established": "2004-01-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8774770",
@@ -1205,7 +1760,11 @@
     "state": "TX",
     "lat": 28.021667,
     "lng": -97.04667,
-    "established": "1937-02-25"
+    "established": "1937-02-25",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8775132",
@@ -1213,7 +1772,11 @@
     "state": "TX",
     "lat": 27.8804,
     "lng": -97.2735,
-    "established": "2020-04-27"
+    "established": "2020-04-27",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8775222",
@@ -1221,7 +1784,10 @@
     "state": "TX",
     "lat": 27.8461,
     "lng": -97.5207,
-    "established": "2007-04-18"
+    "established": "2007-04-18",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8775237",
@@ -1229,7 +1795,11 @@
     "state": "TX",
     "lat": 27.8397,
     "lng": -97.0725,
-    "established": "1990-05-25"
+    "established": "1990-05-25",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8775241",
@@ -1237,7 +1807,11 @@
     "state": "TX",
     "lat": 27.8366,
     "lng": -97.0391,
-    "established": "2016-08-01"
+    "established": "2016-08-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8775283",
@@ -1245,7 +1819,10 @@
     "state": "TX",
     "lat": 27.818611,
     "lng": -97.20895,
-    "established": "1989-11-07"
+    "established": "1989-11-07",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8775296",
@@ -1253,7 +1830,11 @@
     "state": "TX",
     "lat": 27.8149,
     "lng": -97.3892,
-    "established": "2004-01-08"
+    "established": "2004-01-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8775792",
@@ -1261,7 +1842,11 @@
     "state": "TX",
     "lat": 27.6333,
     "lng": -97.2367,
-    "established": "1988-11-30"
+    "established": "1988-11-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8775870",
@@ -1269,7 +1854,11 @@
     "state": "TX",
     "lat": 27.58,
     "lng": -97.2167,
-    "established": "1983-05-09"
+    "established": "1983-05-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8776139",
@@ -1277,7 +1866,11 @@
     "state": "TX",
     "lat": 27.484362,
     "lng": -97.31811,
-    "established": "2003-12-17"
+    "established": "2003-12-17",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8776604",
@@ -1285,7 +1878,11 @@
     "state": "TX",
     "lat": 27.297,
     "lng": -97.40517,
-    "established": "1998-11-17"
+    "established": "1998-11-17",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8777812",
@@ -1293,7 +1890,11 @@
     "state": "TX",
     "lat": 26.801195,
     "lng": -97.47056,
-    "established": "1990-03-04"
+    "established": "1990-03-04",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8778490",
@@ -1301,7 +1902,11 @@
     "state": "TX",
     "lat": 26.557638,
     "lng": -97.42572,
-    "established": "1962-08-11"
+    "established": "1962-08-11",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8779280",
@@ -1309,7 +1914,10 @@
     "state": "TX",
     "lat": 26.2624,
     "lng": -97.2853,
-    "established": "2009-02-23"
+    "established": "2009-02-23",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "8779748",
@@ -1317,7 +1925,11 @@
     "state": "TX",
     "lat": 26.0731,
     "lng": -97.1675,
-    "established": "1993-04-15"
+    "established": "1993-04-15",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8779749",
@@ -1325,7 +1937,11 @@
     "state": "TX",
     "lat": 26.0675,
     "lng": -97.1548,
-    "established": "2016-08-01"
+    "established": "2016-08-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "8779770",
@@ -1333,7 +1949,11 @@
     "state": "TX",
     "lat": 26.061167,
     "lng": -97.21553,
-    "established": "1944-03-31"
+    "established": "1944-03-31",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9014070",
@@ -1341,7 +1961,8 @@
     "state": "MI",
     "lat": 42.621113,
     "lng": -82.526665,
-    "established": "1926-07-01"
+    "established": "1926-07-01",
+    "datums": []
   },
   {
     "id": "9014080",
@@ -1349,7 +1970,8 @@
     "state": "MI",
     "lat": 42.81222,
     "lng": -82.48556,
-    "established": "1971-01-01"
+    "established": "1971-01-01",
+    "datums": []
   },
   {
     "id": "9014087",
@@ -1357,7 +1979,8 @@
     "state": "MI",
     "lat": 42.94528,
     "lng": -82.44334,
-    "established": "1899-03-01"
+    "established": "1899-03-01",
+    "datums": []
   },
   {
     "id": "9014090",
@@ -1365,7 +1988,8 @@
     "state": "MI",
     "lat": 42.9738,
     "lng": -82.4204,
-    "established": "1900-01-01"
+    "established": "1900-01-01",
+    "datums": []
   },
   {
     "id": "9014098",
@@ -1373,7 +1997,8 @@
     "state": "MI",
     "lat": 43.0069,
     "lng": -82.4225,
-    "established": "1970-01-01"
+    "established": "1970-01-01",
+    "datums": []
   },
   {
     "id": "9034052",
@@ -1381,7 +2006,8 @@
     "state": "MI",
     "lat": 42.47322,
     "lng": -82.87925,
-    "established": "1968-03-01"
+    "established": "1968-03-01",
+    "datums": []
   },
   {
     "id": "9044020",
@@ -1389,7 +2015,8 @@
     "state": "MI",
     "lat": 42.090862,
     "lng": -83.186,
-    "established": "1989-11-08"
+    "established": "1989-11-08",
+    "datums": []
   },
   {
     "id": "9044030",
@@ -1397,7 +2024,8 @@
     "state": "MI",
     "lat": 42.202305,
     "lng": -83.1475,
-    "established": "1930-05-01"
+    "established": "1930-05-01",
+    "datums": []
   },
   {
     "id": "9044036",
@@ -1405,7 +2033,8 @@
     "state": "MI",
     "lat": 42.298912,
     "lng": -83.092636,
-    "established": "1970-01-01"
+    "established": "1970-01-01",
+    "datums": []
   },
   {
     "id": "9044049",
@@ -1413,7 +2042,8 @@
     "state": "MI",
     "lat": 42.357777,
     "lng": -82.92995,
-    "established": "1897-06-01"
+    "established": "1897-06-01",
+    "datums": []
   },
   {
     "id": "9052000",
@@ -1421,7 +2051,8 @@
     "state": "NY",
     "lat": 44.13028,
     "lng": -76.33222,
-    "established": "1916-01-01"
+    "established": "1916-01-01",
+    "datums": []
   },
   {
     "id": "9052030",
@@ -1429,7 +2060,8 @@
     "state": "NY",
     "lat": 43.46417,
     "lng": -76.51183,
-    "established": "1860-01-01"
+    "established": "1860-01-01",
+    "datums": []
   },
   {
     "id": "9052058",
@@ -1437,7 +2069,8 @@
     "state": "NY",
     "lat": 43.26903,
     "lng": -77.62575,
-    "established": "1860-01-01"
+    "established": "1860-01-01",
+    "datums": []
   },
   {
     "id": "9052076",
@@ -1445,7 +2078,8 @@
     "state": "NY",
     "lat": 43.33839,
     "lng": -78.72733,
-    "established": "1967-01-01"
+    "established": "1967-01-01",
+    "datums": []
   },
   {
     "id": "9063007",
@@ -1453,7 +2087,8 @@
     "state": "NY",
     "lat": 43.09992,
     "lng": -79.05991,
-    "established": "1957-06-01"
+    "established": "1957-06-01",
+    "datums": []
   },
   {
     "id": "9063009",
@@ -1461,7 +2096,8 @@
     "state": "NY",
     "lat": 43.08106,
     "lng": -79.06136,
-    "established": "1900-01-01"
+    "established": "1900-01-01",
+    "datums": []
   },
   {
     "id": "9063012",
@@ -1469,7 +2105,8 @@
     "state": "NY",
     "lat": 43.07689,
     "lng": -79.01403,
-    "established": "1963-01-01"
+    "established": "1963-01-01",
+    "datums": []
   },
   {
     "id": "9063020",
@@ -1477,7 +2114,8 @@
     "state": "NY",
     "lat": 42.877445,
     "lng": -78.89047,
-    "established": "1860-04-01"
+    "established": "1860-04-01",
+    "datums": []
   },
   {
     "id": "9063028",
@@ -1485,7 +2123,8 @@
     "state": "NY",
     "lat": 42.691307,
     "lng": -79.04733,
-    "established": "1989-12-05"
+    "established": "1989-12-05",
+    "datums": []
   },
   {
     "id": "9063038",
@@ -1493,7 +2132,8 @@
     "state": "PA",
     "lat": 42.15389,
     "lng": -80.075836,
-    "established": "1959-04-01"
+    "established": "1959-04-01",
+    "datums": []
   },
   {
     "id": "9063053",
@@ -1501,7 +2141,8 @@
     "state": "OH",
     "lat": 41.75975,
     "lng": -81.28106,
-    "established": "1935-05-04"
+    "established": "1935-05-04",
+    "datums": []
   },
   {
     "id": "9063063",
@@ -1509,7 +2150,8 @@
     "state": "OH",
     "lat": 41.54086,
     "lng": -81.635475,
-    "established": "1859-12-31"
+    "established": "1859-12-31",
+    "datums": []
   },
   {
     "id": "9063079",
@@ -1517,7 +2159,8 @@
     "state": "OH",
     "lat": 41.54364,
     "lng": -82.73139,
-    "established": "1959-05-01"
+    "established": "1959-05-01",
+    "datums": []
   },
   {
     "id": "9063085",
@@ -1525,7 +2168,8 @@
     "state": "OH",
     "lat": 41.693554,
     "lng": -83.472275,
-    "established": "1904-08-01"
+    "established": "1904-08-01",
+    "datums": []
   },
   {
     "id": "9063090",
@@ -1533,7 +2177,8 @@
     "state": "MI",
     "lat": 41.96,
     "lng": -83.25667,
-    "established": "1963-09-01"
+    "established": "1963-09-01",
+    "datums": []
   },
   {
     "id": "9075002",
@@ -1541,7 +2186,8 @@
     "state": "MI",
     "lat": 43.141693,
     "lng": -82.49331,
-    "established": "1955-09-01"
+    "established": "1955-09-01",
+    "datums": []
   },
   {
     "id": "9075014",
@@ -1549,7 +2195,8 @@
     "state": "MI",
     "lat": 43.84639,
     "lng": -82.64306,
-    "established": "1860-01-01"
+    "established": "1860-01-01",
+    "datums": []
   },
   {
     "id": "9075035",
@@ -1557,7 +2204,8 @@
     "state": "MI",
     "lat": 43.6404,
     "lng": -83.8468,
-    "established": "1977-08-01"
+    "established": "1977-08-01",
+    "datums": []
   },
   {
     "id": "9075065",
@@ -1565,7 +2213,8 @@
     "state": "MI",
     "lat": 45.063,
     "lng": -83.4286,
-    "established": "2006-04-26"
+    "established": "2006-04-26",
+    "datums": []
   },
   {
     "id": "9075080",
@@ -1573,7 +2222,8 @@
     "state": "MI",
     "lat": 45.77722,
     "lng": -84.72111,
-    "established": "1900-01-01"
+    "established": "1900-01-01",
+    "datums": []
   },
   {
     "id": "9075099",
@@ -1581,7 +2231,8 @@
     "state": "MI",
     "lat": 45.9925,
     "lng": -83.8982,
-    "established": "1977-11-01"
+    "established": "1977-11-01",
+    "datums": []
   },
   {
     "id": "9076024",
@@ -1589,7 +2240,8 @@
     "state": "MI",
     "lat": 46.264805,
     "lng": -84.19119,
-    "established": "2001-10-26"
+    "established": "2001-10-26",
+    "datums": []
   },
   {
     "id": "9076027",
@@ -1597,7 +2249,8 @@
     "state": "MI",
     "lat": 46.28469,
     "lng": -84.20981,
-    "established": "2006-10-19"
+    "established": "2006-10-19",
+    "datums": []
   },
   {
     "id": "9076033",
@@ -1605,7 +2258,8 @@
     "state": "MI",
     "lat": 46.485832,
     "lng": -84.30167,
-    "established": "2008-12-17"
+    "established": "2008-12-17",
+    "datums": []
   },
   {
     "id": "9076060",
@@ -1613,7 +2267,8 @@
     "state": "MI",
     "lat": 46.500805,
     "lng": -84.34036,
-    "established": "1903-04-01"
+    "established": "1903-04-01",
+    "datums": []
   },
   {
     "id": "9076070",
@@ -1621,7 +2276,8 @@
     "state": "MI",
     "lat": 46.50111,
     "lng": -84.37261,
-    "established": "1860-05-01"
+    "established": "1860-05-01",
+    "datums": []
   },
   {
     "id": "9087023",
@@ -1629,7 +2285,8 @@
     "state": "MI",
     "lat": 43.94736,
     "lng": -86.4415,
-    "established": "1895-11-01"
+    "established": "1895-11-01",
+    "datums": []
   },
   {
     "id": "9087031",
@@ -1637,7 +2294,8 @@
     "state": "MI",
     "lat": 42.773335,
     "lng": -86.212776,
-    "established": "1894-06-01"
+    "established": "1894-06-01",
+    "datums": []
   },
   {
     "id": "9087044",
@@ -1645,7 +2303,8 @@
     "state": "IL",
     "lat": 41.72972,
     "lng": -87.53833,
-    "established": "1905-02-01"
+    "established": "1905-02-01",
+    "datums": []
   },
   {
     "id": "9087057",
@@ -1653,7 +2312,8 @@
     "state": "WI",
     "lat": 43.001972,
     "lng": -87.88764,
-    "established": "1989-09-01"
+    "established": "1989-09-01",
+    "datums": []
   },
   {
     "id": "9087068",
@@ -1661,7 +2321,8 @@
     "state": "WI",
     "lat": 44.46389,
     "lng": -87.50103,
-    "established": "1974-01-01"
+    "established": "1974-01-01",
+    "datums": []
   },
   {
     "id": "9087072",
@@ -1669,7 +2330,8 @@
     "state": "WI",
     "lat": 44.794693,
     "lng": -87.31392,
-    "established": "1905-01-01"
+    "established": "1905-01-01",
+    "datums": []
   },
   {
     "id": "9087077",
@@ -1677,7 +2339,8 @@
     "state": "WI",
     "lat": 44.539024,
     "lng": -88.00106,
-    "established": "2009-05-27"
+    "established": "2009-05-27",
+    "datums": []
   },
   {
     "id": "9087088",
@@ -1685,7 +2348,8 @@
     "state": "MI",
     "lat": 45.09589,
     "lng": -87.58994,
-    "established": "2005-08-19"
+    "established": "2005-08-19",
+    "datums": []
   },
   {
     "id": "9087096",
@@ -1693,7 +2357,8 @@
     "state": "MI",
     "lat": 45.96989,
     "lng": -85.8715,
-    "established": "1964-12-01"
+    "established": "1964-12-01",
+    "datums": []
   },
   {
     "id": "9099004",
@@ -1701,7 +2366,8 @@
     "state": "MI",
     "lat": 46.484444,
     "lng": -84.63084,
-    "established": "1930-11-01"
+    "established": "1930-11-01",
+    "datums": []
   },
   {
     "id": "9099018",
@@ -1709,7 +2375,8 @@
     "state": "MI",
     "lat": 46.545555,
     "lng": -87.37861,
-    "established": "1991-09-23"
+    "established": "1991-09-23",
+    "datums": []
   },
   {
     "id": "9099044",
@@ -1717,7 +2384,8 @@
     "state": "MI",
     "lat": 46.874443,
     "lng": -89.324165,
-    "established": "1959-08-01"
+    "established": "1959-08-01",
+    "datums": []
   },
   {
     "id": "9099064",
@@ -1725,7 +2393,8 @@
     "state": "MN",
     "lat": 46.77575,
     "lng": -92.092026,
-    "established": "1860-04-01"
+    "established": "1860-04-01",
+    "datums": []
   },
   {
     "id": "9099090",
@@ -1733,7 +2402,8 @@
     "state": "MN",
     "lat": 47.748554,
     "lng": -90.34128,
-    "established": "1966-01-01"
+    "established": "1966-01-01",
+    "datums": []
   },
   {
     "id": "9410170",
@@ -1741,7 +2411,11 @@
     "state": "CA",
     "lat": 32.715557,
     "lng": -117.17667,
-    "established": "1906-01-26"
+    "established": "1906-01-26",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9410230",
@@ -1749,7 +2423,11 @@
     "state": "CA",
     "lat": 32.86689,
     "lng": -117.25714,
-    "established": "1924-08-01"
+    "established": "1924-08-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9410660",
@@ -1757,7 +2435,11 @@
     "state": "CA",
     "lat": 33.72,
     "lng": -118.272,
-    "established": "1923-11-28"
+    "established": "1923-11-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9410678",
@@ -1765,7 +2447,11 @@
     "state": "CA",
     "lat": 33.7478,
     "lng": -118.2158,
-    "established": null
+    "established": null,
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9410840",
@@ -1773,7 +2459,11 @@
     "state": "CA",
     "lat": 34.0083,
     "lng": -118.5,
-    "established": "1932-10-01"
+    "established": "1932-10-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9411340",
@@ -1781,7 +2471,11 @@
     "state": "CA",
     "lat": 34.40459,
     "lng": -119.6925,
-    "established": "1974-02-26"
+    "established": "1974-02-26",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9412110",
@@ -1789,7 +2483,11 @@
     "state": "CA",
     "lat": 35.168888,
     "lng": -120.754166,
-    "established": "1933-10-01"
+    "established": "1933-10-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9413450",
@@ -1797,7 +2495,11 @@
     "state": "CA",
     "lat": 36.60889,
     "lng": -121.89139,
-    "established": "1973-11-04"
+    "established": "1973-11-04",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9414290",
@@ -1805,7 +2507,11 @@
     "state": "CA",
     "lat": 37.806305,
     "lng": -122.46589,
-    "established": "1854-06-29"
+    "established": "1854-06-29",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9414523",
@@ -1813,7 +2519,11 @@
     "state": "CA",
     "lat": 37.506813,
     "lng": -122.21191,
-    "established": "1974-10-09"
+    "established": "1974-10-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9414750",
@@ -1821,7 +2531,11 @@
     "state": "CA",
     "lat": 37.771954,
     "lng": -122.30026,
-    "established": "1939-03-08"
+    "established": "1939-03-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9414863",
@@ -1829,7 +2543,11 @@
     "state": "CA",
     "lat": 37.9283,
     "lng": -122.4,
-    "established": "1947-07-15"
+    "established": "1947-07-15",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9415020",
@@ -1837,7 +2555,11 @@
     "state": "CA",
     "lat": 37.994167,
     "lng": -122.97361,
-    "established": "1975-01-10"
+    "established": "1975-01-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9415102",
@@ -1845,7 +2567,11 @@
     "state": "CA",
     "lat": 38.0346,
     "lng": -122.1252,
-    "established": "2009-03-01"
+    "established": "2009-03-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9415144",
@@ -1853,7 +2579,11 @@
     "state": "CA",
     "lat": 38.056,
     "lng": -122.0395,
-    "established": "1976-06-28"
+    "established": "1976-06-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9416131",
@@ -1861,7 +2591,11 @@
     "state": "CA",
     "lat": 38.56225,
     "lng": -121.5463,
-    "established": "2024-12-17"
+    "established": "2024-12-17",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9416841",
@@ -1869,7 +2603,11 @@
     "state": "CA",
     "lat": 38.914555,
     "lng": -123.71108,
-    "established": "1978-04-09"
+    "established": "1978-04-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9418767",
@@ -1877,7 +2615,11 @@
     "state": "CA",
     "lat": 40.766907,
     "lng": -124.21735,
-    "established": "1977-08-16"
+    "established": "1977-08-16",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9419750",
@@ -1885,7 +2627,11 @@
     "state": "CA",
     "lat": 41.74561,
     "lng": -124.18439,
-    "established": "1933-04-10"
+    "established": "1933-04-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9431647",
@@ -1893,7 +2639,11 @@
     "state": "OR",
     "lat": 42.739,
     "lng": -124.4983,
-    "established": "1924-08-07"
+    "established": "1924-08-07",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9432780",
@@ -1901,7 +2651,11 @@
     "state": "OR",
     "lat": 43.345,
     "lng": -124.322,
-    "established": "1964-08-27"
+    "established": "1964-08-27",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9435380",
@@ -1909,7 +2663,11 @@
     "state": "OR",
     "lat": 44.625446,
     "lng": -124.044945,
-    "established": "1967-01-28"
+    "established": "1967-01-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9437540",
@@ -1917,7 +2675,10 @@
     "state": "OR",
     "lat": 45.55453,
     "lng": -123.918945,
-    "established": "1866-08-11"
+    "established": "1866-08-11",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9439040",
@@ -1925,7 +2686,11 @@
     "state": "OR",
     "lat": 46.207306,
     "lng": -123.7683,
-    "established": "1853-07-09"
+    "established": "1853-07-09",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9439099",
@@ -1933,7 +2698,10 @@
     "state": "OR",
     "lat": 46.16,
     "lng": -123.405,
-    "established": "1940-11-05"
+    "established": "1940-11-05",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9439201",
@@ -1941,7 +2709,11 @@
     "state": "OR",
     "lat": 45.865,
     "lng": -122.797,
-    "established": "1877-09-10"
+    "established": "1877-09-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9440083",
@@ -1949,7 +2721,10 @@
     "state": "WA",
     "lat": 45.631172,
     "lng": -122.69577,
-    "established": "1938-09-14"
+    "established": "1938-09-14",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9440357",
@@ -1957,7 +2732,11 @@
     "state": "WA",
     "lat": 45.9867,
     "lng": -122.8367,
-    "established": "2016-07-19"
+    "established": "2016-07-19",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9440422",
@@ -1965,7 +2744,10 @@
     "state": "WA",
     "lat": 46.1061,
     "lng": -122.9542,
-    "established": "1985-03-23"
+    "established": "1985-03-23",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9440569",
@@ -1973,7 +2755,11 @@
     "state": "WA",
     "lat": 46.270306,
     "lng": -123.4565,
-    "established": "1981-07-01"
+    "established": "1981-07-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9440581",
@@ -1981,7 +2767,11 @@
     "state": "WA",
     "lat": 46.28103,
     "lng": -124.04628,
-    "established": "2015-04-07"
+    "established": "2015-04-07",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9440910",
@@ -1989,7 +2779,11 @@
     "state": "WA",
     "lat": 46.7075,
     "lng": -123.96694,
-    "established": "1922-02-20"
+    "established": "1922-02-20",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9441102",
@@ -1997,7 +2791,11 @@
     "state": "WA",
     "lat": 46.90431,
     "lng": -124.10508,
-    "established": "1982-06-07"
+    "established": "1982-06-07",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9442396",
@@ -2005,7 +2803,11 @@
     "state": "WA",
     "lat": 47.912838,
     "lng": -124.63574,
-    "established": "1924-12-19"
+    "established": "1924-12-19",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9443090",
@@ -2013,7 +2815,11 @@
     "state": "WA",
     "lat": 48.370724,
     "lng": -124.601585,
-    "established": "1934-07-23"
+    "established": "1934-07-23",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9444090",
@@ -2021,7 +2827,11 @@
     "state": "WA",
     "lat": 48.125,
     "lng": -123.44,
-    "established": "1975-08-30"
+    "established": "1975-08-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9444900",
@@ -2029,7 +2839,10 @@
     "state": "WA",
     "lat": 48.11122,
     "lng": -122.759674,
-    "established": "1971-12-31"
+    "established": "1971-12-31",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9445958",
@@ -2037,7 +2850,10 @@
     "state": "WA",
     "lat": 47.5617,
     "lng": -122.623,
-    "established": "1977-04-06"
+    "established": "1977-04-06",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9446484",
@@ -2045,7 +2861,11 @@
     "state": "WA",
     "lat": 47.2667,
     "lng": -122.4133,
-    "established": "1996-07-22"
+    "established": "1996-07-22",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9447130",
@@ -2053,7 +2873,11 @@
     "state": "WA",
     "lat": 47.60264,
     "lng": -122.3393,
-    "established": "1899-01-01"
+    "established": "1899-01-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9449424",
@@ -2061,7 +2885,10 @@
     "state": "WA",
     "lat": 48.862717,
     "lng": -122.75858,
-    "established": "1971-11-07"
+    "established": "1971-11-07",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9449880",
@@ -2069,7 +2896,10 @@
     "state": "WA",
     "lat": 48.545277,
     "lng": -123.0125,
-    "established": "1932-01-25"
+    "established": "1932-01-25",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9450460",
@@ -2077,7 +2907,10 @@
     "state": "AK",
     "lat": 55.331944,
     "lng": -131.62611,
-    "established": "1918-10-01"
+    "established": "1918-10-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9451054",
@@ -2085,7 +2918,11 @@
     "state": "AK",
     "lat": 56.2467,
     "lng": -134.647,
-    "established": "1924-04-10"
+    "established": "1924-04-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9451600",
@@ -2093,7 +2930,10 @@
     "state": "AK",
     "lat": 57.051056,
     "lng": -135.34412,
-    "established": "1938-05-19"
+    "established": "1938-05-19",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9452210",
@@ -2101,7 +2941,10 @@
     "state": "AK",
     "lat": 58.2988,
     "lng": -134.4106,
-    "established": "1936-05-14"
+    "established": "1936-05-14",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9452400",
@@ -2109,7 +2952,10 @@
     "state": "AK",
     "lat": 59.4508,
     "lng": -135.328,
-    "established": "1943-08-16"
+    "established": "1943-08-16",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9452634",
@@ -2117,7 +2963,10 @@
     "state": "AK",
     "lat": 58.19472,
     "lng": -136.34694,
-    "established": "1938-05-13"
+    "established": "1938-05-13",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9453220",
@@ -2125,7 +2974,11 @@
     "state": "AK",
     "lat": 59.5485,
     "lng": -139.7334,
-    "established": "1940-04-24"
+    "established": "1940-04-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9454050",
@@ -2133,7 +2986,10 @@
     "state": "AK",
     "lat": 60.5583,
     "lng": -145.753,
-    "established": "1949-05-14"
+    "established": "1949-05-14",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9454240",
@@ -2141,7 +2997,10 @@
     "state": "AK",
     "lat": 61.125,
     "lng": -146.362,
-    "established": "1964-08-15"
+    "established": "1964-08-15",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9455090",
@@ -2149,7 +3008,10 @@
     "state": "AK",
     "lat": 60.1193,
     "lng": -149.42812,
-    "established": "1925-05-01"
+    "established": "1925-05-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9455500",
@@ -2157,7 +3019,10 @@
     "state": "AK",
     "lat": 59.4405,
     "lng": -151.7199,
-    "established": "1964-05-24"
+    "established": "1964-05-24",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9455760",
@@ -2165,7 +3030,11 @@
     "state": "AK",
     "lat": 60.6833,
     "lng": -151.398,
-    "established": "1971-05-21"
+    "established": "1971-05-21",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9455920",
@@ -2173,7 +3042,11 @@
     "state": "AK",
     "lat": 61.2375,
     "lng": -149.8904,
-    "established": "1964-04-24"
+    "established": "1964-04-24",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9457292",
@@ -2181,7 +3054,11 @@
     "state": "AK",
     "lat": 57.7317,
     "lng": -152.512,
-    "established": "1984-07-10"
+    "established": "1984-07-10",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9457804",
@@ -2189,7 +3066,10 @@
     "state": "AK",
     "lat": 56.89739,
     "lng": -154.248,
-    "established": "1929-05-31"
+    "established": "1929-05-31",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9459450",
@@ -2197,7 +3077,10 @@
     "state": "AK",
     "lat": 55.331722,
     "lng": -160.50433,
-    "established": "1972-09-10"
+    "established": "1972-09-10",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9459881",
@@ -2205,7 +3088,11 @@
     "state": "AK",
     "lat": 55.05989,
     "lng": -162.32611,
-    "established": "1917-08-14"
+    "established": "1917-08-14",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9461380",
@@ -2213,7 +3100,11 @@
     "state": "AK",
     "lat": 51.860638,
     "lng": -176.63759,
-    "established": "1943-08-21"
+    "established": "1943-08-21",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9461710",
@@ -2221,7 +3112,11 @@
     "state": "AK",
     "lat": 52.231945,
     "lng": -174.1725,
-    "established": "2006-08-01"
+    "established": "2006-08-01",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9462450",
@@ -2229,7 +3124,11 @@
     "state": "AK",
     "lat": 52.94061,
     "lng": -168.8713,
-    "established": "2006-06-28"
+    "established": "2006-06-28",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9462620",
@@ -2237,7 +3136,11 @@
     "state": "AK",
     "lat": 53.879196,
     "lng": -166.5403,
-    "established": "1955-05-07"
+    "established": "1955-05-07",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9463502",
@@ -2245,7 +3148,10 @@
     "state": "AK",
     "lat": 55.985832,
     "lng": -160.57361,
-    "established": "1960-09-11"
+    "established": "1960-09-11",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9464212",
@@ -2253,7 +3159,11 @@
     "state": "AK",
     "lat": 57.1253,
     "lng": -170.2852,
-    "established": "1977-06-08"
+    "established": "1977-06-08",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9468333",
@@ -2261,7 +3171,11 @@
     "state": "AK",
     "lat": 63.875,
     "lng": -160.788,
-    "established": "1977-06-30"
+    "established": "1977-06-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9468756",
@@ -2269,7 +3183,11 @@
     "state": "AK",
     "lat": 64.49461,
     "lng": -165.43964,
-    "established": "1944-06-30"
+    "established": "1944-06-30",
+    "datums": [
+      "MSL",
+      "NAVD88"
+    ]
   },
   {
     "id": "9491094",
@@ -2277,7 +3195,10 @@
     "state": "AK",
     "lat": 67.575806,
     "lng": -164.06439,
-    "established": "2003-08-21"
+    "established": "2003-08-21",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9497645",
@@ -2285,7 +3206,10 @@
     "state": "AK",
     "lat": 70.41139,
     "lng": -148.53166,
-    "established": "1990-07-17"
+    "established": "1990-07-17",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9751364",
@@ -2293,7 +3217,10 @@
     "state": "VI",
     "lat": 17.747694,
     "lng": -64.69839,
-    "established": "1981-02-10"
+    "established": "1981-02-10",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9751381",
@@ -2301,7 +3228,10 @@
     "state": "VI",
     "lat": 18.31825,
     "lng": -64.72422,
-    "established": "1983-02-21"
+    "established": "1983-02-21",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9751401",
@@ -2309,7 +3239,10 @@
     "state": "VI",
     "lat": 17.6947,
     "lng": -64.7538,
-    "established": "1977-10-13"
+    "established": "1977-10-13",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9751639",
@@ -2317,7 +3250,10 @@
     "state": "VI",
     "lat": 18.330584,
     "lng": -64.925804,
-    "established": "1975-01-27"
+    "established": "1975-01-27",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9752235",
@@ -2325,7 +3261,10 @@
     "state": "PR",
     "lat": 18.300861,
     "lng": -65.302475,
-    "established": "2005-08-19"
+    "established": "2005-08-19",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9752621",
@@ -2333,7 +3272,8 @@
     "state": "PR",
     "lat": 18.152527,
     "lng": -65.4438,
-    "established": "2023-03-20"
+    "established": "2023-03-20",
+    "datums": []
   },
   {
     "id": "9752695",
@@ -2341,7 +3281,10 @@
     "state": "PR",
     "lat": 18.09386,
     "lng": -65.47136,
-    "established": "2005-08-11"
+    "established": "2005-08-11",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9753216",
@@ -2349,7 +3292,10 @@
     "state": "PR",
     "lat": 18.335278,
     "lng": -65.63111,
-    "established": "1964-02-17"
+    "established": "1964-02-17",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9754229",
@@ -2357,7 +3303,8 @@
     "state": "PR",
     "lat": 18.055084,
     "lng": -65.833,
-    "established": "2023-03-20"
+    "established": "2023-03-20",
+    "datums": []
   },
   {
     "id": "9755371",
@@ -2365,7 +3312,10 @@
     "state": "PR",
     "lat": 18.458944,
     "lng": -66.11642,
-    "established": "1962-03-04"
+    "established": "1962-03-04",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9755968",
@@ -2373,7 +3323,8 @@
     "state": "PR",
     "lat": 17.949083,
     "lng": -66.225945,
-    "established": "2022-12-01"
+    "established": "2022-12-01",
+    "datums": []
   },
   {
     "id": "9757811",
@@ -2381,7 +3332,8 @@
     "state": "PR",
     "lat": 18.480528,
     "lng": -66.70236,
-    "established": "2023-03-20"
+    "established": "2023-03-20",
+    "datums": []
   },
   {
     "id": "9758066",
@@ -2389,7 +3341,8 @@
     "state": "PR",
     "lat": 18.005861,
     "lng": -66.76661,
-    "established": "2022-12-01"
+    "established": "2022-12-01",
+    "datums": []
   },
   {
     "id": "9759110",
@@ -2397,7 +3350,10 @@
     "state": "PR",
     "lat": 17.970112,
     "lng": -67.04639,
-    "established": "1954-12-01"
+    "established": "1954-12-01",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9759394",
@@ -2405,7 +3361,10 @@
     "state": "PR",
     "lat": 18.218834,
     "lng": -67.162445,
-    "established": "1975-12-09"
+    "established": "1975-12-09",
+    "datums": [
+      "MSL"
+    ]
   },
   {
     "id": "9759413",
@@ -2413,7 +3372,8 @@
     "state": "PR",
     "lat": 18.456638,
     "lng": -67.16458,
-    "established": "2023-03-20"
+    "established": "2023-03-20",
+    "datums": []
   },
   {
     "id": "9759938",
@@ -2421,6 +3381,9 @@
     "state": "PR",
     "lat": 18.089289,
     "lng": -67.93821,
-    "established": "2006-09-15"
+    "established": "2006-09-15",
+    "datums": [
+      "MSL"
+    ]
   }
 ]

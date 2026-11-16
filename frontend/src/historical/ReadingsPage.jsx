@@ -1,7 +1,7 @@
 /**
  * Historical readings page (#/historical).
  *
- * Flow: the form (location/gauge, dates, resolution, optional trigger) is mirrored
+ * Flow: the form (location/gauge, dates, resolution, datum, optional trigger) is mirrored
  * into the URL -> "Get readings" calls the backend -> the response becomes one
  * "series" per gauge -> summary cards, a chart or table, and a CSV export.
  *
@@ -82,14 +82,21 @@ const DEFAULT_FORM = {
   endTime: DAY_END,
   useTime: false,
   resolution: 'auto',
+  datum: '', // '' = each gauge's default (MSL); or 'MSL' / 'NAVD88' when chosen
   trigger: '',
   latest: false,
 };
 
+// Datums the API serves, in preference order, with labels for the picker
+const DATUM_OPTIONS = [
+  { id: 'MSL', label: 'MSL (mean sea level)' },
+  { id: 'NAVD88', label: 'NAVD88 (North American Vertical Datum of 1988)' },
+];
+
 /** Whether the form's time inputs are active (and sent to the API). */
 const timesOn = (form) => form.latest || form.useTime;
 
-// ---- URL state: #/historical?target=location:nyc&start=...&end=...&resolution=auto&trigger=10
+// ---- URL state: #/historical?target=location:nyc&start=...&end=...&resolution=auto&datum=NAVD88&trigger=10
 // With a time range, start/end carry the time too (start=2026-11-11T21:00); "Latest"
 // is stored as latest=1 and always means the last hour when the link is opened.
 // Keeping the form in the URL means any view can be bookmarked or shared as a link.
@@ -111,6 +118,7 @@ function readFormFromHash() {
     endTime: endTime ?? DAY_END,
     useTime: Boolean(startTime || endTime),
     resolution: RESOLUTION_OPTIONS.some((o) => o.id === p.get('resolution')) ? p.get('resolution') : 'auto',
+    datum: DATUM_OPTIONS.some((o) => o.id === p.get('datum')) ? p.get('datum') : '',
     trigger: p.get('trigger') ?? '',
     latest,
     // A "Latest" link means the last hour now, whenever it was saved
@@ -126,6 +134,7 @@ function readFormFromHash() {
 function writeFormToHash(form) {
   const [start, end] = rangeBounds(form, timesOn(form));
   const p = new URLSearchParams({ target: form.target, start, end, resolution: form.resolution });
+  if (form.datum) p.set('datum', form.datum);
   if (form.trigger !== '') p.set('trigger', form.trigger);
   if (form.latest) p.set('latest', '1');
   window.history.replaceState(null, '', `#/historical?${p}`);
@@ -147,17 +156,30 @@ const presetFor = ({ start, end, latest, useTime }) =>
     return s === start && e === end;
   })?.id ?? 'custom';
 
+/** The target's gauges as listed in the directory (each with `established`, `datums`, ...). */
+function gaugesFor(targetKey, directory) {
+  const { type, id } = parseTarget(targetKey);
+  return type === 'location'
+    ? directory.locations.find((l) => l.id === id)?.stations ?? []
+    : directory.stations.filter((s) => s.id === id);
+}
+
+/**
+ * The datums every gauge in the target offers, in preference order: ['MSL', 'NAVD88']
+ * when they all have NAVD88 too, otherwise ['MSL']. Empty until the directory loads.
+ */
+function datumsFor(targetKey, directory) {
+  const gauges = gaugesFor(targetKey, directory);
+  if (!gauges.length) return [];
+  return DATUM_OPTIONS.map((o) => o.id).filter((d) => gauges.every((g) => g.datums?.includes(d)));
+}
+
 /**
  * The oldest `established` date among the target's gauges (YYYY-MM-DD), or null if
  * unknown. Used to give the From field a sensible date when leaving "All history".
  */
 function establishedFor(targetKey, directory) {
-  const { type, id } = parseTarget(targetKey);
-  const gauges =
-    type === 'location'
-      ? directory.locations.find((l) => l.id === id)?.stations ?? []
-      : directory.stations.filter((s) => s.id === id);
-  const dates = gauges.map((s) => s.established).filter(Boolean).sort();
+  const dates = gaugesFor(targetKey, directory).map((s) => s.established).filter(Boolean).sort();
   return dates[0] ?? null;
 }
 
@@ -246,7 +268,7 @@ function toCsv(result) {
   for (const s of series) {
     for (const r of s.readings) {
       lines.push(
-        [s.id, s.name, r.t, r.v, r.q, r.f, r.s, r.tMin, r.vMin, r.complete, r.source, data.resolution, data.datum, data.units, data.retrievedAt]
+        [s.id, s.name, r.t, r.v, r.q, r.f, r.s, r.tMin, r.vMin, r.complete, r.source, data.resolution, r.datum ?? data.datum, data.units, data.retrievedAt]
           .map(esc)
           .join(','),
       );
@@ -328,7 +350,7 @@ export default function ReadingsPage() {
     writeFormToHash(f);
     setRequest({ status: 'loading', resolution: resolveResolution(f.start, f.end, f.resolution) });
     const [start, end] = rangeBounds(f, timesOn(f));
-    fetchHistorical(parseTarget(f.target), { start, end, resolution: f.resolution }, { signal: ctl.signal })
+    fetchHistorical(parseTarget(f.target), { start, end, resolution: f.resolution, datum: f.datum }, { signal: ctl.signal })
       .then((data) => {
         setResult({ form: f, data, series: toSeries(data) });
         setRequest({ status: 'idle' });
@@ -372,6 +394,9 @@ export default function ReadingsPage() {
   const resolved = resolveResolution(form.start, form.end, form.resolution);
   const formProblem = rangeProblem(form.start, form.end, form.resolution);
   const trigger = parseTrigger(form.trigger);
+  // The datum picker offers NAVD88 only when every gauge in the target has it
+  const datumChoices = datumsFor(form.target, directory);
+  const datumValue = datumChoices.includes(form.datum) ? form.datum : datumChoices[0] ?? 'MSL';
 
   return (
     <main className="hx-main" data-highlight={highlight ? 'on' : 'off'}>
@@ -412,7 +437,8 @@ export default function ReadingsPage() {
                 locations={directory.locations}
                 stations={directory.stations}
                 value={form.target}
-                onChange={(target) => update({ target })}
+                // Drop a datum choice the new target doesn't offer, so it falls back to the default
+                onChange={(target) => update({ target, ...(!datumsFor(target, directory).includes(form.datum) && { datum: '' }) })}
                 disabled={directory.status !== 'ok'}
               />
             )}
@@ -541,7 +567,24 @@ export default function ReadingsPage() {
               ))}
             </select>
 
-            <SubLabel as="label" htmlFor="hx-trigger">Trigger level (optional)</SubLabel>
+            <SubLabel as="label" htmlFor="hx-datum">Datum</SubLabel>
+            <select
+              id="hx-datum"
+              className="hx-input"
+              value={datumValue}
+              disabled={datumChoices.length < 2}
+              title={datumChoices.length === 1 ? `Only ${datumChoices[0]} is available for this ${parseTarget(form.target).type === 'location' ? 'location' : 'gauge'}` : undefined}
+              onChange={(e) => update({ datum: e.target.value })}
+            >
+              {(datumChoices.length ? DATUM_OPTIONS.filter((o) => datumChoices.includes(o.id)) : DATUM_OPTIONS.slice(0, 1)).map((o) => (
+                <option key={o.id} value={o.id}>{o.label}</option>
+              ))}
+            </select>
+            {datumChoices.length === 1 && (
+              <p className="hx-hint">NAVD88 isn't available {parseTarget(form.target).type === 'location' ? 'at every gauge here' : 'at this gauge'}, so readings are on MSL.</p>
+            )}
+
+            <SubLabel as="label" htmlFor="hx-trigger">Trigger level (optional, same datum)</SubLabel>
             <div className="hx-suffix">
               <input
                 id="hx-trigger"
@@ -648,6 +691,9 @@ function Results({ result, trigger, directory, onEdit }) {
   );
   const totalReadings = ok.reduce((n, s) => n + s.readings.length, 0);
   const valueLabel = resolution === 'daily' ? 'Daily maximum water level' : `${config.label} water level`;
+  // The API reports each station's datum (MSL, else NAVD88); a location's top-level
+  // datum is null only if its gauges don't share one.
+  const unitsLabel = data.datum ? `ft above ${data.datum}` : 'ft above each gauge\'s datum';
 
   // "New York City" for a location (name from the directory), "The Battery" for a station
   const targetName = data.location
@@ -708,7 +754,7 @@ function Results({ result, trigger, directory, onEdit }) {
 
       {ok.length > 0 && (
         <>
-          <SubLabel>Historical · {valueLabel.toLowerCase()}, ft above MLLW</SubLabel>
+          <SubLabel>Historical · {valueLabel.toLowerCase()}, {unitsLabel}</SubLabel>
           {ok.length > 1 && (
             <ul className="hx-legend" aria-label="Legend">
               {ok.map((s) => (
@@ -719,7 +765,7 @@ function Results({ result, trigger, directory, onEdit }) {
               ))}
             </ul>
           )}
-          <ReadingsChart series={ok} domain={domain} trigger={trigger} stepMs={config.stepMs} valueLabel={valueLabel} showReadingTime={resolution === 'daily'} />
+          <ReadingsChart series={ok} domain={domain} trigger={trigger} stepMs={config.stepMs} valueLabel={valueLabel} unitsLabel={unitsLabel} showReadingTime={resolution === 'daily'} />
         </>
       )}
 
@@ -738,7 +784,7 @@ function Results({ result, trigger, directory, onEdit }) {
         </p>
       )}
       <p className="sec-source">
-        Source: NOAA CO-OPS Data API · {config.label.toLowerCase()} data, ft above MLLW, UTC · retrieved {formatDateTime(data.retrievedAt)}
+        Source: NOAA CO-OPS Data API · {config.label.toLowerCase()} data, {unitsLabel}, UTC · retrieved {formatDateTime(data.retrievedAt)}
       </p>
 
       {/* Centered secondary action, like "+ Add layer" */}

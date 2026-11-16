@@ -24,7 +24,7 @@ describe('fetchLatest', () => {
     expect(url.searchParams.get('station')).toBe('8518750');
     expect(url.searchParams.get('product')).toBe('one_minute_water_level');
     expect(url.searchParams.get('date')).toBe('latest');
-    expect(url.searchParams.get('datum')).toBe('MLLW');
+    expect(url.searchParams.get('datum')).toBe('MSL');
     expect(url.searchParams.get('time_zone')).toBe('gmt');
     expect(url.searchParams.has('begin_date')).toBe(false);
   });
@@ -33,7 +33,7 @@ describe('fetchLatest', () => {
     stubNoaa({ data: [{ t: '2026-11-11 22:24', v: '2.385', s: '0.285', f: '1,0,0,0', q: 'p' }] });
     expect(await fetchLatest(8518750)).toEqual({
       station: '8518750',
-      datum: 'MLLW',
+      datum: 'MSL',
       units: 'english',
       t: '2026-11-11T22:24:00.000Z',
       v: 2.385,
@@ -45,7 +45,7 @@ describe('fetchLatest', () => {
 
   test('returns null when the gauge has reported nothing recently', async () => {
     stubNoaa({ error: { message: 'No data was found. This product may not be offered at this station at the requested time.' } });
-    expect(await fetchLatest('8516990')).toBeNull();
+    expect(await fetchLatest('8518750')).toBeNull();
   });
 
   test('1-minute rows carry only t and v, and are marked preliminary', async () => {
@@ -58,9 +58,15 @@ describe('fetchLatest', () => {
     expect(await fetchLatest('8518750')).toBeNull();
   });
 
+  test('refuses a station with neither MSL nor NAVD88, without calling NOAA', async () => {
+    const urls = stubNoaa({ data: [] });
+    await expect(fetchLatest('9063020')).rejects.toThrow('has no MSL or NAVD88 datum');
+    expect(urls).toHaveLength(0);
+  });
+
   test('throws on other NOAA errors', async () => {
     stubNoaa({ error: { message: 'Station ID is invalid' } });
-    await expect(fetchLatest('0000000')).rejects.toThrow('NOAA API error: Station ID is invalid');
+    await expect(fetchLatest('8518750')).rejects.toThrow('NOAA API error: Station ID is invalid');
     stubNoaa(null, false);
     await expect(fetchLatest('8518750')).rejects.toThrow('NOAA API error: Bad Gateway');
   });
@@ -76,8 +82,43 @@ describe('latest routes', async () => {
     stubNoaa({ data: [row] });
     const res = await request(app).get('/stations/8518750/latest');
     expect(res.status).toBe(200);
-    expect(res.body).toMatchObject({ station: '8518750', name: 'The Battery', resolution: '1min', datum: 'MLLW' });
+    expect(res.body).toMatchObject({ station: '8518750', name: 'The Battery', resolution: '1min', datum: 'MSL' });
     expect(res.body.reading).toMatchObject({ t: '2026-11-11T22:24:00.000Z', v: 2.385, q: 'p' });
+  });
+
+  test('GET /stations/:id/latest returns 404 explaining a station without MSL or NAVD88', async () => {
+    const res = await request(app).get('/stations/9063020/latest');
+    expect(res.status).toBe(404);
+    expect(res.body.error).toMatch(/no MSL or NAVD88 datum/);
+  });
+
+  test('?datum=NAVD88 reads a station on NAVD88 instead of its MSL default', async () => {
+    const urls = stubNoaa({ data: [row] });
+    const res = await request(app).get('/stations/8518750/latest?datum=NAVD88');
+    expect(res.status).toBe(200);
+    expect(urls[0].searchParams.get('datum')).toBe('NAVD'); // NOAA's data API spelling
+    expect(res.body.datum).toBe('NAVD88');
+    expect(res.body.reading.datum).toBe('NAVD88');
+  });
+
+  test('?datum= rejects unknown datums and ones the station lacks, without calling NOAA', async () => {
+    const urls = stubNoaa({ data: [row] });
+    const bad = await request(app).get('/stations/8518750/latest?datum=MLLW');
+    expect(bad.status).toBe(400);
+    expect(bad.body.error).toMatch(/datum must be one of: MSL, NAVD88/);
+    const lacking = await request(app).get('/stations/1612340/latest?datum=NAVD88'); // Honolulu: MSL only
+    expect(lacking.status).toBe(400);
+    expect(lacking.body.error).toMatch(/has no NAVD88 datum/);
+    expect(urls).toHaveLength(0);
+  });
+
+  test('GET /locations/:loc/latest?datum=NAVD88 applies it to every gauge', async () => {
+    const urls = stubNoaa({ data: [row] });
+    const res = await request(app).get('/locations/nyc/latest?datum=NAVD88');
+    expect(res.status).toBe(200);
+    expect(res.body.datum).toBe('NAVD88');
+    expect(res.body.stations.every((s) => s.datum === 'NAVD88')).toBe(true);
+    expect(urls.every((u) => u.searchParams.get('datum') === 'NAVD')).toBe(true);
   });
 
   test('GET /stations/:id/latest gives reading: null for a quiet gauge', async () => {

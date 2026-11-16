@@ -133,7 +133,7 @@ export default function ReadingsChart({
   valueLabel,
   showReadingTime = false,
   height = 340,
-  unitsLabel = 'ft above MLLW',
+  unitsLabel = 'ft',
   triggerClassName = '',
 }) {
   const [width, setWidth] = useState(0); // 0 until the container has been measured

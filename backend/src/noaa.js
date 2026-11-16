@@ -6,11 +6,12 @@
  * Tests mock the global `fetch`, so nothing here calls NOAA during tests.
  */
 
+import { datumFor } from './stations.js';
+
 // TODO: calculate storm surge
 
 const NOAA_API_URL = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter';
 
-export const DATUM = 'MSL'; // Or use NAVD (not availible for all stations) both are standards for parametric triggers, MLLW isn't really useful here
 export const UNITS = 'english';
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NO_DATA = /no data was found/i;
@@ -118,15 +119,20 @@ export function splitDateRange(startDate, endDate, chunkDays = CHUNK_DAYS) {
 /**
  * Make one NOAA datagetter request and return its `data` field. `params` holds the
  * request-specific fields (product, and begin_date/end_date or date); the station,
- * datum, units, time zone and format are always added here.
+ * datum (already resolved by datumFor in stations.js), units, time zone and format
+ * are always added here.
  * Returns null when NOAA reports no data (gauge outage, before the station existed,
  * not yet verified); throws on any other NOAA error.
  */
-async function callNoaa(stationId, params) {
+// The data API spells some datums differently from the metadata API we take
+// station datums from: metadata says NAVD88, datagetter only accepts NAVD.
+const NOAA_DATUM_PARAM = { NAVD88: 'NAVD' };
+
+async function callNoaa(stationId, datum, params) {
   const query = new URLSearchParams({
     station: stationId,
     ...params,
-    datum: DATUM,
+    datum: NOAA_DATUM_PARAM[datum] ?? datum,
     time_zone: 'gmt',
     units: UNITS,
     format: 'json',
@@ -150,8 +156,8 @@ async function callNoaa(stationId, params) {
 }
 
 /** One date-range chunk of a product (see RESOLUTIONS). */
-async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
-  return callNoaa(stationId, {
+async function fetchChunk(stationId, datum, startDate, endDate, config, extra = {}) {
+  return callNoaa(stationId, datum, {
     product: config.product,
     ...extra,
     begin_date: toNoaaDate(startDate),
@@ -169,6 +175,7 @@ async function fetchChunk(stationId, startDate, endDate, config, extra = {}) {
  * @param {string} startDate - YYYY-MM-DD, or YYYY-MM-DDTHH:mm (UTC) to start at a time (inclusive)
  * @param {string} endDate - YYYY-MM-DD (through end of day UTC), or YYYY-MM-DDTHH:mm (inclusive)
  * @param {string} [resolution='6min'] - A key of RESOLUTIONS
+ * @param {string} [requestedDatum] - 'MSL' or 'NAVD88'; defaults to the station's datum
  * @returns {Promise<Array>} - Parsed readings, oldest first
  */
 // Quality flag for rows that don't carry their own `q`. 6-minute rows always do.
@@ -179,13 +186,14 @@ const QUALITY_DEFAULTS = {
   daily: 'v',
 };
 
-export async function fetchReadings(stationId, startDate, endDate, resolution = '6min') {
+export async function fetchReadings(stationId, startDate, endDate, resolution = '6min', requestedDatum) {
   const config = RESOLUTIONS[resolution];
   if (!config) throw new Error(`Unknown resolution: ${resolution}`);
+  const datum = datumFor(stationId, requestedDatum);
 
   const meta = {
     station: String(stationId),
-    datum: DATUM,
+    datum,
     units: UNITS,
     defaultQuality: QUALITY_DEFAULTS[resolution],
   };
@@ -202,7 +210,7 @@ export async function fetchReadings(stationId, startDate, endDate, resolution = 
       readings.push(...(await fetchDailyChunk(stationId, chunkStart, chunkEnd, config, meta)));
       continue;
     }
-    const data = await fetchChunk(stationId, chunkStart, chunkEnd, config);
+    const data = await fetchChunk(stationId, datum, chunkStart, chunkEnd, config);
     if (data !== null) readings.push(...parseReadings(data, meta));
   }
   if (readings.length === 0) {
@@ -219,17 +227,19 @@ export async function fetchReadings(stationId, startDate, endDate, resolution = 
  * decommissioned station); throws on any other NOAA error.
  *
  * @param {string|number} stationId - The NOAA tide gauge ID
+ * @param {string} [requestedDatum] - 'MSL' or 'NAVD88'; defaults to the station's datum
  * @returns {Promise<Object|null>} - One reading in the same shape as fetchReadings
  */
 /** The resolution fetchLatest reads; routes report it as the response's `resolution`. */
 export const LATEST_RESOLUTION = '1min';
 
-export async function fetchLatest(stationId) {
-  const latestData = await callNoaa(stationId, { product: RESOLUTIONS[LATEST_RESOLUTION].product, date: 'latest' });
+export async function fetchLatest(stationId, requestedDatum) {
+  const datum = datumFor(stationId, requestedDatum);
+  const latestData = await callNoaa(stationId, datum, { product: RESOLUTIONS[LATEST_RESOLUTION].product, date: 'latest' });
   if (latestData === null) return null;
   const [reading] = parseReadings(latestData, {
     station: String(stationId),
-    datum: DATUM,
+    datum,
     units: UNITS,
     defaultQuality: QUALITY_DEFAULTS[LATEST_RESOLUTION],
   });
@@ -241,8 +251,8 @@ export async function fetchLatest(stationId) {
  * fill the days before 6-minute recording began (or any day it is missing).
  */
 async function fetchDailyChunk(stationId, startDate, endDate, config, meta) {
-  const fromSixMin = await fetchChunk(stationId, startDate, endDate, config, { interval: '6' });
-  const fromHourly = await fetchChunk(stationId, startDate, endDate, config);
+  const fromSixMin = await fetchChunk(stationId, meta.datum, startDate, endDate, config, { interval: '6' });
+  const fromHourly = await fetchChunk(stationId, meta.datum, startDate, endDate, config);
 
   const byDate = new Map();
   for (const r of fromHourly ? parseDailyMaxMin(fromHourly, meta) : []) byDate.set(r.t.slice(0, 10), r);
