@@ -8,7 +8,8 @@
     "established": "1954-11-24",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1612340",
@@ -19,7 +20,8 @@
     "established": "1905-01-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1612401",
@@ -30,7 +32,8 @@
     "established": "2023-05-31",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1612480",
@@ -41,7 +44,8 @@
     "established": "1957-05-03",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1615680",
@@ -52,7 +56,8 @@
     "established": "1946-12-19",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1617433",
@@ -63,7 +68,8 @@
     "established": "1988-02-06",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1617760",
@@ -74,7 +80,8 @@
     "established": "1946-11-30",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1619910",
@@ -85,7 +92,8 @@
     "established": "1947-02-02",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1630000",
@@ -96,7 +104,8 @@
     "established": "1948-03-11",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1631428",
@@ -107,7 +116,8 @@
     "established": "2004-04-22",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1770000",
@@ -118,7 +128,8 @@
     "established": "1948-09-06",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1820000",
@@ -129,7 +140,8 @@
     "established": "1946-06-10",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "1890000",
@@ -140,7 +152,8 @@
     "established": "1950-05-29",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "2695535",
@@ -151,7 +164,8 @@
     "established": "1932-01-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "2695540",
@@ -162,7 +176,8 @@
     "established": "1989-05-29",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8311030",
@@ -171,7 +186,8 @@
     "lat": 44.702778,
     "lng": -75.494446,
     "established": "1900-09-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "8311062",
@@ -180,7 +196,8 @@
     "lat": 44.33111,
     "lng": -75.934525,
     "established": "1983-06-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "8410140",
@@ -192,7 +209,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8411060",
@@ -204,7 +222,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8413320",
@@ -215,7 +234,8 @@
     "established": "1947-08-16",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8418150",
@@ -227,7 +247,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8419870",
@@ -239,7 +260,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8443970",
@@ -251,7 +273,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8447386",
@@ -263,7 +286,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8447435",
@@ -275,7 +299,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8447636",
@@ -286,7 +311,8 @@
     "established": "2022-11-10",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8447930",
@@ -298,7 +324,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8449130",
@@ -309,7 +336,8 @@
     "established": "1963-10-04",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8452660",
@@ -321,7 +349,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8452944",
@@ -332,7 +361,8 @@
     "established": "1999-09-28",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8454000",
@@ -344,7 +374,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8461490",
@@ -356,7 +387,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8465705",
@@ -367,7 +399,8 @@
     "established": "1999-08-11",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8467150",
@@ -379,7 +412,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8510560",
@@ -391,7 +425,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8516945",
@@ -403,7 +438,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8518750",
@@ -415,7 +451,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8518962",
@@ -426,7 +463,8 @@
     "established": "2017-06-20",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8518979",
@@ -438,7 +476,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8531680",
@@ -450,7 +489,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8534720",
@@ -462,7 +502,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8536110",
@@ -474,7 +515,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8537121",
@@ -485,7 +527,8 @@
     "established": "1997-10-30",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8539094",
@@ -496,7 +539,8 @@
     "established": "1977-02-21",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8540433",
@@ -508,7 +552,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8545240",
@@ -520,7 +565,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8546252",
@@ -531,7 +577,8 @@
     "established": "1979-07-23",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8548989",
@@ -542,7 +589,8 @@
     "established": "2001-10-27",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8551762",
@@ -553,7 +601,8 @@
     "established": "2001-10-08",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8551910",
@@ -565,7 +614,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8555889",
@@ -576,7 +626,8 @@
     "established": "1984-03-18",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8557380",
@@ -588,7 +639,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8570283",
@@ -600,7 +652,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8571421",
@@ -612,7 +665,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8571892",
@@ -624,7 +678,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8573364",
@@ -636,7 +691,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8573927",
@@ -648,7 +704,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8574680",
@@ -660,7 +717,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8575512",
@@ -672,7 +730,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8577330",
@@ -684,7 +743,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8594900",
@@ -696,7 +756,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8631044",
@@ -708,7 +769,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8632200",
@@ -720,7 +782,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8635027",
@@ -732,7 +795,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8635750",
@@ -744,7 +808,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8636580",
@@ -756,7 +821,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8637689",
@@ -768,7 +834,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8638610",
@@ -780,7 +847,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8638901",
@@ -791,7 +859,8 @@
     "established": "2016-10-15",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8639348",
@@ -802,7 +871,8 @@
     "established": "1997-12-17",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8651370",
@@ -814,7 +884,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8652587",
@@ -826,7 +897,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8654467",
@@ -838,7 +910,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8656483",
@@ -850,7 +923,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8658120",
@@ -862,7 +936,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8658163",
@@ -874,7 +949,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8661070",
@@ -886,7 +962,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8665530",
@@ -898,7 +975,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8670870",
@@ -910,7 +988,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8679598",
@@ -921,7 +1000,8 @@
     "established": "1978-11-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8720030",
@@ -933,7 +1013,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8720218",
@@ -945,7 +1026,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8720219",
@@ -957,7 +1039,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8720226",
@@ -969,7 +1052,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8720357",
@@ -981,7 +1065,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8721604",
@@ -993,7 +1078,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8722670",
@@ -1005,7 +1091,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8722956",
@@ -1017,7 +1104,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8723214",
@@ -1029,7 +1117,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8723970",
@@ -1041,7 +1130,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8724580",
@@ -1053,7 +1143,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8725114",
@@ -1065,7 +1156,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8725520",
@@ -1077,7 +1169,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8726384",
@@ -1089,7 +1182,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8726520",
@@ -1101,7 +1195,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8726607",
@@ -1113,7 +1208,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8726674",
@@ -1125,7 +1221,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8726724",
@@ -1137,7 +1234,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8727520",
@@ -1149,7 +1247,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8728690",
@@ -1161,7 +1260,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8729108",
@@ -1173,7 +1273,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8729210",
@@ -1185,7 +1286,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8729840",
@@ -1197,7 +1299,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8735180",
@@ -1209,7 +1312,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8735391",
@@ -1220,7 +1324,8 @@
     "established": "2010-09-08",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8735523",
@@ -1232,7 +1337,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8736897",
@@ -1244,7 +1350,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8737048",
@@ -1256,7 +1363,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8737138",
@@ -1268,7 +1376,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8738043",
@@ -1280,7 +1389,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8739803",
@@ -1292,7 +1402,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8741533",
@@ -1304,7 +1415,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8747437",
@@ -1316,7 +1428,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8760721",
@@ -1327,7 +1440,8 @@
     "established": "1980-12-19",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8760922",
@@ -1338,7 +1452,8 @@
     "established": "2004-03-08",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8761305",
@@ -1350,7 +1465,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8761724",
@@ -1361,7 +1477,8 @@
     "established": "1979-11-09",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8761927",
@@ -1373,7 +1490,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8761955",
@@ -1385,7 +1503,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": null
   },
   {
     "id": "8762075",
@@ -1396,7 +1515,8 @@
     "established": "2003-07-19",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8762482",
@@ -1408,7 +1528,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": null
   },
   {
     "id": "8764044",
@@ -1420,7 +1541,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8764227",
@@ -1432,7 +1554,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8764314",
@@ -1443,7 +1566,8 @@
     "established": "2014-11-15",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8766072",
@@ -1455,7 +1579,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8767816",
@@ -1467,7 +1592,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8767961",
@@ -1479,7 +1605,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8768094",
@@ -1491,7 +1618,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770475",
@@ -1503,7 +1631,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770520",
@@ -1515,7 +1644,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770613",
@@ -1527,7 +1657,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770777",
@@ -1539,7 +1670,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770808",
@@ -1551,7 +1683,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770822",
@@ -1563,7 +1696,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8770971",
@@ -1575,7 +1709,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8771013",
@@ -1586,7 +1721,8 @@
     "established": "1973-06-14",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8771341",
@@ -1598,7 +1734,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8771367",
@@ -1609,7 +1746,8 @@
     "established": "2020-01-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8771450",
@@ -1621,7 +1759,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8771486",
@@ -1633,7 +1772,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8771972",
@@ -1645,7 +1785,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8772471",
@@ -1657,7 +1798,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8772985",
@@ -1669,7 +1811,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8773037",
@@ -1681,7 +1824,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8773146",
@@ -1693,7 +1837,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8773259",
@@ -1704,7 +1849,8 @@
     "established": "1989-01-28",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8773701",
@@ -1716,7 +1862,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8773767",
@@ -1728,7 +1875,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8774230",
@@ -1740,7 +1888,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8774513",
@@ -1752,7 +1901,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8774770",
@@ -1764,7 +1914,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775132",
@@ -1776,7 +1927,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775222",
@@ -1787,7 +1939,8 @@
     "established": "2007-04-18",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775237",
@@ -1799,7 +1952,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775241",
@@ -1811,7 +1965,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775283",
@@ -1822,7 +1977,8 @@
     "established": "1989-11-07",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775296",
@@ -1834,7 +1990,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775792",
@@ -1846,7 +2003,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8775870",
@@ -1858,7 +2016,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8776139",
@@ -1870,7 +2029,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": null
   },
   {
     "id": "8776604",
@@ -1882,7 +2042,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": null
   },
   {
     "id": "8777812",
@@ -1894,7 +2055,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": null
   },
   {
     "id": "8778490",
@@ -1906,7 +2068,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": null
   },
   {
     "id": "8779280",
@@ -1917,7 +2080,8 @@
     "established": "2009-02-23",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8779748",
@@ -1929,7 +2093,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8779749",
@@ -1941,7 +2106,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "8779770",
@@ -1953,7 +2119,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9014070",
@@ -1962,7 +2129,8 @@
     "lat": 42.621113,
     "lng": -82.526665,
     "established": "1926-07-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9014080",
@@ -1971,7 +2139,8 @@
     "lat": 42.81222,
     "lng": -82.48556,
     "established": "1971-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9014087",
@@ -1980,7 +2149,8 @@
     "lat": 42.94528,
     "lng": -82.44334,
     "established": "1899-03-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9014090",
@@ -1989,7 +2159,8 @@
     "lat": 42.9738,
     "lng": -82.4204,
     "established": "1900-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9014098",
@@ -1998,7 +2169,8 @@
     "lat": 43.0069,
     "lng": -82.4225,
     "established": "1970-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9034052",
@@ -2007,7 +2179,8 @@
     "lat": 42.47322,
     "lng": -82.87925,
     "established": "1968-03-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9044020",
@@ -2016,7 +2189,8 @@
     "lat": 42.090862,
     "lng": -83.186,
     "established": "1989-11-08",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9044030",
@@ -2025,7 +2199,8 @@
     "lat": 42.202305,
     "lng": -83.1475,
     "established": "1930-05-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9044036",
@@ -2034,7 +2209,8 @@
     "lat": 42.298912,
     "lng": -83.092636,
     "established": "1970-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9044049",
@@ -2043,7 +2219,8 @@
     "lat": 42.357777,
     "lng": -82.92995,
     "established": "1897-06-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9052000",
@@ -2052,7 +2229,8 @@
     "lat": 44.13028,
     "lng": -76.33222,
     "established": "1916-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9052030",
@@ -2061,7 +2239,8 @@
     "lat": 43.46417,
     "lng": -76.51183,
     "established": "1860-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9052058",
@@ -2070,7 +2249,8 @@
     "lat": 43.26903,
     "lng": -77.62575,
     "established": "1860-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9052076",
@@ -2079,7 +2259,8 @@
     "lat": 43.33839,
     "lng": -78.72733,
     "established": "1967-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063007",
@@ -2088,7 +2269,8 @@
     "lat": 43.09992,
     "lng": -79.05991,
     "established": "1957-06-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063009",
@@ -2097,7 +2279,8 @@
     "lat": 43.08106,
     "lng": -79.06136,
     "established": "1900-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063012",
@@ -2106,7 +2289,8 @@
     "lat": 43.07689,
     "lng": -79.01403,
     "established": "1963-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063020",
@@ -2115,7 +2299,8 @@
     "lat": 42.877445,
     "lng": -78.89047,
     "established": "1860-04-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063028",
@@ -2124,7 +2309,8 @@
     "lat": 42.691307,
     "lng": -79.04733,
     "established": "1989-12-05",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063038",
@@ -2133,7 +2319,8 @@
     "lat": 42.15389,
     "lng": -80.075836,
     "established": "1959-04-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063053",
@@ -2142,7 +2329,8 @@
     "lat": 41.75975,
     "lng": -81.28106,
     "established": "1935-05-04",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063063",
@@ -2151,7 +2339,8 @@
     "lat": 41.54086,
     "lng": -81.635475,
     "established": "1859-12-31",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063079",
@@ -2160,7 +2349,8 @@
     "lat": 41.54364,
     "lng": -82.73139,
     "established": "1959-05-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063085",
@@ -2169,7 +2359,8 @@
     "lat": 41.693554,
     "lng": -83.472275,
     "established": "1904-08-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9063090",
@@ -2178,7 +2369,8 @@
     "lat": 41.96,
     "lng": -83.25667,
     "established": "1963-09-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9075002",
@@ -2187,7 +2379,8 @@
     "lat": 43.141693,
     "lng": -82.49331,
     "established": "1955-09-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9075014",
@@ -2196,7 +2389,8 @@
     "lat": 43.84639,
     "lng": -82.64306,
     "established": "1860-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9075035",
@@ -2205,7 +2399,8 @@
     "lat": 43.6404,
     "lng": -83.8468,
     "established": "1977-08-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9075065",
@@ -2214,7 +2409,8 @@
     "lat": 45.063,
     "lng": -83.4286,
     "established": "2006-04-26",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9075080",
@@ -2223,7 +2419,8 @@
     "lat": 45.77722,
     "lng": -84.72111,
     "established": "1900-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9075099",
@@ -2232,7 +2429,8 @@
     "lat": 45.9925,
     "lng": -83.8982,
     "established": "1977-11-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9076024",
@@ -2241,7 +2439,8 @@
     "lat": 46.264805,
     "lng": -84.19119,
     "established": "2001-10-26",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9076027",
@@ -2250,7 +2449,8 @@
     "lat": 46.28469,
     "lng": -84.20981,
     "established": "2006-10-19",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9076033",
@@ -2259,7 +2459,8 @@
     "lat": 46.485832,
     "lng": -84.30167,
     "established": "2008-12-17",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9076060",
@@ -2268,7 +2469,8 @@
     "lat": 46.500805,
     "lng": -84.34036,
     "established": "1903-04-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9076070",
@@ -2277,7 +2479,8 @@
     "lat": 46.50111,
     "lng": -84.37261,
     "established": "1860-05-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087023",
@@ -2286,7 +2489,8 @@
     "lat": 43.94736,
     "lng": -86.4415,
     "established": "1895-11-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087031",
@@ -2295,7 +2499,8 @@
     "lat": 42.773335,
     "lng": -86.212776,
     "established": "1894-06-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087044",
@@ -2304,7 +2509,8 @@
     "lat": 41.72972,
     "lng": -87.53833,
     "established": "1905-02-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087057",
@@ -2313,7 +2519,8 @@
     "lat": 43.001972,
     "lng": -87.88764,
     "established": "1989-09-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087068",
@@ -2322,7 +2529,8 @@
     "lat": 44.46389,
     "lng": -87.50103,
     "established": "1974-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087072",
@@ -2331,7 +2539,8 @@
     "lat": 44.794693,
     "lng": -87.31392,
     "established": "1905-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087077",
@@ -2340,7 +2549,8 @@
     "lat": 44.539024,
     "lng": -88.00106,
     "established": "2009-05-27",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087088",
@@ -2349,7 +2559,8 @@
     "lat": 45.09589,
     "lng": -87.58994,
     "established": "2005-08-19",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9087096",
@@ -2358,7 +2569,8 @@
     "lat": 45.96989,
     "lng": -85.8715,
     "established": "1964-12-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9099004",
@@ -2367,7 +2579,8 @@
     "lat": 46.484444,
     "lng": -84.63084,
     "established": "1930-11-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9099018",
@@ -2376,7 +2589,8 @@
     "lat": 46.545555,
     "lng": -87.37861,
     "established": "1991-09-23",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9099044",
@@ -2385,7 +2599,8 @@
     "lat": 46.874443,
     "lng": -89.324165,
     "established": "1959-08-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9099064",
@@ -2394,7 +2609,8 @@
     "lat": 46.77575,
     "lng": -92.092026,
     "established": "1860-04-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9099090",
@@ -2403,7 +2619,8 @@
     "lat": 47.748554,
     "lng": -90.34128,
     "established": "1966-01-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9410170",
@@ -2415,7 +2632,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9410230",
@@ -2427,7 +2645,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9410660",
@@ -2439,7 +2658,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9410678",
@@ -2451,7 +2671,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9410840",
@@ -2463,7 +2684,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9411340",
@@ -2475,7 +2697,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9412110",
@@ -2487,7 +2710,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9413450",
@@ -2499,7 +2723,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9414290",
@@ -2511,7 +2736,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9414523",
@@ -2523,7 +2749,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9414750",
@@ -2535,7 +2762,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9414863",
@@ -2547,7 +2775,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9415020",
@@ -2559,7 +2788,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9415102",
@@ -2571,7 +2801,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9415144",
@@ -2583,7 +2814,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9416131",
@@ -2595,7 +2827,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9416841",
@@ -2607,7 +2840,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9418767",
@@ -2619,7 +2853,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9419750",
@@ -2631,7 +2866,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9431647",
@@ -2643,7 +2879,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9432780",
@@ -2655,7 +2892,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9435380",
@@ -2667,7 +2905,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9437540",
@@ -2678,7 +2917,8 @@
     "established": "1866-08-11",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9439040",
@@ -2690,7 +2930,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9439099",
@@ -2701,7 +2942,8 @@
     "established": "1940-11-05",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9439201",
@@ -2713,7 +2955,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9440083",
@@ -2724,7 +2967,8 @@
     "established": "1938-09-14",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9440357",
@@ -2736,7 +2980,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9440422",
@@ -2747,7 +2992,8 @@
     "established": "1985-03-23",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9440569",
@@ -2759,7 +3005,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9440581",
@@ -2771,7 +3018,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9440910",
@@ -2783,7 +3031,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9441102",
@@ -2795,7 +3044,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9442396",
@@ -2807,7 +3057,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9443090",
@@ -2819,7 +3070,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9444090",
@@ -2831,7 +3083,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9444900",
@@ -2842,7 +3095,8 @@
     "established": "1971-12-31",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9445958",
@@ -2853,7 +3107,8 @@
     "established": "1977-04-06",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9446484",
@@ -2865,7 +3120,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9447130",
@@ -2877,7 +3133,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9449424",
@@ -2888,7 +3145,8 @@
     "established": "1971-11-07",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9449880",
@@ -2899,7 +3157,8 @@
     "established": "1932-01-25",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9450460",
@@ -2910,7 +3169,8 @@
     "established": "1918-10-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9451054",
@@ -2922,7 +3182,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9451600",
@@ -2933,7 +3194,8 @@
     "established": "1938-05-19",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9452210",
@@ -2944,7 +3206,8 @@
     "established": "1936-05-14",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9452400",
@@ -2955,7 +3218,8 @@
     "established": "1943-08-16",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9452634",
@@ -2966,7 +3230,8 @@
     "established": "1938-05-13",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9453220",
@@ -2978,7 +3243,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9454050",
@@ -2989,7 +3255,8 @@
     "established": "1949-05-14",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9454240",
@@ -3000,7 +3267,8 @@
     "established": "1964-08-15",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9455090",
@@ -3011,7 +3279,8 @@
     "established": "1925-05-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9455500",
@@ -3022,7 +3291,8 @@
     "established": "1964-05-24",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9455760",
@@ -3034,7 +3304,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9455920",
@@ -3046,7 +3317,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9457292",
@@ -3058,7 +3330,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9457804",
@@ -3069,7 +3342,8 @@
     "established": "1929-05-31",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9459450",
@@ -3080,7 +3354,8 @@
     "established": "1972-09-10",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9459881",
@@ -3092,7 +3367,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9461380",
@@ -3104,7 +3380,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9461710",
@@ -3116,7 +3393,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9462450",
@@ -3128,7 +3406,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9462620",
@@ -3140,7 +3419,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9463502",
@@ -3151,7 +3431,8 @@
     "established": "1960-09-11",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9464212",
@@ -3163,7 +3444,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9468333",
@@ -3175,7 +3457,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9468756",
@@ -3187,7 +3470,8 @@
     "datums": [
       "MSL",
       "NAVD88"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9491094",
@@ -3198,7 +3482,8 @@
     "established": "2003-08-21",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9497645",
@@ -3209,7 +3494,8 @@
     "established": "1990-07-17",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9751364",
@@ -3220,7 +3506,8 @@
     "established": "1981-02-10",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9751381",
@@ -3231,7 +3518,8 @@
     "established": "1983-02-21",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9751401",
@@ -3242,7 +3530,8 @@
     "established": "1977-10-13",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9751639",
@@ -3253,7 +3542,8 @@
     "established": "1975-01-27",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9752235",
@@ -3264,7 +3554,8 @@
     "established": "2005-08-19",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9752621",
@@ -3273,7 +3564,8 @@
     "lat": 18.152527,
     "lng": -65.4438,
     "established": "2023-03-20",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9752695",
@@ -3284,7 +3576,8 @@
     "established": "2005-08-11",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9753216",
@@ -3295,7 +3588,8 @@
     "established": "1964-02-17",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9754229",
@@ -3304,7 +3598,8 @@
     "lat": 18.055084,
     "lng": -65.833,
     "established": "2023-03-20",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9755371",
@@ -3315,7 +3610,8 @@
     "established": "1962-03-04",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9755968",
@@ -3324,7 +3620,8 @@
     "lat": 17.949083,
     "lng": -66.225945,
     "established": "2022-12-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9757811",
@@ -3333,7 +3630,8 @@
     "lat": 18.480528,
     "lng": -66.70236,
     "established": "2023-03-20",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9758066",
@@ -3342,7 +3640,8 @@
     "lat": 18.005861,
     "lng": -66.76661,
     "established": "2022-12-01",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9759110",
@@ -3353,7 +3652,8 @@
     "established": "1954-12-01",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9759394",
@@ -3364,7 +3664,8 @@
     "established": "1975-12-09",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   },
   {
     "id": "9759413",
@@ -3373,7 +3674,8 @@
     "lat": 18.456638,
     "lng": -67.16458,
     "established": "2023-03-20",
-    "datums": []
+    "datums": [],
+    "predictions": null
   },
   {
     "id": "9759938",
@@ -3384,6 +3686,7 @@
     "established": "2006-09-15",
     "datums": [
       "MSL"
-    ]
+    ],
+    "predictions": "harmonic"
   }
 ]

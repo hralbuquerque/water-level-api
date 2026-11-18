@@ -175,6 +175,9 @@
 .hx-axis { stroke: rgba(30, 42, 71, 0.28); stroke-width: 1; shape-rendering: crispEdges; }
 .hx-tick { fill: var(--app-muted); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-variant-numeric: tabular-nums; }
 .hx-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+/* Predicted (astronomical) tide: dotted and lighter, so it reads as a reference under the
+   observed line and isn't mistaken for the dashed trigger line */
+.hx-line-pred { fill: none; stroke-width: 1.75; stroke-dasharray: 0.5 4; stroke-linecap: round; opacity: 0.7; }
 .hx-trigger { stroke: var(--app-danger); stroke-width: 1.5; stroke-dasharray: 6 4; }
 /* Status tones for a movable trigger (landing panel): calm, near (within a foot), hit */
 .hx-trigger.tone-calm { stroke: var(--app-muted); stroke-width: 1; }
@@ -208,6 +211,13 @@
 .hx-tooltip-row { display: grid; grid-template-columns: 14px auto; column-gap: 8px; align-items: center; margin-top: 4px; }
 .hx-tooltip-row strong { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
 .hx-tooltip-name { grid-column: 2; color: var(--app-muted); }
+.hx-tooltip-pred { grid-column: 2; color: var(--app-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.hx-surge-up { color: var(--app-danger); font-weight: 600; }
+.hx-surge-down { color: var(--app-ink); }
+/* Legend swatches: a solid bar for observed, dots for predicted */
+.hx-key-pred { background: none !important; height: 0; border-top: 3px dotted var(--app-muted); }
+.hx-block { display: block; font-size: 0.8rem; }
+.hx-pred-note { margin: 4px 0 8px; font-size: 0.85rem; color: var(--app-muted); }
 .hx-tooltip-units { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--app-line); font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--app-muted); }
 
 /* Zoom: toolbar above the chart, drag selection, overview strip, hint below */

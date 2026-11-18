@@ -1,9 +1,10 @@
 /**
  * Historical readings page (#/historical).
  *
- * Flow: the form (location/gauge, dates, resolution, datum, optional trigger) is mirrored
+ * Flow: the form (location/gauge, dates, resolution, datum, predictions, optional trigger) is mirrored
  * into the URL -> "Get readings" calls the backend -> the response becomes one
- * "series" per gauge -> summary cards, a chart or table, and a CSV export.
+ * "series" per gauge -> summary cards, a chart or table, and a CSV export. With
+ * predictions on, the matching tide predictions are fetched next and drawn alongside.
  *
  * Components in this file
  * Layout follows the company's "Build a bond" page: a back link + title header,
@@ -16,11 +17,12 @@
  *   ReadingsTable   section 03, paged in the browser
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { fetchDirectory, fetchHistorical } from '../api.js';
+import { fetchDirectory, fetchHistorical, fetchPredictions } from '../api.js';
 import { ActionButton } from '../theme/Primitives.jsx';
 import Section, { SubLabel } from '../components/Section.jsx';
 import ReadingsChart from './ReadingsChart.jsx';
 import TargetPicker from './TargetPicker.jsx';
+import { formatResidual, maxResidual, predictionRequestFor, toPredictionSeries } from './predictions.js';
 import {
   EARLIEST,
   RESOLUTIONS,
@@ -83,6 +85,7 @@ const DEFAULT_FORM = {
   useTime: false,
   resolution: 'auto',
   datum: '', // '' = each gauge's default (MSL); or 'MSL' / 'NAVD88' when chosen
+  predictions: true, // also fetch NOAA tide predictions and compare them with the readings
   trigger: '',
   latest: false,
 };
@@ -119,6 +122,7 @@ function readFormFromHash() {
     useTime: Boolean(startTime || endTime),
     resolution: RESOLUTION_OPTIONS.some((o) => o.id === p.get('resolution')) ? p.get('resolution') : 'auto',
     datum: DATUM_OPTIONS.some((o) => o.id === p.get('datum')) ? p.get('datum') : '',
+    predictions: p.get('predictions') !== '0',
     trigger: p.get('trigger') ?? '',
     latest,
     // A "Latest" link means the last hour now, whenever it was saved
@@ -135,6 +139,7 @@ function writeFormToHash(form) {
   const [start, end] = rangeBounds(form, timesOn(form));
   const p = new URLSearchParams({ target: form.target, start, end, resolution: form.resolution });
   if (form.datum) p.set('datum', form.datum);
+  if (!form.predictions) p.set('predictions', '0'); // on by default, so only "off" is recorded
   if (form.trigger !== '') p.set('trigger', form.trigger);
   if (form.latest) p.set('latest', '1');
   window.history.replaceState(null, '', `#/historical?${p}`);
@@ -256,9 +261,11 @@ function summarize(series, { resolution, start, end, trigger }) {
  * resolution, datum, units and retrieval time so a row copied out on its own is
  * still a complete record for settlement.
  */
-function toCsv(result) {
+function toCsv(result, predictions) {
   const { data, series } = result;
-  const cols = ['station', 'name', 'time_utc', 'value_ft', 'quality', 'flags', 'sigma', 'daily_min_time_utc', 'daily_min_ft', 'pct_complete', 'source', 'resolution', 'datum', 'units', 'retrieved_at'];
+  // predicted_ft is NOAA's astronomical tide at the reading's time (for daily data, the day's
+  // highest predicted high tide); residual_ft is the reading minus it. Empty without predictions.
+  const cols = ['station', 'name', 'time_utc', 'value_ft', 'predicted_ft', 'residual_ft', 'quality', 'flags', 'sigma', 'daily_min_time_utc', 'daily_min_ft', 'pct_complete', 'source', 'resolution', 'datum', 'units', 'retrieved_at'];
   const esc = (v) => {
     if (v === null || v === undefined) return '';
     const s = String(v);
@@ -266,9 +273,12 @@ function toCsv(result) {
   };
   const lines = [cols.join(',')];
   for (const s of series) {
+    const pred = predictions?.get(s.id);
     for (const r of s.readings) {
+      const p = pred && !pred.error ? pred.valueFor(r) : null;
+      const residual = p !== null && r.v !== null ? Number((r.v - p).toFixed(3)) : null;
       lines.push(
-        [s.id, s.name, r.t, r.v, r.q, r.f, r.s, r.tMin, r.vMin, r.complete, r.source, data.resolution, r.datum ?? data.datum, data.units, data.retrievedAt]
+        [s.id, s.name, r.t, r.v, p, residual, r.q, r.f, r.s, r.tMin, r.vMin, r.complete, r.source, data.resolution, r.datum ?? data.datum, data.units, data.retrievedAt]
           .map(esc)
           .join(','),
       );
@@ -278,8 +288,8 @@ function toCsv(result) {
 }
 
 /** Trigger a browser download of the CSV via a temporary object URL. */
-function downloadCsv(result) {
-  const blob = new Blob([toCsv(result)], { type: 'text/csv' });
+function downloadCsv(result, predictions) {
+  const blob = new Blob([toCsv(result, predictions)], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   const target = parseTarget(result.form.target);
@@ -352,14 +362,32 @@ export default function ReadingsPage() {
     const [start, end] = rangeBounds(f, timesOn(f));
     fetchHistorical(parseTarget(f.target), { start, end, resolution: f.resolution, datum: f.datum }, { signal: ctl.signal })
       .then((data) => {
-        setResult({ form: f, data, series: toSeries(data) });
+        setResult({ form: f, data, series: toSeries(data), predictions: f.predictions ? { status: 'loading' } : null });
         setRequest({ status: 'idle' });
         setTablePage(0);
+        if (f.predictions) loadPredictions(f, data, ctl.signal);
       })
       .catch((e) => {
         if (e.name === 'AbortError') return;
         setRequest({ status: 'error', message: e.message });
       });
+  };
+
+  /**
+   * Fetch the tide predictions matching a readings response (same gauges, range and
+   * datum) and attach them to that result. The readings are already on screen, so a
+   * failure here only adds a note. A newer search replaces the result and wins.
+   */
+  const loadPredictions = (f, data, signal) => {
+    const attach = (predictions) => setResult((r) => (r && r.data === data ? { ...r, predictions } : r));
+    const req = predictionRequestFor(data);
+    if (req.error) {
+      attach({ status: 'error', message: req.error });
+      return;
+    }
+    fetchPredictions(parseTarget(f.target), { ...req, datum: f.datum }, { signal })
+      .then((resp) => attach({ status: 'ok', byStation: toPredictionSeries(resp, data.resolution) }))
+      .catch((e) => e.name !== 'AbortError' && attach({ status: 'error', message: e.message }));
   };
 
   // Run the initial request once (default view, or a shared link)
@@ -584,6 +612,16 @@ export default function ReadingsPage() {
               <p className="hx-hint">NAVD88 isn't available {parseTarget(form.target).type === 'location' ? 'at every gauge here' : 'at this gauge'}, so readings are on MSL.</p>
             )}
 
+            <label className="hx-check">
+              <input type="checkbox" checked={form.predictions} onChange={(e) => update({ predictions: e.target.checked })} />
+              Compare with tide predictions
+            </label>
+            {form.predictions && (
+              <p className="hx-hint">
+                Adds NOAA's predicted tide (the tide alone, no storm surge) as a dotted line. Observed minus predicted shows how far weather pushed the water.
+              </p>
+            )}
+
             <SubLabel as="label" htmlFor="hx-trigger">Trigger level (optional, same datum)</SubLabel>
             <div className="hx-suffix">
               <input
@@ -646,7 +684,7 @@ export default function ReadingsPage() {
           )}
         </div>
         {result ? (
-          <Results result={result} trigger={trigger} directory={directory} onEdit={editRequest} />
+          <Results result={result} trigger={trigger} showPredictions={form.predictions} directory={directory} onEdit={editRequest} />
         ) : (
           !loading && request.status !== 'error' && <p className="hx-muted">No readings yet. Fill in the request above.</p>
         )}
@@ -659,6 +697,7 @@ export default function ReadingsPage() {
             series={result.series.filter((s) => !s.error)}
             resolution={result.data.resolution}
             trigger={trigger}
+            predictions={form.predictions && result.predictions?.status === 'ok' ? result.predictions.byStation : null}
             page={tablePage}
             setPage={setTablePage}
           />
@@ -673,8 +712,11 @@ export default function ReadingsPage() {
  * (not the submitted one), so changing it updates the cards and chart instantly
  * without refetching.
  */
-function Results({ result, trigger, directory, onEdit }) {
+function Results({ result, trigger, showPredictions, directory, onEdit }) {
   const { form, data, series } = result;
+  // Predictions show while the live checkbox is on; turning it off hides them without refetching
+  const predState = showPredictions ? result.predictions : null;
+  const predictions = predState?.status === 'ok' ? predState.byStation : null;
   const latest = Boolean(form.latest); // the "Latest" preset: the last hour of 1-minute data
   const resolution = data.resolution;
   const config = RESOLUTIONS[resolution];
@@ -689,6 +731,13 @@ function Results({ result, trigger, directory, onEdit }) {
     () => series.map((s) => (s.error ? null : summarize(s, { resolution, start, end, trigger }))),
     [series, resolution, start, end, trigger],
   );
+  // Each gauge's largest rise above the predicted tide
+  const residuals = useMemo(
+    () => series.map((s) => (s.error ? null : maxResidual(s, predictions?.get(s.id)))),
+    [series, predictions],
+  );
+  // Gauges whose predictions failed (e.g. NOAA publishes none for that station)
+  const predErrors = predictions ? ok.map((s) => ({ s, p: predictions.get(s.id) })).filter(({ p }) => p?.error) : [];
   const totalReadings = ok.reduce((n, s) => n + s.readings.length, 0);
   const valueLabel = resolution === 'daily' ? 'Daily maximum water level' : `${config.label} water level`;
   // The API reports each station's datum (MSL, else NAVD88); a location's top-level
@@ -746,7 +795,7 @@ function Results({ result, trigger, directory, onEdit }) {
             {s.error ? (
               <p className="hx-error">{s.error}</p>
             ) : (
-              <Summary summary={summaries[i]} resolution={resolution} trigger={trigger} latest={latest} />
+              <Summary summary={summaries[i]} residual={residuals[i]} resolution={resolution} trigger={trigger} latest={latest} />
             )}
           </li>
         ))}
@@ -755,17 +804,39 @@ function Results({ result, trigger, directory, onEdit }) {
       {ok.length > 0 && (
         <>
           <SubLabel>Historical · {valueLabel.toLowerCase()}, {unitsLabel}</SubLabel>
-          {ok.length > 1 && (
+          {(ok.length > 1 || predictions) && (
             <ul className="hx-legend" aria-label="Legend">
-              {ok.map((s) => (
-                <li key={s.id}>
-                  <span className="hx-key" style={{ background: s.color }} aria-hidden="true" />
-                  {s.name}
+              {ok.length > 1 &&
+                ok.map((s) => (
+                  <li key={s.id}>
+                    <span className="hx-key" style={{ background: s.color }} aria-hidden="true" />
+                    {s.name}
+                  </li>
+                ))}
+              {predictions && (
+                <li>
+                  <span className="hx-key hx-key-pred" aria-hidden="true" />
+                  {resolution === 'daily' ? 'Predicted daily high tide' : 'Predicted tide'}
                 </li>
-              ))}
+              )}
             </ul>
           )}
-          <ReadingsChart series={ok} domain={domain} trigger={trigger} stepMs={config.stepMs} valueLabel={valueLabel} unitsLabel={unitsLabel} showReadingTime={resolution === 'daily'} />
+          {predState?.status === 'loading' && <p className="hx-pred-note">Loading tide predictions…</p>}
+          {predState?.status === 'error' && <p className="hx-pred-note">Tide predictions unavailable: {predState.message}</p>}
+          {showPredictions && !result.predictions && <p className="hx-pred-note">Press Get readings to add tide predictions.</p>}
+          {predErrors.map(({ s, p }) => (
+            <p key={s.id} className="hx-pred-note">No tide predictions for {s.name}: {p.error}</p>
+          ))}
+          <ReadingsChart
+            series={ok}
+            predictions={predictions}
+            domain={domain}
+            trigger={trigger}
+            stepMs={config.stepMs}
+            valueLabel={valueLabel}
+            unitsLabel={unitsLabel}
+            showReadingTime={resolution === 'daily'}
+          />
         </>
       )}
 
@@ -785,11 +856,12 @@ function Results({ result, trigger, directory, onEdit }) {
       )}
       <p className="sec-source">
         Source: NOAA CO-OPS Data API · {config.label.toLowerCase()} data, {unitsLabel}, UTC · retrieved {formatDateTime(data.retrievedAt)}
+        {predictions && ` · predictions: NOAA astronomical tide${resolution === 'daily' ? ' (daily highest high)' : ''}`}
       </p>
 
       {/* Centered secondary action, like "+ Add layer" */}
       <div className="sec-foot">
-        <ActionButton type="button" tone="ghost" size="px-6 py-2.5 text-sm" disabled={!totalReadings} onClick={() => downloadCsv(result)}>
+        <ActionButton type="button" tone="ghost" size="px-6 py-2.5 text-sm" disabled={!totalReadings} onClick={() => downloadCsv(result, predictions)}>
           + Download CSV
         </ActionButton>
       </div>
@@ -798,7 +870,7 @@ function Results({ result, trigger, directory, onEdit }) {
 }
 
 /** One gauge's card contents (the gauge name is rendered by Results). */
-function Summary({ summary, resolution, trigger, latest = false }) {
+function Summary({ summary, residual, resolution, trigger, latest = false }) {
   const { peak, latest: last, count, missing, verifiedShare, startsLate, endsEarly, above, aboveLabel, firstAbove } = summary;
   // "Latest" leads with the gauge's current level; other ranges lead with the peak
   const lead = latest ? last : peak;
@@ -816,6 +888,17 @@ function Summary({ summary, resolution, trigger, latest = false }) {
           <div>
             <dt>Peak</dt>
             <dd>{peak.v.toFixed(2)} ft at {peak.t.slice(11, 16)} UTC</dd>
+          </div>
+        )}
+        {residual && (
+          <div>
+            <dt>{resolution === 'daily' ? 'Max above predicted high' : 'Max above tide'}</dt>
+            <dd>
+              <span className={residual.v > 0 ? 'hx-surge-up' : undefined}>{formatResidual(residual.v)}</span>
+              <span className="hx-muted hx-block">
+                {formatDateTime(residual.t)}: {residual.observed.toFixed(2)} observed vs {residual.predicted.toFixed(2)} predicted
+              </span>
+            </dd>
           </div>
         )}
         <div>
@@ -862,7 +945,7 @@ function Summary({ summary, resolution, trigger, latest = false }) {
  * Table view: every reading from every gauge, merged in time order, 500 rows per
  * page. Rows at or above the trigger are highlighted. Daily data adds a min column.
  */
-function ReadingsTable({ series, resolution, trigger, page, setPage }) {
+function ReadingsTable({ series, resolution, trigger, predictions, page, setPage }) {
   const rows = useMemo(() => {
     const all = [];
     for (const s of series) for (const r of s.readings) all.push({ s, r });
@@ -883,21 +966,29 @@ function ReadingsTable({ series, resolution, trigger, page, setPage }) {
             <th scope="col">Gauge</th>
             <th scope="col" className="num">{daily ? 'Daily max (ft)' : 'Level (ft)'}</th>
             {daily && <th scope="col" className="num">Daily min (ft)</th>}
+            {predictions && <th scope="col" className="num">{daily ? 'Predicted high (ft)' : 'Predicted (ft)'}</th>}
+            {predictions && <th scope="col" className="num">vs tide (ft)</th>}
             <th scope="col">Status</th>
             <th scope="col">Flags</th>
           </tr>
         </thead>
         <tbody>
-          {slice.map(({ s, r }) => (
+          {slice.map(({ s, r }) => {
+            const pred = predictions?.get(s.id);
+            const p = pred && !pred.error ? pred.valueFor(r) : null;
+            return (
             <tr key={`${s.id}-${r.t}`} className={trigger !== null && r.v !== null && r.v >= trigger ? 'hx-row-hit' : undefined}>
               <td>{formatDateTime(r.t).replace(' UTC', '')}</td>
               <td>{s.name}</td>
               <td className="num">{r.v === null ? '–' : r.v.toFixed(3)}</td>
               {daily && <td className="num">{r.vMin == null ? '–' : r.vMin.toFixed(3)}</td>}
+              {predictions && <td className="num">{p === null ? '–' : p.toFixed(3)}</td>}
+              {predictions && <td className="num">{p === null || r.v === null ? '–' : `${r.v - p >= 0 ? '+' : '−'}${Math.abs(r.v - p).toFixed(3)}`}</td>}
               <td>{r.q === 'v' ? 'Verified' : r.q === 'p' ? 'Preliminary' : '–'}</td>
               <td className="hx-muted">{r.f ?? ''}</td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
       <div className="hx-pager">

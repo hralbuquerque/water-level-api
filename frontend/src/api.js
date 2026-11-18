@@ -52,3 +52,18 @@ export function fetchHistorical(target, { start, end, resolution, datum }, { sig
   return getJson(`${base}/historical?${query}`, { signal });
 }
 
+
+/**
+ * Tide predictions (astronomical tide only, no storm surge) for a location or a
+ * single station over a date range. Dates may be in the future.
+ *
+ * @param {{ type: 'location'|'station', id: string }} target
+ * @param {{ start: string, end: string, interval: string, datum?: string }} range - YYYY-MM-DD
+ *   or YYYY-MM-DDTHH:mm (UTC, inclusive); interval is '1min' | '6min' | 'hourly' | 'hilo' | ...
+ */
+export function fetchPredictions(target, { start, end, interval, datum }, { signal } = {}) {
+  const base = target.type === 'location' ? `/locations/${encodeURIComponent(target.id)}` : `/stations/${encodeURIComponent(target.id)}`;
+  const query = new URLSearchParams({ start, end, interval });
+  if (datum) query.set('datum', datum);
+  return getJson(`${base}/predictions?${query}`, { signal });
+}

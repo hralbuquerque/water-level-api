@@ -1,5 +1,6 @@
 /**
- * The app's water-level line chart: one line per gauge, drawn as plain SVG.
+ * The app's water-level line chart: one line per gauge, drawn as plain SVG, plus
+ * an optional dashed line per gauge for its predicted (astronomical) tide.
  * Used by the readings page and by the landing page's live panel.
  *
  * Built by hand rather than with a chart library because it has to stay fast with
@@ -107,6 +108,12 @@ function extentIn(series, t0, t1) {
   return Number.isFinite(lo) ? { lo, hi, peak } : null;
 }
 
+/** Merge two extents (either may be null), keeping the first one's peak. */
+function mergeExtent(a, b) {
+  if (!a || !b) return a ?? (b && { ...b, peak: null });
+  return { lo: Math.min(a.lo, b.lo), hi: Math.max(a.hi, b.hi), peak: a.peak };
+}
+
 /** NOAA flags worth showing: the 6-minute flag string ("0,0,0,0") only matters when one is set. */
 const flagNote = (f) => (typeof f === 'string' && /[1-9]/.test(f) ? ` · NOAA flags ${f}` : '');
 
@@ -124,6 +131,9 @@ const flagNote = (f) => (typeof f === 'string' && /[1-9]/.test(f) ? ` · NOAA fl
  * @param {number} [props.height] - plot height in px, axes included (the overview strip is added below)
  * @param {string} [props.unitsLabel] - units and datum shown in the tooltip
  * @param {string} [props.triggerClassName] - extra class on the trigger line, e.g. to color it by status
+ * @param {Map<string, { times: number[], values: (number|null)[], stepMs: number, valueFor: Function, error?: string }>} [props.predictions]
+ *   Predicted tide per gauge id (see predictions.js). Drawn dashed in the gauge's color and
+ *   shown in the tooltip with the residual (observed minus predicted). The y axis fits both.
  */
 export default function ReadingsChart({
   series,
@@ -135,7 +145,16 @@ export default function ReadingsChart({
   height = 340,
   unitsLabel = 'ft',
   triggerClassName = '',
+  predictions = null,
 }) {
+  // Prediction series in the same order as `series`; null where a gauge has none
+  const preds = useMemo(
+    () => series.map((s) => {
+      const p = predictions?.get(s.id);
+      return p && !p.error && p.times.length ? p : null;
+    }),
+    [series, predictions],
+  );
   const [width, setWidth] = useState(0); // 0 until the container has been measured
   const [hoverT, setHoverT] = useState(null); // time (ms) under the pointer or keyboard cursor, or null
   const [zoom, setZoom] = useState(null); // visible [t0, t1] in ms, or null for the whole domain
@@ -208,7 +227,8 @@ export default function ReadingsChart({
     const [t0, t1] = view; // the visible range, so missing coverage shows as empty space
     // Fit the y axis to what's visible; fall back to the whole series inside a gap
     const inView = extentIn(series, t0, t1);
-    let { lo, hi } = inView ?? overview.ext;
+    const predInView = extentIn(preds.filter(Boolean), t0, t1);
+    let { lo, hi } = mergeExtent(inView, predInView) ?? overview.ext;
     if (trigger !== null) {
       lo = Math.min(lo, trigger);
       hi = Math.max(hi, trigger);
@@ -226,8 +246,13 @@ export default function ReadingsChart({
       const [i0, i1] = visibleRange(s.times, t0, t1);
       return buildPath(s.times, s.values, x, y, stepMs * 2.5, i0, i1);
     });
-    return { t0, t1, x, y, yTicks, xt, paths, peak: inView?.peak ?? null };
-  }, [series, overview, view, trigger, width, plotW, plotH, stepMs]);
+    const predPaths = preds.map((p) => {
+      if (!p) return null;
+      const [i0, i1] = visibleRange(p.times, t0, t1);
+      return buildPath(p.times, p.values, x, y, p.stepMs * 2.5, i0, i1);
+    });
+    return { t0, t1, x, y, yTicks, xt, paths, predPaths, peak: inView?.peak ?? null };
+  }, [series, preds, overview, view, trigger, width, plotW, plotH, stepMs]);
 
   if (!overview) {
     return <p className="hx-empty">No readings with a value in this range.</p>;
@@ -235,7 +260,7 @@ export default function ReadingsChart({
   // First render: draw an empty frame of the right height so it can be measured without a layout jump
   if (!width || !layout) return <div className="hx-chart" ref={wrapRef} style={{ height: svgH + 12 }} />;
 
-  const { t0, t1, x, y, yTicks, xt, paths, peak } = layout;
+  const { t0, t1, x, y, yTicks, xt, paths, predPaths, peak } = layout;
   const { ox } = overview;
   const toT = (px) => t0 + ((px - M.left) / plotW) * (t1 - t0);
   const fromOverview = (px) => full[0] + ((px - M.left) / plotW) * (full[1] - full[0]);
@@ -252,11 +277,24 @@ export default function ReadingsChart({
   const readout =
     hoverT === null
       ? null
-      : series.map((s) => {
-          if (!s.times.length) return { s, r: null };
-          const i = nearestIndex(s.times, hoverT);
-          const near = Math.abs(s.times[i] - hoverT) <= Math.max(stepMs, (t1 - t0) / plotW) * 1.5;
-          return { s, r: near ? s.readings[i] : null };
+      : series.map((s, k) => {
+          const tol = Math.max(stepMs, (t1 - t0) / plotW) * 1.5;
+          let r = null;
+          if (s.times.length) {
+            const i = nearestIndex(s.times, hoverT);
+            if (Math.abs(s.times[i] - hoverT) <= tol) r = s.readings[i];
+          }
+          // The prediction matching the reading (same time, or same day for daily data),
+          // or, with no reading here, the nearest prediction to the cursor
+          const p = preds[k];
+          let predicted = null;
+          if (p && r && r.v !== null) {
+            predicted = p.valueFor(r);
+          } else if (p) {
+            const j = nearestIndex(p.times, hoverT);
+            if (Math.abs(p.times[j] - hoverT) <= Math.max(p.stepMs, (t1 - t0) / plotW) * 1.5) predicted = p.values[j];
+          }
+          return { s, r, predicted };
         });
 
   // Pointer position in SVG units. The SVG can be scaled by CSS, so map through its
@@ -502,6 +540,8 @@ export default function ReadingsChart({
 
           {/* Series, clipped to the plot so zoomed lines stop at its edges */}
           <g clipPath={`url(#${clipId})`}>
+            {/* Predicted tide first, so the observed lines draw over it */}
+            {predPaths.map((d, i) => d && <path key={`p-${series[i].id}`} d={d} className="hx-line-pred" style={{ stroke: series[i].color }} />)}
             {paths.map((d, i) => (
               <path key={series[i].id} d={d} className="hx-line" style={{ stroke: series[i].color }} />
             ))}
@@ -558,7 +598,7 @@ export default function ReadingsChart({
         {readout && (
           <div className="hx-tooltip" style={{ left: tooltipLeft, top: M.top }} role="status">
             <div className="hx-tooltip-time">{formatDateTime(new Date(hoverT).toISOString())}</div>
-            {readout.map(({ s, r }) => (
+            {readout.map(({ s, r, predicted }) => (
               <div key={s.id} className="hx-tooltip-row">
                 <span className="hx-key" style={{ background: s.color }} aria-hidden="true" />
                 <strong>{r && r.v !== null ? `${r.v.toFixed(2)} ft` : 'No reading'}</strong>
@@ -568,6 +608,20 @@ export default function ReadingsChart({
                   {r && r.q ? ` · ${r.q === 'v' ? 'verified' : 'preliminary'}` : ''}
                   {r ? flagNote(r.f) : ''}
                 </span>
+                {predicted !== null && (
+                  <span className="hx-tooltip-pred">
+                    Predicted {predicted.toFixed(2)} ft
+                    {r && r.v !== null && (
+                      <>
+                        {' · '}
+                        <span className={r.v - predicted >= 0 ? 'hx-surge-up' : 'hx-surge-down'}>
+                          {r.v - predicted >= 0 ? '+' : '−'}
+                          {Math.abs(r.v - predicted).toFixed(2)} ft vs tide
+                        </span>
+                      </>
+                    )}
+                  </span>
+                )}
               </div>
             ))}
             <div className="hx-tooltip-units">{unitsLabel}</div>

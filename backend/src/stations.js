@@ -42,6 +42,9 @@ export const STATIONS = Object.fromEntries(
     established: s.established ?? null,
     datum: pickDatum(s), // what readings for this station are reported against
     datums: s.datums.filter((d) => DATUM_PREFERENCE.includes(d)), // all supported datums it has
+    // Tide predictions NOAA publishes: 'harmonic' (every interval), 'subordinate'
+    // (high/low only) or null (none)
+    predictions: s.predictions ?? null,
   }])
 );
 
