@@ -1,14 +1,13 @@
 /**
  * Refresh data/stations.json from NOAA's Metadata API: every water-level station
- * with its name, state, coordinates and the date NOAA says it was established.
+ * with its name, state, coordinates, the date NOAA says it was established, the
+ * datums we support that it has, and whether NOAA publishes tide predictions for it.
  *
  * Run from backend/:  node scripts/syncStations.js
  *
  * `established` is where "All history" starts looking for a station's data
  * (with a safety margin; see probeStartFor in src/noaa.js).
  */
-
-// TODO: Add predictions variables
 
 import { writeFileSync } from 'node:fs';
 
@@ -19,6 +18,14 @@ const url = `${MDAPI}/stations.json?type=waterlevels&expand=details`;
 const response = await fetch(url);
 if (!response.ok) throw new Error(`NOAA Metadata API returned ${response.status} ${response.statusText}`);
 const { stations } = await response.json();
+
+// Which stations NOAA publishes tide predictions for. 'R' (reference/harmonic)
+// stations support every prediction interval; 'S' (subordinate) ones only
+// high/low. A station missing from this list has no predictions at all.
+const tpResponse = await fetch(`${MDAPI}/stations.json?type=tidepredictions`);
+if (!tpResponse.ok) throw new Error(`NOAA Metadata API returned ${tpResponse.status} ${tpResponse.statusText}`);
+const PREDICTION_TYPES = { R: 'harmonic', S: 'subordinate' };
+const predictionsById = new Map((await tpResponse.json()).stations.map((s) => [s.id, PREDICTION_TYPES[s.type] ?? null]));
 
 // The datums we support. NOAA names NAVD as 'NAVD88'.
 const WANTED_DATUMS = ['MSL', 'NAVD88'];
@@ -62,9 +69,12 @@ const slim = stations.map((s) => ({
   lng: s.lng,
   established: s.details?.established ? s.details.established.slice(0, 10) : null, // "1920-05-24 00:00:00" -> "1920-05-24"
   datums: datumsById.get(s.id) ?? [],
+  predictions: predictionsById.get(s.id) ?? null, // 'harmonic' | 'subordinate' | null (none)
 }));
 
 writeFileSync('data/stations.json', `${JSON.stringify(slim, null, 2)}\n`);
 const count = (name) => slim.filter((s) => s.datums.includes(name)).length;
 console.log(`Wrote ${slim.length} stations to data/stations.json`);
+const predictions = (type) => slim.filter((s) => s.predictions === type).length;
 console.log(`  MSL: ${count('MSL')}  NAVD88: ${count('NAVD88')}  neither: ${slim.filter((s) => !s.datums.length).length}`);
+console.log(`  predictions: ${predictions('harmonic')} harmonic, ${predictions('subordinate')} subordinate, ${predictions(null)} none`);

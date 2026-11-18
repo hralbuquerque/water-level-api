@@ -1,6 +1,17 @@
 /**
- * The app's water-level line chart: one line per gauge, drawn as plain SVG.
+ * The app's water-level line chart: one line per gauge, drawn as plain SVG, plus
+ * an optional dotted line per gauge for its predicted (astronomical) tide. With
+ * predictions, a second panel under the levels plots the residual (observed minus
+ * predicted, i.e. the surge) on the same time axis, since the surge is what a
+ * trigger is about and it is hard to see on top of a several-foot tide.
  * Used by the readings page and by the landing page's live panel.
+ *
+ * Encodings: observed solid, predicted dotted, preliminary readings dashed (only
+ * when a view mixes preliminary and verified; otherwise a note says which), the
+ * stretch at or above the trigger gets a wide halo. None of these rely on hue.
+ *
+ * Zooming changes only the time axis: both y axes stay fitted to all the loaded data,
+ * so values keep their vertical position while zooming and panning.
  *
  * Built by hand rather than with a chart library because it has to stay fast with
  * ~260k points (a year of 6-minute data at three gauges) and must never smooth away
@@ -18,11 +29,14 @@
  */
 import { useCallback, useId, useMemo, useRef, useState } from 'react';
 import { ActionButton } from '../theme/Primitives.jsx';
+import { formatResidual, residualSeries } from './predictions.js';
 import { formatDateTime, niceTicks, timeTicks } from './time.js';
 import { clampView, isFullView, lowerBound, panView, visibleRange, zoomView } from './zoom.js';
 import './readings.css';
 
-const M = { top: 16, right: 20, bottom: 34, left: 52 }; // margins around the plot for axis labels
+const M = { top: 26, right: 20, bottom: 34, left: 60 }; // margins around the plot for axis labels (top holds the axis titles)
+const RES_H = 110; // px; height of the residual (surge) panel
+const RES_GAP = 34; // px between the level plot and the residual panel; holds the panel's title
 const BRUSH_H = 36; // px; height of the overview strip under the x axis
 const BRUSH_GAP = 10; // px between the x-axis labels and the strip
 const MIN_DRAG_PX = 6; // a drag shorter than this is a click, not a selection
@@ -40,7 +54,7 @@ function nearestIndex(times, t) {
  * per pixel column (in time order) so peaks survive however many points there are.
  * The line breaks at missing values and at gaps longer than `gapMs`.
  */
-function buildPath(times, values, x, y, gapMs, i0 = 0, i1 = times.length) {
+function buildPath(times, values, x, y, gapMs, i0 = 0, i1 = times.length, skip = null) {
   const parts = [];
   let penDown = false;
   let col = null;
@@ -59,8 +73,9 @@ function buildPath(times, values, x, y, gapMs, i0 = 0, i1 = times.length) {
 
   for (let i = i0; i < i1; i++) {
     const v = values[i];
-    // A missing value lifts the pen, so the line shows a gap instead of bridging it
-    if (v === null) {
+    // A missing value lifts the pen, so the line shows a gap instead of bridging it.
+    // `skip` does the same for readings drawn by another path (e.g. preliminary ones).
+    if (v === null || skip?.(i)) {
       flush();
       penDown = false;
       col = null;
@@ -107,6 +122,12 @@ function extentIn(series, t0, t1) {
   return Number.isFinite(lo) ? { lo, hi, peak } : null;
 }
 
+/** Merge two extents (either may be null), keeping the first one's peak. */
+function mergeExtent(a, b) {
+  if (!a || !b) return a ?? (b && { ...b, peak: null });
+  return { lo: Math.min(a.lo, b.lo), hi: Math.max(a.hi, b.hi), peak: a.peak };
+}
+
 /** NOAA flags worth showing: the 6-minute flag string ("0,0,0,0") only matters when one is set. */
 const flagNote = (f) => (typeof f === 'string' && /[1-9]/.test(f) ? ` · NOAA flags ${f}` : '');
 
@@ -122,8 +143,14 @@ const flagNote = (f) => (typeof f === 'string' && /[1-9]/.test(f) ? ` · NOAA fl
  * @param {string} props.valueLabel - e.g. "Water level" or "Daily max"
  * @param {boolean} [props.showReadingTime] - show each reading's own time (daily max happens at a time of its own)
  * @param {number} [props.height] - plot height in px, axes included (the overview strip is added below)
- * @param {string} [props.unitsLabel] - units and datum shown in the tooltip
+ * @param {string} [props.unitsLabel] - units and datum, e.g. "ft above MSL": the y-axis title and the tooltip footer
+ * @param {string|null} [props.datum] - the readings' datum ("MSL", "NAVD88"), labels the 0 ft baseline; null if mixed
+ * @param {string} [props.residualLabel] - title of the residual panel
  * @param {string} [props.triggerClassName] - extra class on the trigger line, e.g. to color it by status
+ * @param {Map<string, { times: number[], values: (number|null)[], stepMs: number, valueFor: Function, error?: string }>} [props.predictions]
+ *   Predicted tide per gauge id (see predictions.js). Drawn dotted in the gauge's color and
+ *   shown in the tooltip with the residual (observed minus predicted). The y axis fits both,
+ *   and the residual gets its own panel below, sharing the time axis.
  */
 export default function ReadingsChart({
   series,
@@ -135,7 +162,36 @@ export default function ReadingsChart({
   height = 340,
   unitsLabel = 'ft',
   triggerClassName = '',
+  predictions = null,
+  datum = null,
+  residualLabel = 'Surge: observed minus predicted tide, ft',
 }) {
+  // Prediction series in the same order as `series`; null where a gauge has none
+  const preds = useMemo(
+    () => series.map((s) => {
+      const p = predictions?.get(s.id);
+      return p && !p.error && p.times.length ? p : null;
+    }),
+    [series, predictions],
+  );
+  // Residual (observed minus predicted) per gauge, same order; null where a gauge has no predictions
+  const resid = useMemo(() => series.map((s, k) => residualSeries(s, preds[k])), [series, preds]);
+  const hasResid = resid.some(Boolean);
+  // Preliminary vs verified, per gauge: is any reading preliminary, and is any not?
+  // Only a gauge that mixes both gets dashed preliminary stretches; otherwise a note says which.
+  const quality = useMemo(
+    () => series.map((s) => {
+      let p = false;
+      let v = false;
+      for (const r of s.readings) {
+        if (r.q === 'p') p = true;
+        else v = true;
+        if (p && v) break;
+      }
+      return { p, v, mixed: p && v };
+    }),
+    [series],
+  );
   const [width, setWidth] = useState(0); // 0 until the container has been measured
   const [hoverT, setHoverT] = useState(null); // time (ms) under the pointer or keyboard cursor, or null
   const [zoom, setZoom] = useState(null); // visible [t0, t1] in ms, or null for the whole domain
@@ -184,7 +240,10 @@ export default function ReadingsChart({
 
   const plotW = width - M.left - M.right;
   const plotH = height - M.top - M.bottom;
-  const brushTop = height + BRUSH_GAP;
+  // With a residual panel, the shared time axis and its labels move under it
+  const resTop = M.top + plotH + RES_GAP;
+  const axisY = hasResid ? resTop + RES_H : M.top + plotH;
+  const brushTop = axisY + M.bottom + BRUSH_GAP;
   const svgH = brushTop + BRUSH_H + 2;
 
   // The overview strip: every series over the whole domain, with its own small y scale.
@@ -203,31 +262,77 @@ export default function ReadingsChart({
 
   // Everything that depends on the data, the size or the view: scales, ticks, paths and
   // the peak in view. Recomputed only when those change, not on every hover.
-  const layout = useMemo(() => {
-    if (!overview || !width) return null;
-    const [t0, t1] = view; // the visible range, so missing coverage shows as empty space
-    // Fit the y axis to what's visible; fall back to the whole series inside a gap
-    const inView = extentIn(series, t0, t1);
-    let { lo, hi } = inView ?? overview.ext;
+  // The y extents of both panels, from all the loaded data rather than the zoomed view,
+  // so zooming and panning in time never shift the vertical axes. They change only when
+  // the data does (a new request, predictions arriving or toggled, a datum change) or the trigger.
+  const yFit = useMemo(() => {
+    if (!overview) return null;
+    let { lo, hi } = mergeExtent(overview.ext, extentIn(preds.filter(Boolean), -Infinity, Infinity));
     if (trigger !== null) {
       lo = Math.min(lo, trigger);
       hi = Math.max(hi, trigger);
     }
+    const rExt = hasResid ? extentIn(resid.filter(Boolean), -Infinity, Infinity) : null;
+    return { lo, hi, rExt };
+  }, [overview, preds, resid, hasResid, trigger]);
+
+  const layout = useMemo(() => {
+    if (!overview || !width || !yFit) return null;
+    const [t0, t1] = view; // the visible range, so missing coverage shows as empty space
+    const inView = extentIn(series, t0, t1); // only for the "peak in view" label
+    const { lo, hi } = yFit;
     const yTicks = niceTicks(lo, hi, Math.max(3, Math.round(plotH / 50)));
     const yLo = yTicks[0];
     const yHi = yTicks[yTicks.length - 1] === yLo ? yLo + 1 : yTicks[yTicks.length - 1];
     // Scales: time (ms) -> px from the left, feet -> px from the top
     const x = (t) => M.left + ((t - t0) / (t1 - t0)) * plotW;
     const y = (v) => M.top + (1 - (v - yLo) / (yHi - yLo)) * plotH;
-    const xt = timeTicks(t0, t1, Math.max(2, Math.floor(plotW / 110)));
+    const xt = timeTicks(t0, t1, Math.max(3, Math.floor(plotW / 80)));
     // Break a line where readings are more than 2.5 intervals apart (a real gap, not jitter).
     // Only the readings in view (plus one either side) are walked.
-    const paths = series.map((s) => {
+    // A gauge mixing preliminary and verified readings gets two paths: verified solid,
+    // preliminary dashed. The preliminary one also takes the verified reading on either
+    // side of each stretch, so the two join up instead of leaving a false gap.
+    const paths = [];
+    const prelimPaths = [];
+    const fullPaths = []; // every reading, for the at-or-above-trigger halo
+    series.forEach((s, k) => {
       const [i0, i1] = visibleRange(s.times, t0, t1);
-      return buildPath(s.times, s.values, x, y, stepMs * 2.5, i0, i1);
+      const all = buildPath(s.times, s.values, x, y, stepMs * 2.5, i0, i1);
+      fullPaths.push(all);
+      if (!quality[k].mixed) {
+        paths.push(all);
+        prelimPaths.push(null);
+        return;
+      }
+      const isP = (i) => s.readings[i]?.q === 'p';
+      paths.push(buildPath(s.times, s.values, x, y, stepMs * 2.5, i0, i1, isP));
+      prelimPaths.push(buildPath(s.times, s.values, x, y, stepMs * 2.5, i0, i1, (i) => !(isP(i) || isP(i - 1) || isP(i + 1))));
     });
-    return { t0, t1, x, y, yTicks, xt, paths, peak: inView?.peak ?? null };
-  }, [series, overview, view, trigger, width, plotW, plotH, stepMs]);
+    const predPaths = preds.map((p) => {
+      if (!p) return null;
+      const [i0, i1] = visibleRange(p.times, t0, t1);
+      return buildPath(p.times, p.values, x, y, p.stepMs * 2.5, i0, i1);
+    });
+    // Residual panel: its own y scale, always including 0 (observed = predicted)
+    let res = null;
+    if (hasResid) {
+      const rs = resid.filter(Boolean);
+      const rIn = extentIn(rs, t0, t1); // only for the "largest surge in view" label
+      const { rExt } = yFit;
+      const rTicks = niceTicks(Math.min(rExt.lo, 0), Math.max(rExt.hi, 0), 3);
+      const rLo = rTicks[0];
+      const rHi = rTicks[rTicks.length - 1] === rLo ? rLo + 1 : rTicks[rTicks.length - 1];
+      const yr = (v) => resTop + (1 - (v - rLo) / (rHi - rLo)) * RES_H;
+      const rPaths = resid.map((r) => {
+        if (!r) return null;
+        const [i0, i1] = visibleRange(r.times, t0, t1);
+        return buildPath(r.times, r.values, x, yr, stepMs * 2.5, i0, i1);
+      });
+      res = { yr, rTicks, rPaths, peak: rIn?.peak ?? null };
+    }
+    return { t0, t1, x, y, yTicks, yLo, yHi, xt, paths, prelimPaths, fullPaths, predPaths, res, peak: inView?.peak ?? null };
+  }, [series, preds, resid, hasResid, quality, overview, yFit, view, width, plotW, plotH, resTop, stepMs]);
 
   if (!overview) {
     return <p className="hx-empty">No readings with a value in this range.</p>;
@@ -235,7 +340,7 @@ export default function ReadingsChart({
   // First render: draw an empty frame of the right height so it can be measured without a layout jump
   if (!width || !layout) return <div className="hx-chart" ref={wrapRef} style={{ height: svgH + 12 }} />;
 
-  const { t0, t1, x, y, yTicks, xt, paths, peak } = layout;
+  const { t0, t1, x, y, yTicks, yLo, yHi, xt, paths, prelimPaths, fullPaths, predPaths, res, peak } = layout;
   const { ox } = overview;
   const toT = (px) => t0 + ((px - M.left) / plotW) * (t1 - t0);
   const fromOverview = (px) => full[0] + ((px - M.left) / plotW) * (full[1] - full[0]);
@@ -252,11 +357,24 @@ export default function ReadingsChart({
   const readout =
     hoverT === null
       ? null
-      : series.map((s) => {
-          if (!s.times.length) return { s, r: null };
-          const i = nearestIndex(s.times, hoverT);
-          const near = Math.abs(s.times[i] - hoverT) <= Math.max(stepMs, (t1 - t0) / plotW) * 1.5;
-          return { s, r: near ? s.readings[i] : null };
+      : series.map((s, k) => {
+          const tol = Math.max(stepMs, (t1 - t0) / plotW) * 1.5;
+          let r = null;
+          if (s.times.length) {
+            const i = nearestIndex(s.times, hoverT);
+            if (Math.abs(s.times[i] - hoverT) <= tol) r = s.readings[i];
+          }
+          // The prediction matching the reading (same time, or same day for daily data),
+          // or, with no reading here, the nearest prediction to the cursor
+          const p = preds[k];
+          let predicted = null;
+          if (p && r && r.v !== null) {
+            predicted = p.valueFor(r);
+          } else if (p) {
+            const j = nearestIndex(p.times, hoverT);
+            if (Math.abs(p.times[j] - hoverT) <= Math.max(p.stepMs, (t1 - t0) / plotW) * 1.5) predicted = p.values[j];
+          }
+          return { s, r, predicted };
         });
 
   // Pointer position in SVG units. The SVG can be scaled by CSS, so map through its
@@ -426,7 +544,28 @@ export default function ReadingsChart({
   const tooltipLeft = hx === null ? 0 : tooltipFlip ? Math.max(0, hx - 12 - TOOLTIP_W) : Math.max(hx + 12, 0);
   const sel = selection && [Math.min(x(selection[0]), x(selection[1])), Math.max(x(selection[0]), x(selection[1]))];
   const win = [ox(view[0]), ox(view[1])];
-  const peakText = peak ? `${zoomed ? 'Peak in view' : 'Peak'} ${peak.v.toFixed(2)} ft at ${formatDateTime(new Date(peak.t).toISOString())}` : 'No readings in view';
+  const many = series.length > 1;
+  const isoOf = (t) => new Date(t).toISOString();
+  const peakText = peak
+    ? `${zoomed ? 'Peak in view' : 'Peak'} ${peak.v.toFixed(2)} ${unitsLabel}${many ? ` at ${peak.name}` : ''}, ${formatDateTime(isoOf(peak.t))}`
+    : 'No readings in view';
+  const resPeak = res?.peak ?? null;
+  const surgeText = resPeak
+    ? `Largest surge ${formatResidual(resPeak.v)}${many ? ` at ${resPeak.name}` : ''}, ${formatDateTime(isoOf(resPeak.t))}`
+    : null;
+  // Preliminary vs verified, said in words (the dashed style only appears when a gauge mixes both)
+  const anyMixed = quality.some((q) => q.mixed);
+  const qualityText = anyMixed
+    ? 'Dashed = preliminary (not yet verified)'
+    : quality.every((q) => q.p && !q.v)
+      ? 'All preliminary (not yet verified)'
+      : quality.every((q) => !q.p)
+        ? 'All verified'
+        : 'Some gauges preliminary only';
+  const showZero = yLo < 0 && yHi > 0;
+  // Peak labels are centered on their point and kept inside the plot; narrow plots drop the gauge name
+  const labelHalf = many && plotW >= 420 ? 95 : 55;
+  const labelX = (t) => Math.min(Math.max(x(t), M.left + labelHalf), M.left + plotW - labelHalf);
 
   return (
     <div className="hx-chart-block">
@@ -438,6 +577,8 @@ export default function ReadingsChart({
               : 'Full range'}
           </span>
           <span className="hx-chart-peak">{peakText}</span>
+          {surgeText && <span className="hx-chart-peak">{surgeText}</span>}
+          <span>{qualityText}</span>
         </p>
         <ActionButton tone="ghost" size="px-3 py-1.5 text-xs" onClick={resetZoom} disabled={!zoomed} aria-label="Reset zoom to the full range">
           Reset zoom
@@ -451,7 +592,7 @@ export default function ReadingsChart({
           height={svgH}
           viewBox={`0 0 ${width} ${svgH}`}
           role="application"
-          aria-label={`${valueLabel} chart. ${peakText}. Left and right arrows move through time, plus and minus zoom, Shift with arrows pans, 0 resets the zoom.`}
+          aria-label={`${valueLabel} chart, ${unitsLabel}, times in UTC. ${peakText}.${surgeText ? ` ${surgeText}.` : ''} ${qualityText}. Left and right arrows move through time, plus and minus zoom, Shift with arrows pans, 0 resets the zoom.`}
           tabIndex={0}
           className={selection ? 'is-selecting' : ''}
           onPointerDown={onPointerDown}
@@ -467,71 +608,134 @@ export default function ReadingsChart({
             <clipPath id={clipId}>
               <rect x={M.left} y={M.top - 6} width={plotW} height={plotH + 12} />
             </clipPath>
+            {/* The part of the plot at or above the trigger, for the exceedance halo */}
+            {trigger !== null && (
+              <clipPath id={`${clipId}-hit`}>
+                <rect x={M.left} y={M.top - 6} width={plotW} height={Math.max(0, y(trigger) - M.top + 6)} />
+              </clipPath>
+            )}
+            {res && (
+              <clipPath id={`${clipId}-res`}>
+                <rect x={M.left} y={resTop - 4} width={plotW} height={RES_H + 8} />
+              </clipPath>
+            )}
           </defs>
 
+          {/* Axis titles: units and datum on the left, the time zone on the right */}
+          <text className="hx-axis-title" x={6} y={M.top - 12}>{unitsLabel}</text>
+          <text className="hx-axis-title" x={M.left + plotW} y={M.top - 12} textAnchor="end">Times UTC</text>
+
           {/* Plot background: the target for crosshair hover and drag-to-zoom */}
-          <rect className="hx-plot-hit" x={M.left} y={M.top} width={plotW} height={plotH} />
+          <rect className="hx-plot-hit" x={M.left} y={M.top} width={plotW} height={axisY - M.top} />
 
           {/* Grid + y axis */}
           {yTicks.map((v) => (
             <g key={v}>
               <line className="hx-grid" x1={M.left} x2={M.left + plotW} y1={y(v)} y2={y(v)} />
               <text className="hx-tick" x={M.left - 8} y={y(v)} dy="0.32em" textAnchor="end">
-                {v.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                {/* The 0 tick names the datum, since 0 ft is the datum itself */}
+                {v === 0 && datum ? `${datum} 0` : v.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </text>
             </g>
           ))}
 
-          {/* x axis */}
+          {/* The datum itself (0 ft), when it's in range: values below it are normal on MSL and NAVD88 */}
+          {showZero && <line className="hx-zero" x1={M.left} x2={M.left + plotW} y1={y(0)} y2={y(0)} />}
+
+          {/* x axis: under the lowest panel, shared by both. Day ticks get faint vertical guides
+              so the two panels line up by eye. */}
+          {xt.ticks.filter((t) => x(t) >= M.left && x(t) <= M.left + plotW).map((t) => (
+            <line key={`g-${t}`} className="hx-grid hx-grid-x" x1={x(t)} x2={x(t)} y1={M.top} y2={axisY} />
+          ))}
           <line className="hx-axis" x1={M.left} x2={M.left + plotW} y1={M.top + plotH} y2={M.top + plotH} />
+          {res && <line className="hx-axis" x1={M.left} x2={M.left + plotW} y1={axisY} y2={axisY} />}
           {xt.ticks.filter((t) => x(t) >= M.left + 16 && x(t) <= M.left + plotW - 24).map((t) => (
-            <text key={t} className="hx-tick" x={x(t)} y={M.top + plotH + 20} textAnchor="middle">
+            <text key={t} className="hx-tick" x={x(t)} y={axisY + 20} textAnchor="middle">
               {xt.format(t)}
             </text>
           ))}
+
+          {/* Residual (surge) panel: observed minus predicted, 0 = exactly the predicted tide */}
+          {res && (
+            <g>
+              <text className="hx-panel-title" x={6} y={resTop - 10}>
+                {/* Narrow plots keep only the part before the colon, e.g. "Surge" */}
+                {plotW < 330 ? `${residualLabel.split(':')[0]}, ft (observed − predicted)` : residualLabel}
+              </text>
+              {res.rTicks.map((v) => (
+                <g key={`r-${v}`}>
+                  <line className={v === 0 ? 'hx-zero' : 'hx-grid'} x1={M.left} x2={M.left + plotW} y1={res.yr(v)} y2={res.yr(v)} />
+                  <text className="hx-tick" x={M.left - 8} y={res.yr(v)} dy="0.32em" textAnchor="end">
+                    {v > 0 ? '+' : v < 0 ? '−' : ''}{Math.abs(v).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  </text>
+                </g>
+              ))}
+              <g clipPath={`url(#${clipId}-res)`}>
+                {res.rPaths.map((d, i) => d && <path key={`r-${series[i].id}`} d={d} className="hx-line hx-line-res" style={{ stroke: series[i].color }} />)}
+              </g>
+              {resPeak && hoverT === null && !selection && (
+                <g>
+                  <circle className="hx-dot" cx={x(resPeak.t)} cy={res.yr(resPeak.v)} r={4} style={{ fill: resPeak.color }} />
+                  <text className="hx-peak-label" x={labelX(resPeak.t)} y={Math.max(res.yr(resPeak.v) - 10, resTop + 10)} textAnchor="middle">
+                    {formatResidual(resPeak.v)}{labelHalf > 55 ? ` · ${resPeak.name}` : ''}
+                  </text>
+                </g>
+              )}
+            </g>
+          )}
 
           {/* Trigger level */}
           {trigger !== null && (
             <g>
               <line className={`hx-trigger ${triggerClassName}`} x1={M.left} x2={M.left + plotW} y1={y(trigger)} y2={y(trigger)} />
-              <text className="hx-trigger-label" x={M.left + 8} y={y(trigger) - 6}>
-                Trigger {trigger.toFixed(2)} ft
+              {/* Above the line, unless that would run into the axis titles at the top */}
+              <text className="hx-trigger-label" x={M.left + 8} y={y(trigger) - 6 < M.top + 6 ? y(trigger) + 14 : y(trigger) - 6}>
+                Trigger {trigger.toFixed(2)} {unitsLabel}
               </text>
             </g>
           )}
 
           {/* Series, clipped to the plot so zoomed lines stop at its edges */}
           <g clipPath={`url(#${clipId})`}>
+            {/* Predicted tide first, so the observed lines draw over it */}
+            {predPaths.map((d, i) => d && <path key={`p-${series[i].id}`} d={d} className="hx-line-pred" style={{ stroke: series[i].color }} />)}
+            {/* At or above the trigger: a wide halo under the line, so exceedance reads without color */}
+            {trigger !== null && (
+              <g clipPath={`url(#${clipId}-hit)`}>
+                {fullPaths.map((d, i) => <path key={`h-${series[i].id}`} d={d} className="hx-line-hit" style={{ stroke: series[i].color }} />)}
+              </g>
+            )}
             {paths.map((d, i) => (
               <path key={series[i].id} d={d} className="hx-line" style={{ stroke: series[i].color }} />
             ))}
+            {prelimPaths.map((d, i) => d && <path key={`q-${series[i].id}`} d={d} className="hx-line hx-line-prelim" style={{ stroke: series[i].color }} />)}
           </g>
 
           {/* Peak label: only the single highest reading in view is labelled, and it hides while hovering */}
           {peak && hoverT === null && !selection && (
             <g>
               <circle className="hx-dot" cx={x(peak.t)} cy={y(peak.v)} r={4} style={{ fill: peak.color }} />
-              <text
-                className="hx-peak-label"
-                x={Math.min(Math.max(x(peak.t), M.left + 60), M.left + plotW - 60)}
-                y={Math.max(y(peak.v) - 10, M.top + 10)}
-                textAnchor="middle"
-              >
-                Peak {peak.v.toFixed(2)} ft
+              <text className="hx-peak-label" x={labelX(peak.t)} y={Math.max(y(peak.v) - 10, M.top + 10)} textAnchor="middle">
+                Peak {peak.v.toFixed(2)} ft{labelHalf > 55 ? ` · ${peak.name}` : ''}
               </text>
             </g>
           )}
 
           {/* Drag-to-zoom selection */}
-          {sel && <rect className="hx-selection" x={sel[0]} y={M.top} width={sel[1] - sel[0]} height={plotH} />}
+          {sel && <rect className="hx-selection" x={sel[0]} y={M.top} width={sel[1] - sel[0]} height={axisY - M.top} />}
 
           {/* Crosshair */}
           {hx !== null && (
             <g>
-              <line className="hx-crosshair" x1={hx} x2={hx} y1={M.top} y2={M.top + plotH} />
-              {readout.map(({ s, r }) =>
+              <line className="hx-crosshair" x1={hx} x2={hx} y1={M.top} y2={axisY} />
+              {readout.map(({ s, r, predicted }) =>
                 r && r.v !== null ? (
-                  <circle key={s.id} className="hx-dot" cx={x(Date.parse(r.t))} cy={y(r.v)} r={4} style={{ fill: s.color }} />
+                  <g key={s.id}>
+                    <circle className="hx-dot" cx={x(Date.parse(r.t))} cy={y(r.v)} r={4} style={{ fill: s.color }} />
+                    {res && predicted !== null && (
+                      <circle className="hx-dot" cx={x(Date.parse(r.t))} cy={res.yr(r.v - predicted)} r={4} style={{ fill: s.color }} />
+                    )}
+                  </g>
                 ) : null,
               )}
             </g>
@@ -558,7 +762,7 @@ export default function ReadingsChart({
         {readout && (
           <div className="hx-tooltip" style={{ left: tooltipLeft, top: M.top }} role="status">
             <div className="hx-tooltip-time">{formatDateTime(new Date(hoverT).toISOString())}</div>
-            {readout.map(({ s, r }) => (
+            {readout.map(({ s, r, predicted }) => (
               <div key={s.id} className="hx-tooltip-row">
                 <span className="hx-key" style={{ background: s.color }} aria-hidden="true" />
                 <strong>{r && r.v !== null ? `${r.v.toFixed(2)} ft` : 'No reading'}</strong>
@@ -568,6 +772,17 @@ export default function ReadingsChart({
                   {r && r.q ? ` · ${r.q === 'v' ? 'verified' : 'preliminary'}` : ''}
                   {r ? flagNote(r.f) : ''}
                 </span>
+                {predicted !== null && (
+                  <span className="hx-tooltip-pred">
+                    {showReadingTime ? 'Predicted high' : 'Predicted'} {predicted.toFixed(2)} ft
+                    {r && r.v !== null && (
+                      <>
+                        {' · surge '}
+                        <span className="hx-surge">{formatResidual(r.v - predicted)}</span>
+                      </>
+                    )}
+                  </span>
+                )}
               </div>
             ))}
             <div className="hx-tooltip-units">{unitsLabel}</div>

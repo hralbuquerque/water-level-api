@@ -6,15 +6,14 @@
  * Tests mock the global `fetch`, so nothing here calls NOAA during tests.
  */
 
-import { datumFor } from './stations.js';
-
-// TODO: calculate storm surge
+import { STATIONS, datumFor } from './stations.js';
 
 const NOAA_API_URL = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter';
 
 export const UNITS = 'english';
 const DAY_MS = 24 * 60 * 60 * 1000;
-const NO_DATA = /no data was found/i;
+// Observed products say "No data was found"; predictions say "No Predictions data was found"
+const NO_DATA = /no (predictions )?data was found/i;
 
 /**
  * The resolutions the API serves. `chunkDays` is NOAA's per-request limit (end
@@ -117,7 +116,8 @@ export function splitDateRange(startDate, endDate, chunkDays = CHUNK_DAYS) {
 }
 
 /**
- * Make one NOAA datagetter request and return its `data` field. `params` holds the
+ * Make one NOAA datagetter request and return its rows (`data`, or `predictions`
+ * for that product). `params` holds the
  * request-specific fields (product, and begin_date/end_date or date); the station,
  * datum (already resolved by datumFor in stations.js), units, time zone and format
  * are always added here.
@@ -149,10 +149,12 @@ async function callNoaa(stationId, datum, params) {
   if (!response.ok || data?.error) {
     throw new Error(`NOAA API error: ${message || response.statusText}`);
   }
-  if (data?.data == null || typeof data.data !== 'object') {
+  // Observed products return their rows under `data`; the predictions product under `predictions`
+  const rows = data?.data ?? data?.predictions;
+  if (rows == null || typeof rows !== 'object') {
     throw new Error('Invalid NOAA response: missing data field');
   }
-  return data.data;
+  return rows;
 }
 
 /** One date-range chunk of a product (see RESOLUTIONS). */
@@ -168,8 +170,10 @@ async function fetchChunk(stationId, datum, startDate, endDate, config, extra = 
 /**
  * Fetch historical water level readings from NOAA for a station, paging past
  * NOAA's per-request limits. Chunks are fetched sequentially to stay polite to
- * NOAA. Any hard NOAA error fails the whole range, so callers never get silently
- * partial data.
+ * NOAA. Any hard NOAA error fails the whole range. A chunk NOAA reports as "no
+ * data" (a gauge outage, or before the station existed) is skipped, so the
+ * readings can have holes: callers report them with findGaps, so missing data is
+ * never silent.
  *
  * @param {string|number} stationId - The NOAA tide gauge ID
  * @param {string} startDate - YYYY-MM-DD, or YYYY-MM-DDTHH:mm (UTC) to start at a time (inclusive)
@@ -219,6 +223,67 @@ export async function fetchReadings(stationId, startDate, endDate, resolution = 
   return readings;
 }
 
+// Spacing of readings at each resolution (daily is handled by date)
+const STEP_MS = { '1min': 60_000, '6min': 360_000, hourly: 3_600_000 };
+
+/**
+ * Where a station's readings are missing over the requested range: timestamps
+ * NOAA returned nothing for (an empty chunk, a dropped row) and rows with a null
+ * value. A trigger check over data with gaps can't say a level was "never
+ * reached", only that it wasn't reached in the data available.
+ *
+ * The expected readings run from the start (or the first reading, for
+ * start=earliest) to the end, but never past now. Daily data is counted by UTC date.
+ *
+ * @param {Array} readings - From fetchReadings, oldest first
+ * @param {string} startDate - As passed to fetchReadings
+ * @param {string} endDate - As passed to fetchReadings
+ * @param {string} resolution - A key of RESOLUTIONS
+ * @param {{ fromFirstReading?: boolean, now?: number }} [options]
+ * @returns {{ expected: number, missing: number, gaps: Array<{ start: string, end: string, missing: number }> }}
+ *   Each gap's `start` and `end` are the first and last missing timestamps (inclusive).
+ */
+export function findGaps(readings, startDate, endDate, resolution, { fromFirstReading = false, now = Date.now() } = {}) {
+  const daily = resolution === 'daily';
+  const step = daily ? DAY_MS : STEP_MS[resolution];
+  if (!step) throw new Error(`Unknown resolution: ${resolution}`);
+  const present = new Set(
+    readings.filter((r) => r.v !== null).map((r) => (daily ? r.t.slice(0, 10) : Date.parse(r.t)))
+  );
+
+  let startMs = Date.parse(`${datePart(startDate)}T${(!daily && timePart(startDate)) || '00:00'}:00Z`);
+  if (fromFirstReading && readings.length) startMs = Math.max(startMs, Date.parse(readings[0].t));
+  let endMs = Date.parse(`${datePart(endDate)}T${(!daily && timePart(endDate)) || '23:59'}:00Z`);
+  endMs = Math.min(endMs, now);
+  if (daily) {
+    startMs = parseIsoDate(new Date(startMs).toISOString()).getTime();
+    endMs = parseIsoDate(new Date(endMs).toISOString()).getTime();
+  }
+
+  const gaps = [];
+  let expected = 0;
+  let missing = 0;
+  let open = null;
+  for (let t = Math.ceil(startMs / step) * step; t <= endMs; t += step) {
+    expected++;
+    const key = daily ? toIsoDate(new Date(t)) : t;
+    if (present.has(key)) {
+      open = null;
+      continue;
+    }
+    missing++;
+    const iso = daily ? key : new Date(t).toISOString();
+    if (open) {
+      open.end = iso;
+      open.missing++;
+    } else {
+      open = { start: iso, end: iso, missing: 1 };
+      gaps.push(open);
+    }
+  }
+  return { expected, missing, gaps };
+}
+
 /**
  * The station's most recent 1-minute reading (one_minute_water_level with
  * `date=latest`). 1-minute data is never verified, so it is always preliminary
@@ -244,6 +309,98 @@ export async function fetchLatest(stationId, requestedDatum) {
     defaultQuality: QUALITY_DEFAULTS[LATEST_RESOLUTION],
   });
   return reading ?? null;
+}
+
+/**
+ * Tide prediction intervals (NOAA's `predictions` product). Predictions are the
+ * astronomical tide only: no storm surge, wind, pressure or river flow, so they
+ * show what the tide alone would do and can differ from observed water levels by
+ * feet in a storm.
+ *
+ * NOAA serves up to 3655 days per request at any interval. `chunkDays` keeps each
+ * request a manageable size; `maxDays` caps one API call at roughly 90k values per
+ * station, like RESOLUTIONS. Harmonic stations support every interval; subordinate
+ * stations only `hilo` (see predictionsError).
+ */
+export const PREDICTION_INTERVALS = {
+  '1min': { interval: '1', chunkDays: 31, maxDays: 31 },
+  '5min': { interval: '5', chunkDays: 92, maxDays: 310 },
+  '6min': { interval: '6', chunkDays: 92, maxDays: 366 },
+  '10min': { interval: '10', chunkDays: 365, maxDays: 620 },
+  '15min': { interval: '15', chunkDays: 365, maxDays: 930 },
+  '30min': { interval: '30', chunkDays: 365, maxDays: 1860 },
+  hourly: { interval: 'h', chunkDays: 3650, maxDays: 3660 },
+  hilo: { interval: 'hilo', chunkDays: 3650, maxDays: 3660 }, // each high and low tide, about 4 a day
+};
+
+/**
+ * Why `station` can't give predictions at `interval`, or null if it can.
+ *
+ * @param {Object} station - An entry of STATIONS (with `predictions`)
+ * @param {string} interval - A key of PREDICTION_INTERVALS
+ */
+export function predictionsError(station, interval) {
+  if (!station.predictions) return `station ${station.id} has no tide predictions`;
+  if (station.predictions === 'subordinate' && interval !== 'hilo') {
+    return `station ${station.id} is a subordinate prediction station; only interval=hilo is available`;
+  }
+  return null;
+}
+
+/**
+ * Fetch tide predictions for a station, chunked like fetchReadings. Dates may be
+ * in the past or the future.
+ *
+ * @param {string|number} stationId - The NOAA tide gauge ID
+ * @param {string} startDate - YYYY-MM-DD, or YYYY-MM-DDTHH:mm (UTC) (inclusive)
+ * @param {string} endDate - YYYY-MM-DD (through end of day UTC), or YYYY-MM-DDTHH:mm (inclusive)
+ * @param {string} [interval='6min'] - A key of PREDICTION_INTERVALS
+ * @param {string} [requestedDatum] - 'MSL' or 'NAVD88'; defaults to the station's datum
+ * @returns {Promise<Array>} - { station, datum, units, t, v } oldest first; hilo
+ *   predictions also carry `type`: 'high' or 'low'
+ */
+export async function fetchPredictions(stationId, startDate, endDate, interval = '6min', requestedDatum) {
+  const config = PREDICTION_INTERVALS[interval];
+  if (!config) throw new Error(`Unknown prediction interval: ${interval}`);
+  const datum = datumFor(stationId, requestedDatum); // throws for a station we don't serve
+  const problem = predictionsError(STATIONS[String(stationId)], interval);
+  if (problem) throw new Error(problem);
+
+  const meta = { station: String(stationId), datum, units: UNITS };
+  const chunks = splitDateRange(startDate, endDate, config.chunkDays);
+  // Chunks are whole days; put the requested times back on the first and last
+  if (timePart(startDate)) chunks[0][0] = startDate;
+  if (timePart(endDate)) chunks.at(-1)[1] = endDate;
+
+  const predictions = [];
+  for (const [chunkStart, chunkEnd] of chunks) {
+    const rows = await callNoaa(stationId, datum, {
+      product: 'predictions',
+      interval: config.interval,
+      begin_date: toNoaaDate(chunkStart),
+      end_date: toNoaaDate(chunkEnd),
+    });
+    if (rows !== null) predictions.push(...parsePredictions(rows, meta));
+  }
+  if (predictions.length === 0) {
+    throw new Error(`NOAA API error: No predictions were found for station ${stationId} between ${startDate} and ${endDate}`);
+  }
+  return predictions;
+}
+
+const HILO_TYPES = { H: 'high', L: 'low' };
+
+/** Parse NOAA prediction rows ({ t, v } plus `type` H/L for hilo). */
+export function parsePredictions(rawData, meta = {}) {
+  if (!Array.isArray(rawData)) throw new Error('Invalid NOAA response: non-array predictions field');
+  return rawData.map((row) => ({
+    station: meta.station ?? null,
+    datum: meta.datum ?? null,
+    units: meta.units ?? null,
+    t: parseTimestamp(row.t),
+    v: parseValue(row.v),
+    ...(row.type && { type: HILO_TYPES[row.type] ?? row.type }),
+  }));
 }
 
 /**
@@ -345,6 +502,30 @@ function parseValue(val) {
  * @returns {string|null}
  */
 export function getDateRangeError(from, to, resolution = '6min') {
+  const basicError = getDateFormatError(from, to);
+  if (basicError) return basicError;
+
+  const now = Date.now();
+  // The end may be later today (NOAA returns what exists so far), but not a future day
+  const startAt = Date.parse(`${datePart(from)}T${timePart(from) ?? '00:00'}:00Z`);
+  if (startAt > now || parseIsoDate(to).getTime() > now) return 'dates cannot be in the future';
+
+  const { maxDays } = RESOLUTIONS[resolution];
+  const days = countDays(from, to);
+  if (days > maxDays) {
+    return `range is ${days} days; the maximum at ${resolution} resolution is ${maxDays}`;
+  }
+
+  return null;
+}
+
+/**
+ * The checks every range shares, observed or predicted: both bounds present,
+ * well-formed, real dates and times, and in order. Future dates are allowed here.
+ *
+ * @returns {string|null} - What's wrong, or null if the range is well-formed
+ */
+export function getDateFormatError(from, to) {
   if (!from || !to) return 'start and end are required';
   if (!DATE_TIME.test(from) || !DATE_TIME.test(to)) return 'dates must be YYYY-MM-DD or YYYY-MM-DDTHH:mm (UTC)';
 
@@ -360,16 +541,6 @@ export function getDateRangeError(from, to, resolution = '6min') {
   const startAt = Date.parse(`${datePart(from)}T${timePart(from) ?? '00:00'}:00Z`);
   const endAt = Date.parse(`${datePart(to)}T${timePart(to) ?? '23:59'}:00Z`);
   if (startAt > endAt) return 'start must be on or before end';
-  const now = Date.now();
-  // The end may be later today (NOAA returns what exists so far), but not a future day
-  if (startAt > now || parseIsoDate(to).getTime() > now) return 'dates cannot be in the future';
-
-  const { maxDays } = RESOLUTIONS[resolution];
-  const days = countDays(from, to);
-  if (days > maxDays) {
-    return `range is ${days} days; the maximum at ${resolution} resolution is ${maxDays}`;
-  }
-
   return null;
 }
 

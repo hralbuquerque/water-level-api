@@ -1,10 +1,8 @@
 # water-level-api
 
-An API and web page for NOAA tide-gauge water levels, built so parametric (catastrophe) bonds can be written and settled against them. A parametric bond pays out when a gauge reading crosses a threshold. The reference case is the MTA's storm-surge bond, which pays on New York City tide gauges.
+An API and web page for NOAA tide-gauge water levels. The goal (see `docs/plan.md`) is a data layer parametric (catastrophe) bonds can be written and settled against. A parametric bond pays out when a gauge reading crosses a threshold. The reference case is the MTA's storm-surge bond, which pays on New York City tide gauges.
 
-- **Ask for a place, get its gauges:** `nyc` resolves to The Battery, Sandy Hook and Kings Point. Any of NOAA's ~300 water-level stations can also be requested by ID.
-- **Any date or time range:** the API pages past NOAA's per-request limits and steps down to hourly or daily data for long ranges.
-- **A settlement-grade record:** every reading keeps its gauge, UTC time, value, and whether NOAA marked it *preliminary* or *verified*.
+Today it reads and compares the data; whether a real bond triggers is decided under its terms by its calculation agent. There is no stored settlement record yet, and no trigger evaluator.
 
 Data comes live from the [NOAA CO-OPS Data API](https://api.tidesandcurrents.noaa.gov/api/prod/). No API key is needed.
 
@@ -31,6 +29,8 @@ If port 3000 is taken, run the backend with `PORT=3001 npm run dev` and the fron
 | `GET /stations/:stationId/historical` | Readings for one gauge |
 | `GET /locations/:location/latest` | Most recent reading from each gauge in a location |
 | `GET /stations/:stationId/latest` | Most recent reading from one gauge |
+| `GET /locations/:location/predictions` | NOAA tide predictions for every gauge in a location |
+| `GET /stations/:stationId/predictions` | NOAA tide predictions for one gauge |
 | `GET /health` | `{ status: "ok" }` |
 
 `/historical` takes:
@@ -40,6 +40,9 @@ If port 3000 is taken, run the backend with `PORT=3001 npm run dev` and the fron
 | `start` | `YYYY-MM-DD` or `YYYY-MM-DDTHH:mm` (UTC, inclusive), or `earliest` for each gauge's whole record |
 | `end` | `YYYY-MM-DD` (whole day) or `YYYY-MM-DDTHH:mm` (UTC, inclusive) |
 | `resolution` | `1min`, `6min` (default), `hourly`, `daily` or `auto` |
+| `datum` | `MSL` or `NAVD88` (optional; also on `/latest` and `/predictions`). Without it each gauge uses MSL. |
+
+`/predictions` takes `start` and `end` (required; future dates allowed), `datum`, and `interval`: `1min`, `5min`, `6min` (default), `10min`, `15min`, `30min`, `hourly` or `hilo` (each high and low tide, with `type: "high"|"low"`). Predictions are the astronomical tide only: no storm surge, wind or pressure. Stations without predictions return 404.
 
 ```bash
 curl "http://localhost:3000/locations/nyc/historical?start=2012-10-28&end=2012-10-31"
@@ -49,10 +52,12 @@ curl "http://localhost:3000/stations/8518750/historical?start=earliest&end=2026-
 
 Each reading looks like `{ "t": "2012-10-30T01:24:00.000Z", "v": 14.055, "s": 0.046, "f": "0,0,0,0", "q": "v" }`:
 - `t` is the UTC time.
-- `v` is feet above MLLW, or `null` if NOAA has no value.
+- `v` is feet above the response's `datum` (MSL or NAVD88), or `null` if NOAA has no value.
 - `q` is `p` (preliminary) or `v` (verified).
 
 Responses also carry `resolution`, `datum`, `units` and `retrievedAt`. Daily readings are the day's maximum, with the minimum in `tMin`/`vMin`.
+
+Each gauge also has `coverage`: `{ expected, missing, gaps: [{ start, end, missing }] }`, the readings NOAA had nothing for (an outage, a dropped row, or a null value) over the requested range. A level that wasn't reached while data was missing may still have been reached.
 
 **Errors:**
 - `400`: bad dates or a range too long for the resolution.
@@ -83,7 +88,7 @@ Responses also carry `resolution`, `datum`, `units` and `retrievedAt`. Daily rea
 backend/    Express API: src/routes/ (endpoints), src/noaa.js (NOAA paging and parsing),
             src/stations.js (locations → gauges), data/stations.json, scripts/, tests/
 frontend/   React + Vite: src/historical/ (readings page), src/theme/ (company theme)
-docs/       CLAUDE.md (detailed developer notes)
+docs/       plan.md (project brief and goals), CLAUDE.md (detailed developer notes)
 ```
 
 ## Development

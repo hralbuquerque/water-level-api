@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`water-level-api` is a data layer over NOAA CO-OPS tide gauges, built to track and settle parametric (catastrophe) bond triggers. The reference deal is the MTA's MetroCat Re storm-surge bond, which pays out on NYC gauge readings. A location resolves to its gauges (`nyc` → The Battery, Sandy Hook, Kings Point), and station IDs stay available underneath.
+`water-level-api` is a data layer over NOAA CO-OPS tide gauges. Its goal (`docs/plan.md`) is to track and settle parametric (catastrophe) bond triggers; today it serves and compares readings, with no stored settlement record or trigger evaluator yet. The reference deal is the MTA's MetroCat Re storm-surge bond, which pays out on NYC gauge readings. A location resolves to its gauges (`nyc` → The Battery, Sandy Hook, Kings Point), and station IDs stay available underneath.
 
 Settlement needs an auditable record of the reading behind a trigger: which gauge, what time, what value, and whether NOAA had it as **preliminary (`q: "p"`) or verified (`q: "v"`)**. Preserve those fields in any change.
 
@@ -26,13 +26,14 @@ water-level-api/
 │   │   │   ├── directory.js  # /locations, /stations
 │   │   │   ├── historical.js # /locations/:loc/historical, /stations/:id/historical
 │   │   │   ├── latest.js     # /locations/:loc/latest, /stations/:id/latest
-│   │   │   └── shared.js     # meta(): response fields shared by readings endpoints
-│   │   ├── noaa.js           # fetchReadings, fetchLatest, parseReadings, validateDateRange
-│   │   └── stations.js       # STATIONS directory + LOCATION_STATIONS (location → gauge IDs)
-│   ├── data/stations.json    # All NOAA water-level stations (id, name, state, lat, lng)
+│   │   │   ├── predictions.js # /locations/:loc/predictions, /stations/:id/predictions
+│   │   │   └── shared.js     # meta(), parseDatumQuery(): shared by readings endpoints
+│   │   ├── noaa.js           # fetchReadings, fetchLatest, fetchPredictions, findGaps, parsing, date validation
+│   │   └── stations.js       # STATIONS (served stations + datums) + LOCATION_STATIONS (location → gauge IDs)
+│   ├── data/stations.json    # All NOAA water-level stations (id, name, state, lat, lng, established, datums, predictions)
 │   ├── scripts/
 │   │   ├── cli.js            # Command-line client; runs the app in-process
-│   │   └── syncStations.js   # Refreshes data/stations.json (incl. `established` dates) from the NOAA Metadata API
+│   │   └── syncStations.js   # Refreshes data/stations.json (established dates, MSL/NAVD88 datums, prediction type) from the NOAA Metadata API
 │   ├── services/             # Empty placeholder
 │   └── tests/                # Vitest + Supertest
 ├── frontend/                 # Vite + React 19
@@ -43,8 +44,9 @@ water-level-api/
 │       ├── api.js            # backend client
 │       ├── theme/            # company theme, copied from another Rhodex project (see Theme below)
 │       ├── global.css        # app shell + landing styles, built on the theme tokens
-│       └── historical/       # Historical readings page: page, chart, picker, time helpers, CSS
-└── docs/                     # CLAUDE.md, plan.md
+│       └── historical/       # Readings page: ReadingsPage.jsx, ReadingsChart.jsx, TargetPicker.jsx,
+│                             #   predictions.js, time.js, zoom.js, readings.css
+└── docs/                     # CLAUDE.md, plan.md (the brief and final goal; keep it as the plan)
 ```
 
 ## Commands
@@ -80,11 +82,16 @@ No linter or formatter is configured.
 |---|---|
 | `GET /health` | `{ status: "ok", timestamp }` |
 | `GET /locations` | Named locations with their gauges, in display order |
-| `GET /stations` | Every station in `data/stations.json` (id, name, state, lat, lng, established) |
+| `GET /stations` | Every served station (id, name, state, lat, lng, established, datum, datums, predictions) |
 | `GET /locations/:loc/historical?start=YYYY-MM-DD&end=YYYY-MM-DD[&resolution=]` | Readings for every gauge in a location. `:loc` is case-insensitive. |
 | `GET /stations/:id/historical?start=YYYY-MM-DD&end=YYYY-MM-DD[&resolution=]` | Readings for a single NOAA station ID (any station in `data/stations.json`) |
 | `GET /locations/:loc/latest` | Most recent 1-minute reading from every gauge in a location; a failing gauge gets `error` instead of `reading` |
 | `GET /stations/:id/latest` | Most recent 1-minute reading from one gauge; 502 on a NOAA error |
+| `GET /locations/:loc/predictions?start=&end=[&interval=]` | NOAA tide predictions for every gauge in a location; a failing gauge gets `error` |
+| `GET /stations/:id/predictions?start=&end=[&interval=]` | NOAA tide predictions for one gauge |
+
+- **Datum:** every readings and predictions route takes an optional `datum=MSL|NAVD88`. Without it each station uses its default (`datum` in STATIONS: MSL where it has one). A station without the requested datum is a 400; a station with neither MSL nor NAVD88 isn't served (404 with the reason, from `unsupportedStationError`). NOAA's metadata calls it NAVD88 but the datagetter only accepts `NAVD`, so `callNoaa` maps it.
+- **Predictions** (`fetchPredictions`, `PREDICTION_INTERVALS`): NOAA's `predictions` product, the astronomical tide only. `interval` is `1min`, `5min`, `6min` (default), `10min`, `15min`, `30min`, `hourly` or `hilo` (rows carry `type: 'high'|'low'`). Future dates are allowed. NOAA returns rows under `predictions`, not `data`. A station with no predictions is a 404; a subordinate station only allows `hilo`.
 
 - **Time ranges:** `start`/`end` accept `YYYY-MM-DD` or `YYYY-MM-DDTHH:mm` (UTC). A date-only start is 00:00 and a date-only end is the whole day. `fetchReadings` splits the range into whole-day chunks, then puts the times back on the first and last NOAA request (`begin_date=20121029 20:00`). Daily data ignores times. The end may be later today, but not a future day.
 - **Adding a route:** create a Router module in `src/routes/` (full paths, e.g. `/locations/:loc/risk`) and mount it in `routes/index.js`. Don't define routes in `app.js` or outside `routes/`.
@@ -115,9 +122,10 @@ Location response shape:
 ```json
 {
   "location": "nyc", "start": "2012-10-29", "end": "2012-10-30", "resolution": "6min",
-  "datum": "MLLW", "units": "english", "timeZone": "GMT", "retrievedAt": "2026-11-09T22:00:17.950Z",
+  "datum": "MSL", "units": "english", "timeZone": "GMT", "retrievedAt": "2026-11-09T22:00:17.950Z",
   "stations": [
-    { "station": "8518750", "name": "The Battery", "readings": [ /* reading */ ] },
+    { "station": "8518750", "name": "The Battery", "datum": "MSL",
+      "coverage": { "expected": 480, "missing": 0, "gaps": [] }, "readings": [ /* reading */ ] },
     { "station": "8531680", "name": "Sandy Hook", "error": "NOAA API error: ..." }
   ]
 }
@@ -126,7 +134,7 @@ Location response shape:
 Reading shape (from `parseReadings` in `noaa.js`):
 
 ```json
-{ "station": "8518750", "datum": "MLLW", "units": "english",
+{ "station": "8518750", "datum": "MSL", "units": "english",
   "t": "2012-10-29T23:00:00.000Z", "v": 4.21, "s": 0.02, "f": "0,0,0,0", "q": "v" }
 ```
 
@@ -143,14 +151,15 @@ Daily readings (`parseDailyMaxMin`) have a different shape:
 
 ## NOAA Integration (`backend/src/noaa.js`)
 
-- **Request parameters:** every request uses the CO-OPS Data API `datagetter` with the resolution's `product`, plus `datum=MLLW`, `units=english`, `time_zone=gmt` and `application=rhodex-water-level-api`.
+- **Request parameters:** every request uses the CO-OPS Data API `datagetter` with the resolution's `product`, plus the station's datum (`MSL`, or `NAVD` for NAVD88), `units=english`, `time_zone=gmt` and `application=rhodex-water-level-api`.
 - **Datum:** NOAA requires a datum on water-level requests.
 - **Date format:** NOAA wants dates as `YYYYMMDD`, so `toNoaaDate` converts from our `YYYY-MM-DD`.
 - **Errors:** NOAA reports errors either as a non-2xx status or as a 200 whose body has an `error` field. The body may not be JSON. `fetchReadings` handles all three cases and throws `Error("NOAA API error: ...")`.
 - **Paging:** each NOAA product has a per-request limit (`chunkDays`): 31 days for 6-minute, 365 for hourly, 3,650 for daily. `fetchReadings` uses `splitDateRange` to break the range into non-overlapping chunks of that size. It fetches them one after another and joins them, oldest first.
 - **Daily, two sources:** NOAA computes daily max/min either from 6-minute data (`interval=6`, which keeps the true storm peak but only exists from the mid-1990s) or from hourly data (which reaches back to the 1910s–20s). `fetchDailyChunk` requests both and keeps the 6-minute value for any day that has one.
-- **Gaps:** NOAA reports a window with no data (a gauge outage, or a date before the station existed) as an error. A chunk like that is skipped. If every chunk is empty, the station fails with "No data was found".
-- **No partial data:** any other NOAA error in any chunk fails the whole station, so a settlement never rests on silently partial data.
+- **Gaps:** NOAA reports a window with no data (a gauge outage, or a date before the station existed) as an error. A chunk like that is skipped and shows up in `coverage`. If every chunk is empty, the station fails with "No data was found".
+- **Coverage:** because empty chunks are skipped, readings can have holes. Every historical response gives each station `coverage` from `findGaps`: `{ expected, missing, gaps: [{ start, end, missing }] }`, counting timestamps NOAA returned nothing for and rows with a null value, up to now (from the first reading for `start=earliest`; by date for daily). Never describe a level as "never reached" when `missing > 0`.
+- **Other errors:** any other NOAA error in any chunk fails the whole station.
 - **Size:** a full year of 6-minute data is about 87,600 readings per station, roughly 30 MB of JSON for the three NYC gauges, and takes about 20 s. The resolution caps keep every response around that size or smaller. A full NYC daily history (back to 1910) comes to about 83k readings and takes about 10 s.
 - **Real outages:** NOAA itself sometimes returns rows with an empty value and all flags set (`f: "1,1,1,1"`), as during Sandy Hook's recovery in December 2012. These pass through with `v: null`.
 
@@ -186,22 +195,26 @@ test('returns readings', async () => {
 
 ## Frontend Notes
 
-- **Routing:** hash routes, with no router library. `#/historical?...` renders `src/historical/HistoricalPage.jsx`. Any other hash shows the landing page in `App.jsx`, where `#how`-style hashes stay in-page section links.
-- **Page layout** follows the company's "Build a bond" page (screenshot in `frontend/references/`):
+- **Routing:** hash routes, with no router library. `#/historical?...` renders `src/historical/ReadingsPage.jsx`. Any other hash shows the landing page in `App.jsx`, where `#how`-style hashes stay in-page section links.
+- **Page layout** follows the company's "Build a bond" page, which lives in another Rhodex project, not this repo (screenshot in `frontend/references/` is the only copy here):
   - **Header:** a "← RHODEX." back link, a title and a one-line subtitle.
   - **Sections:** numbered cards from `src/components/Section.jsx` ("01 Request", with × / + to collapse), each with a hairline under its header. Inside, use `SubLabel` for uppercase sub-headings, `.sec-cols` for the two-column layout, `.sec-summary` for a mono summary box with an "Edit" link, `.sec-source` for the source line and `.sec-foot` for a centered action. All of these are styled in `global.css`.
   - **Highlight key fields:** a checkbox on the page root sets `data-highlight="on"`. Add `.hl` to any input or box, or `.hl-text` to any value, that a trigger depends on, and it gets outlined or colored in the accent.
 - **Historical page** (`src/historical/`):
   - **Sections:** 01 Request (the form; the location picker is an option box), 02 Readings (summary, gauge cards, chart, trigger sentence, source, CSV), and 03 Readings table (collapsed, and only built when opened).
   - Calls the backend through `src/api.js`.
-  - Its form lives in the URL (`target=location:nyc|station:<id>`, `start`, `end`, `resolution`, `trigger`, `latest=1`), so a link reopens the same view. With a time range, `start`/`end` carry the time (`2026-11-11T21:00`).
+  - Its form lives in the URL (`target=location:nyc|station:<id>`, `start`, `end`, `resolution`, `datum`, `predictions=0`, `trigger` + `triggerDatum`, `latest=1`), so a link reopens the same view.
+  - **Reference trigger:** the level is stored with the datum it was typed on (`triggerDatum`). It's drawn and checked only when the readings are on that datum; otherwise the page says why. It's labelled a reference level: whether a bond triggers is for its calculation agent.
+  - **Gaps:** cards use the API's `coverage` to show missing time and the longest gap, and say "Not reached in the data available" instead of "Not reached" when readings are missing.
+  - **Predictions:** `predictions.js` matches readings to NOAA predictions (daily: the day's highest predicted high tide). The chart draws them dotted and adds a surge panel (observed minus predicted). With a time range, `start`/`end` carry the time (`2026-11-11T21:00`).
   - **Time range:** the time inputs under the dates are dimmed and disabled unless the "Time range" checkbox or the "Latest" chip is on (`timesOn(form)`). Otherwise requests are whole days. Editing a time switches on the checkbox; a whole-day preset switches it off.
   - **Latest chip:** the last 60 minutes up to the moment the request runs (`latestWindow()` in `time.js`), at `1min`, with the resolution locked. It fetches through `/historical` with a time range, not `/latest`. Cards lead with each gauge's latest value and list the hour's peak. A `latest=1` link always means the last hour when opened.
   - `time.js` mirrors the backend's resolution limits so the form can explain them before a request. The API's 400 messages are still shown as-is.
   - `ReadingsChart.jsx` keeps the lowest and highest reading per pixel column, so peaks survive at any range. Lines break at gaps longer than 2.5 reading intervals.
   - Colors come from the dataviz reference palette; each gauge's color is fixed by its position in the location.
 - **Landing page:** the live-gauge panel in `App.jsx` still calls NOAA directly (last 24h for the three NYC gauges), not the backend.
-- **Planned endpoints:** the landing page's endpoint list includes `/risk` and `/forecast`. Those are planned; `/historical` and `/latest` exist (`/latest` without forecasts so far).
+- **Planned endpoints:** the landing page's endpoint list includes `/risk` and `/forecast`, labelled "(planned)". `/historical`, `/latest` and `/predictions` exist (`/latest` without forecasts so far).
+- **Landing copy:** describe what exists today and the plan's goal as a goal. The sample record is labelled illustrative on screen, the slider is an "example trigger level", and the "Contact us" buttons stay hidden until `CONTACT_HREF` is a real link.
 
 ## Theme (`frontend/src/theme/`)
 
@@ -210,7 +223,7 @@ The company design system, copied from another Rhodex project. Keep these files 
 - **Two themes:** **Lapis** (the default) is IBM Plex Mono on a blue-gray gradient, with square "brutalist" buttons and glass cards. **Ghost** is a white "clean room": Plex Sans, hairline borders, 8–10px radii and a soft shadow. Users switch with `ThemeSwitcher` in the header, and the choice is stored in localStorage (`rhodex-theme`).
 - **How it applies:** `ThemeProvider` (wrapping `<App/>` in `main.jsx`) writes the active theme's tokens onto `:root` as `--rhodex-*` variables and sets `<html data-theme="lapis|ghost">`.
 - **Primitives:** use `ActionButton`, `Surface` and `Tag` from `Primitives.jsx` for buttons, cards/panels and status chips, so both themes render correctly. Their tones mean different things per theme: `primary` is a filled blue button in Lapis but an outline in Ghost. Don't hand-roll buttons or cards.
-- **Tailwind:** the primitives are written in Tailwind v3 classes, so `index.css` has the `@tailwind` directives and `tailwind.config.js` / `postcss.config.js` exist. Page styles stay in plain CSS (`global.css`, `historical/historical.css`) and read the theme through `--app-*` variables defined in `global.css`. Those map `--rhodex-*` tokens and add per-theme values such as `--app-line`, `--app-radius`, `--app-field` and `--app-plot`, keyed on `[data-theme]`.
+- **Tailwind:** the primitives are written in Tailwind v3 classes, so `index.css` has the `@tailwind` directives and `tailwind.config.js` / `postcss.config.js` exist. Page styles stay in plain CSS (`global.css`, `historical/readings.css`) and read the theme through `--app-*` variables defined in `global.css`. Those map `--rhodex-*` tokens and add per-theme values such as `--app-line`, `--app-radius`, `--app-field` and `--app-plot`, keyed on `[data-theme]`.
 - **Selector caveat:** Tailwind utilities are single-class selectors. Keep page selectors that could hit a primitive at low specificity (e.g. `:where(.app-root) a`), or they override the primitive's colors.
 - **Light only:** both themes are light, so there is no dark mode.
-- **Chart colors:** `--series-1…8` in `historical.css` are the dataviz reference palette, using its darker orange and aqua steps. They were validated against both theme chart surfaces (Lapis chart panel ≈ #E5EAEE, Ghost ≈ #FEFEFF). The Lapis chart panel is deliberately more opaque than a normal glass card so the lines keep contrast. Re-run the validator if you change either.
+- **Chart colors:** `--series-1…8` in `readings.css` are the dataviz reference palette, using its darker orange and aqua steps. They were validated against both theme chart surfaces (Lapis chart panel ≈ #E5EAEE, Ghost ≈ #FEFEFF). The Lapis chart panel is deliberately more opaque than a normal glass card so the lines keep contrast. Re-run the validator if you change either.

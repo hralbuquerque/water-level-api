@@ -28,24 +28,27 @@ const STATIONS = [
 
 const SIX_MIN_MS = 6 * 60 * 1000;
 
-const CONTACT_HREF = "mailto:hello@example.com"; // TODO: real contact link
+// TODO: a real contact link. Until there is one, the "Contact us" buttons are hidden
+// rather than pointing at a placeholder address.
+const CONTACT_HREF = null;
 
 // Rows in the landing page's "Endpoints" section. Entries with `href` exist and link
-// to a live example (the readings page, or the raw JSON for /latest); the rest are
-// planned (docs/plan.md).
+// to a live example (the readings page, or the raw JSON for /latest); `planned` ones
+// are in docs/plan.md but not built yet, and are labelled so on the page.
 const ENDPOINTS = [
   { route: "/locations/nyc/historical", does: "Readings for a location over any date range, paged for you", href: "#/historical" },
   { route: "/stations/8518750/historical", does: "The same for any single NOAA gauge, by station ID", href: "#/historical?target=station:8518750&start=2012-10-22&end=2012-11-05&resolution=auto" },
   { route: "/locations/nyc/latest", does: "The most recent reading from each gauge", href: `${API_BASE}/locations/nyc/latest` },
-  { route: "/locations/nyc/risk", does: "How often an area reaches risky water levels" },
-  { route: "/locations/nyc/forecast", does: "Forecasted readings for the location" },
+  { route: "/locations/nyc/predictions", does: "NOAA's predicted astronomical tide for each gauge, to compare with readings" },
+  { route: "/locations/nyc/risk", does: "How often an area reaches risky water levels", planned: true },
+  { route: "/locations/nyc/forecast", does: "Forecasted readings for the location", planned: true },
 ];
 
 // The three "How it works" steps on the landing page.
 const HOW = [
   { title: "Pick a place", body: "Ask for a city and we resolve it to its tide gauges. Station IDs stay available if you want them." },
   { title: "Set a trigger", body: "Choose a water level and a gauge or set of gauges. Check it against years of history first." },
-  { title: "Settle on the record", body: "When a gauge crosses the line, the reading, gauge and time are on file." },
+  { title: "Settle on the record", body: "Every reading keeps its gauge, UTC time, datum and preliminary or verified status, so a settlement can show exactly what it rested on." },
 ];
 
 /**
@@ -90,7 +93,7 @@ function useGauge(stationId, datum) {
  */
 function GaugePanel() {
   const [stationId, setStationId] = useState(STATIONS[0].id);
-  const [trigger, setTrigger] = useState(4); // ft above MSL: a moderate storm-tide level for NYC
+  const [trigger, setTrigger] = useState(4); // ft above MSL: an arbitrary example to drag, not taken from any deal
   const station = STATIONS.find((s) => s.id === stationId);
   const { status, rows, message } = useGauge(stationId, station.datum);
 
@@ -163,22 +166,23 @@ function GaugePanel() {
               unitsLabel={`ft above ${station.datum}`}
               height={220}
               triggerClassName={`tone-${tone || "calm"}`}
+              datum={station.datum}
             />
           </div>
 
           <label className="hp-slider">
-            <span className="app-eyebrow">Trigger level</span>
+            <span className="app-eyebrow">Example trigger level</span>
             <input
               type="range" min="-4" max="12" step="0.1" value={trigger}
               onChange={(e) => setTrigger(parseFloat(e.target.value))}
             />
-            <span className="app-num">{trigger.toFixed(1)} ft</span>
+            <span className="app-num">{trigger.toFixed(1)} ft {station.datum}</span>
           </label>
           <p className={`hp-status ${tone}`}>
             {gap <= 0
-              ? `Trigger exceeded by ${Math.abs(gap).toFixed(2)} ft.`
-              : `${gap.toFixed(2)} ft below the trigger.`}{" "}
-            <span className="app-muted">Example trigger level.</span>
+              ? `${Math.abs(gap).toFixed(2)} ft above the example level.`
+              : `${gap.toFixed(2)} ft below the example level.`}{" "}
+            <span className="app-muted">An example level to drag, not a real deal's trigger.</span>
           </p>
         </>
       )}
@@ -258,10 +262,11 @@ function Home() {
             <h1>Write a deal against any coastline we can measure.</h1>
             <p>
               One API on top of NOAA tide gauges. Ask for a city and get its gauges, their history,
-              and the risk behind a trigger. When a gauge crosses the line, the payout follows the data.
+              and how often they've reached a level. Built so parametric deals can be written against a
+              clear record of what each gauge read.
             </p>
             <div className="hp-actions">
-              <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Contact us</ActionButton>
+              {CONTACT_HREF && <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Contact us</ActionButton>}
               <ActionButton as="a" href="#/historical" tone="ghost" size="px-5 py-3 text-xs">Explore readings</ActionButton>
             </div>
           </div>
@@ -289,7 +294,7 @@ function Home() {
             {ENDPOINTS.map((e) => (
               <li key={e.route}>
                 <code className="hp-code app-num">{e.href ? <a href={e.href}>GET {e.route}</a> : `GET ${e.route}`}</code>
-                <span>{e.does}</span>
+                <span>{e.does}{e.planned && <span className="app-muted"> (planned)</span>}</span>
               </li>
             ))}
           </ul>
@@ -298,11 +303,12 @@ function Home() {
         {/* Illustrative example of a settlement record, not live data */}
         <Section number={3} title="Data" className="hp-section" bodyClassName="hp-split" id="record">
           <div>
-            <h3>Every settlement has a receipt</h3>
+            <h3>Every reading carries its record</h3>
             <p className="hp-lead">
-              If a deal triggers, you can see the exact reading, the gauge, the time, and whether
-              NOAA had marked it preliminary or verified when it was used.
+              Each reading keeps the gauge, the time, the datum, and whether NOAA had marked it
+              preliminary or verified when it was retrieved: what a settlement needs to show.
             </p>
+            <p className="app-muted">Illustrative example below, not live data.</p>
           </div>
           <dl className="hp-record app-num">
             <div><dt>gauge</dt><dd>8518750</dd></div>
@@ -315,7 +321,7 @@ function Home() {
         <Surface as="section" className="hp-section hp-cta">
           <h2>Build on the water-level API</h2>
           <p className="hp-lead">Tell us the coastline and the sponsor. We'll tell you which gauges can carry the deal.</p>
-          <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Contact us</ActionButton>
+          {CONTACT_HREF && <ActionButton as="a" href={CONTACT_HREF} tone="primary" size="px-5 py-3 text-xs">Contact us</ActionButton>}
         </Surface>
       </main>
 

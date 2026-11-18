@@ -197,7 +197,7 @@ describe('directory endpoints', () => {
     expect(res.body.stations.every((s) => ['MSL', 'NAVD88'].includes(s.datum))).toBe(true);
     expect(res.body.stations.find((s) => s.id === '8518750')).toEqual({
       id: '8518750', name: 'The Battery', state: 'NY', lat: 40.700554, lng: -74.01417, established: '1920-05-24',
-      datum: 'MSL', datums: ['MSL', 'NAVD88'],
+      datum: 'MSL', datums: ['MSL', 'NAVD88'], predictions: 'harmonic',
     });
   });
 });
