@@ -4,11 +4,6 @@ An API and web page for NOAA tide-gauge water levels. The goal (see `docs/plan.m
 
 Today it reads and compares the data; whether a real bond triggers is decided under its terms by its calculation agent. There is no stored settlement record yet, and no trigger evaluator.
 
-- **Ask for a place, get its gauges:** `nyc` resolves to The Battery, Sandy Hook and Kings Point. Any of the 245 NOAA water-level stations with an MSL or NAVD88 datum can also be requested by ID.
-- **Any date or time range:** the API pages past NOAA's per-request limits and steps down to hourly or daily data for long ranges.
-- **A traceable reading:** every reading keeps its gauge, UTC time, value, datum, and whether NOAA marked it *preliminary* or *verified*, and every response says where readings are missing.
-- **Tide predictions:** NOAA's predicted astronomical tide, to compare with readings and see the surge (observed minus predicted).
-
 Data comes live from the [NOAA CO-OPS Data API](https://api.tidesandcurrents.noaa.gov/api/prod/). No API key is needed.
 
 ## Run it
@@ -82,10 +77,10 @@ Each gauge also has `coverage`: `{ expected, missing, gaps: [{ start, end, missi
 
 ## Things worth knowing
 
-- **Datum:** levels are feet above **MSL** (mean sea level) by default, or **NAVD88** with `datum=NAVD88` where the gauge has it. A 10 ft reading means 10 ft above that baseline, not 10 ft of flooding. A trigger level only means something on a stated datum.
+- **Datum:** MSL (Mean Sea Level) or NAVD88 (North American Vertical Datum of 1988), standard for surge models.
 - **Preliminary vs verified:** NOAA revises preliminary readings when it verifies them. A bond's terms decide which counts, so every reading carries `q` and every response records `retrievedAt`.
-- **Gaps are real:** gauges go offline. Sandy Hook stopped reporting during Hurricane Sandy. NOAA returns nothing for an outage, so the API reports it in `coverage` instead. Any other NOAA error fails that gauge.
-- **Unsupported stations:** stations with neither MSL nor NAVD88 (the Great Lakes use IGLD; some Puerto Rico and Niagara stations publish no datums) aren't served, and return 404 with that reason.
+- **Gaps are real:** gauges go offline. Sandy Hook stopped reporting during Hurricane Sandy. Missing data is skipped, but any other NOAA error fails that gauge rather than returning partial data.
+- **Great Lakes, Niagra Falls, & Puerto Rico stations** Requests for them currently fail as they do not have MSL or NAVD88 Data.
 
 ## Project layout
 
