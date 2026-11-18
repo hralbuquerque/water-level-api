@@ -40,6 +40,11 @@
   border-radius: var(--app-radius);
 }
 .hx-input::placeholder { color: var(--app-muted); }
+/* Dropdowns: the browser's arrow hugs the edge, so draw the location picker's chevron at the same inset */
+.hx-select { position: relative; display: block; }
+.hx-select select { appearance: none; -webkit-appearance: none; padding-right: 40px; }
+.hx-select-caret { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--app-muted); pointer-events: none; }
+.hx-select select:disabled + .hx-select-caret { opacity: 0.5; }
 .hx-input[readonly] { cursor: pointer; color: var(--app-muted); }
 
 /* Preset chips: square tags under Lapis, pills under Ghost (like the theme's Tag) */
@@ -64,8 +69,11 @@
 /* Listed for both themes so it outranks the Ghost-specific chip rule above */
 .hx-chip[aria-checked="true"],
 :root[data-theme="ghost"] .hx-chip[aria-checked="true"] { background: var(--app-accent); border-color: var(--app-accent); color: var(--rhodex-text-white); }
-.hx-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.hx-dates label { display: flex; flex-direction: column; gap: 4px; }
+.hx-dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+/* minmax(0, ...) and min-width: 0 let the date and time inputs shrink below their
+   intrinsic width, which otherwise pushes the page wider than a phone screen */
+.hx-dates label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hx-dates .hx-input { min-width: 0; }
 /* "Time range" checkbox and the time inputs under the dates. The times are dimmed
    (and disabled) until the checkbox or "Latest" turns them on. */
 .hx-check { display: inline-flex; align-items: center; gap: 8px; margin: 12px 0 8px; font-size: 0.85rem; color: var(--app-muted); cursor: pointer; }
@@ -75,9 +83,10 @@
 .hx-times { transition: opacity 0.15s ease; }
 .hx-times.is-off { opacity: 0.4; }
 .hx-times .hx-input:disabled { cursor: not-allowed; }
-.hx-suffix { position: relative; }
-.hx-suffix .hx-input { padding-right: 32px; }
-.hx-suffix span { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--app-muted); font-size: 0.85rem; }
+/* The unit sits beside the input, not over it, so it can't cover the number spinner */
+.hx-suffix { display: flex; align-items: center; gap: 8px; }
+.hx-suffix .hx-input { flex: 1; min-width: 0; }
+.hx-suffix span { flex: none; color: var(--app-muted); font-size: 0.85rem; white-space: nowrap; }
 
 /* ---- Location picker: an option box (title, description, caret) over a combobox ---- */
 .hx-picker { position: relative; }
@@ -153,10 +162,18 @@
 .hx-facts div { display: grid; grid-template-columns: minmax(84px, auto) 1fr; gap: 10px; }
 .hx-facts dt { color: var(--app-muted); }
 .hx-hit { color: var(--app-danger); font-weight: 600; }
+/* A signed residual: bold ink, the sign carries the direction (not red, which reads as an alarm) */
+.hx-surge { color: var(--app-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 
 .hx-key { display: inline-block; width: 14px; height: 3px; flex: none; }
 .hx-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 8px; font-size: 0.85rem; color: var(--app-muted); }
 .hx-legend li { display: inline-flex; align-items: center; gap: 8px; }
+/* Line-style keys (observed / predicted / preliminary), drawn in ink so they read as style, not identity */
+.hx-legend-styles { padding-left: 18px; border-left: 1px solid var(--app-line); }
+.hx-key-style { display: inline-block; width: 22px; height: 0; flex: none; border-top: 2px solid var(--app-ink); }
+.hx-key-style.is-pred { border-top: 3px dotted var(--app-muted); }
+.hx-key-style.is-prelim { border-top-style: dashed; }
+.hx-key-style.is-hit { border-top-width: 6px; opacity: 0.3; }
 
 /* ---- Chart ----
    The chart panel is more opaque than a regular Lapis glass card: the series
@@ -172,12 +189,27 @@
 :root[data-theme="ghost"] .hx-chart { border-radius: 10px; box-shadow: var(--rhodex-shadow); }
 .hx-chart svg { display: block; max-width: 100%; height: auto; touch-action: pan-y; }
 .hx-grid { stroke: rgba(30, 42, 71, 0.10); stroke-width: 1; shape-rendering: crispEdges; }
+.hx-grid-x { stroke: rgba(30, 42, 71, 0.06); }
+/* The datum (0 ft; its tick is labelled with the datum's name), and 0 on the residual panel */
+.hx-zero { stroke: rgba(30, 42, 71, 0.45); stroke-width: 1; shape-rendering: crispEdges; }
+.hx-axis-title, .hx-panel-title {
+  fill: var(--app-muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+}
+.hx-panel-title { fill: var(--app-ink); font-weight: 600; }
 .hx-axis { stroke: rgba(30, 42, 71, 0.28); stroke-width: 1; shape-rendering: crispEdges; }
 .hx-tick { fill: var(--app-muted); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-variant-numeric: tabular-nums; }
 .hx-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 /* Predicted (astronomical) tide: dotted and lighter, so it reads as a reference under the
    observed line and isn't mistaken for the dashed trigger line */
-.hx-line-pred { fill: none; stroke-width: 1.75; stroke-dasharray: 0.5 4; stroke-linecap: round; opacity: 0.7; }
+.hx-line-pred { fill: none; stroke-width: 1.75; stroke-dasharray: 0.5 4; stroke-linecap: round; opacity: 0.75; }
+/* Preliminary stretches of a gauge that also has verified readings */
+.hx-line-prelim { stroke-dasharray: 5 4; stroke-linecap: butt; }
+/* Residual lines are thinner: three gauges overlap more here than on the level plot */
+.hx-line-res { stroke-width: 1.5; }
+/* At or above the trigger: a wide translucent halo under the observed line */
+.hx-line-hit { fill: none; stroke-width: 9; stroke-opacity: 0.28; stroke-linejoin: round; stroke-linecap: round; }
 .hx-trigger { stroke: var(--app-danger); stroke-width: 1.5; stroke-dasharray: 6 4; }
 /* Status tones for a movable trigger (landing panel): calm, near (within a foot), hit */
 .hx-trigger.tone-calm { stroke: var(--app-muted); stroke-width: 1; }
@@ -212,10 +244,6 @@
 .hx-tooltip-row strong { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
 .hx-tooltip-name { grid-column: 2; color: var(--app-muted); }
 .hx-tooltip-pred { grid-column: 2; color: var(--app-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
-.hx-surge-up { color: var(--app-danger); font-weight: 600; }
-.hx-surge-down { color: var(--app-ink); }
-/* Legend swatches: a solid bar for observed, dots for predicted */
-.hx-key-pred { background: none !important; height: 0; border-top: 3px dotted var(--app-muted); }
 .hx-block { display: block; font-size: 0.8rem; }
 .hx-pred-note { margin: 4px 0 8px; font-size: 0.85rem; color: var(--app-muted); }
 .hx-tooltip-units { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--app-line); font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--app-muted); }

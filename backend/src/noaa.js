@@ -8,8 +8,6 @@
 
 import { STATIONS, datumFor } from './stations.js';
 
-// TODO: calculate storm surge
-
 const NOAA_API_URL = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter';
 
 export const UNITS = 'english';
@@ -172,8 +170,10 @@ async function fetchChunk(stationId, datum, startDate, endDate, config, extra = 
 /**
  * Fetch historical water level readings from NOAA for a station, paging past
  * NOAA's per-request limits. Chunks are fetched sequentially to stay polite to
- * NOAA. Any hard NOAA error fails the whole range, so callers never get silently
- * partial data.
+ * NOAA. Any hard NOAA error fails the whole range. A chunk NOAA reports as "no
+ * data" (a gauge outage, or before the station existed) is skipped, so the
+ * readings can have holes: callers report them with findGaps, so missing data is
+ * never silent.
  *
  * @param {string|number} stationId - The NOAA tide gauge ID
  * @param {string} startDate - YYYY-MM-DD, or YYYY-MM-DDTHH:mm (UTC) to start at a time (inclusive)
@@ -221,6 +221,67 @@ export async function fetchReadings(stationId, startDate, endDate, resolution = 
     throw new Error(`NOAA API error: No data was found for station ${stationId} between ${startDate} and ${endDate}`);
   }
   return readings;
+}
+
+// Spacing of readings at each resolution (daily is handled by date)
+const STEP_MS = { '1min': 60_000, '6min': 360_000, hourly: 3_600_000 };
+
+/**
+ * Where a station's readings are missing over the requested range: timestamps
+ * NOAA returned nothing for (an empty chunk, a dropped row) and rows with a null
+ * value. A trigger check over data with gaps can't say a level was "never
+ * reached", only that it wasn't reached in the data available.
+ *
+ * The expected readings run from the start (or the first reading, for
+ * start=earliest) to the end, but never past now. Daily data is counted by UTC date.
+ *
+ * @param {Array} readings - From fetchReadings, oldest first
+ * @param {string} startDate - As passed to fetchReadings
+ * @param {string} endDate - As passed to fetchReadings
+ * @param {string} resolution - A key of RESOLUTIONS
+ * @param {{ fromFirstReading?: boolean, now?: number }} [options]
+ * @returns {{ expected: number, missing: number, gaps: Array<{ start: string, end: string, missing: number }> }}
+ *   Each gap's `start` and `end` are the first and last missing timestamps (inclusive).
+ */
+export function findGaps(readings, startDate, endDate, resolution, { fromFirstReading = false, now = Date.now() } = {}) {
+  const daily = resolution === 'daily';
+  const step = daily ? DAY_MS : STEP_MS[resolution];
+  if (!step) throw new Error(`Unknown resolution: ${resolution}`);
+  const present = new Set(
+    readings.filter((r) => r.v !== null).map((r) => (daily ? r.t.slice(0, 10) : Date.parse(r.t)))
+  );
+
+  let startMs = Date.parse(`${datePart(startDate)}T${(!daily && timePart(startDate)) || '00:00'}:00Z`);
+  if (fromFirstReading && readings.length) startMs = Math.max(startMs, Date.parse(readings[0].t));
+  let endMs = Date.parse(`${datePart(endDate)}T${(!daily && timePart(endDate)) || '23:59'}:00Z`);
+  endMs = Math.min(endMs, now);
+  if (daily) {
+    startMs = parseIsoDate(new Date(startMs).toISOString()).getTime();
+    endMs = parseIsoDate(new Date(endMs).toISOString()).getTime();
+  }
+
+  const gaps = [];
+  let expected = 0;
+  let missing = 0;
+  let open = null;
+  for (let t = Math.ceil(startMs / step) * step; t <= endMs; t += step) {
+    expected++;
+    const key = daily ? toIsoDate(new Date(t)) : t;
+    if (present.has(key)) {
+      open = null;
+      continue;
+    }
+    missing++;
+    const iso = daily ? key : new Date(t).toISOString();
+    if (open) {
+      open.end = iso;
+      open.missing++;
+    } else {
+      open = { start: iso, end: iso, missing: 1 };
+      gaps.push(open);
+    }
+  }
+  return { expected, missing, gaps };
 }
 
 /**

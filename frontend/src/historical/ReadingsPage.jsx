@@ -87,6 +87,9 @@ const DEFAULT_FORM = {
   datum: '', // '' = each gauge's default (MSL); or 'MSL' / 'NAVD88' when chosen
   predictions: true, // also fetch NOAA tide predictions and compare them with the readings
   trigger: '',
+  // The datum the trigger level is stated on. A level only means something on a
+  // datum, so it's kept with the number and the line is drawn only on that datum.
+  triggerDatum: 'MSL',
   latest: false,
 };
 
@@ -99,7 +102,7 @@ const DATUM_OPTIONS = [
 /** Whether the form's time inputs are active (and sent to the API). */
 const timesOn = (form) => form.latest || form.useTime;
 
-// ---- URL state: #/historical?target=location:nyc&start=...&end=...&resolution=auto&datum=NAVD88&trigger=10
+// ---- URL state: #/historical?target=location:nyc&start=...&end=...&resolution=auto&datum=NAVD88&trigger=10&triggerDatum=NAVD88
 // With a time range, start/end carry the time too (start=2026-11-11T21:00); "Latest"
 // is stored as latest=1 and always means the last hour when the link is opened.
 // Keeping the form in the URL means any view can be bookmarked or shared as a link.
@@ -124,6 +127,8 @@ function readFormFromHash() {
     datum: DATUM_OPTIONS.some((o) => o.id === p.get('datum')) ? p.get('datum') : '',
     predictions: p.get('predictions') !== '0',
     trigger: p.get('trigger') ?? '',
+    // Older links have no triggerDatum: their trigger was on the link's datum
+    triggerDatum: DATUM_OPTIONS.find((o) => o.id === (p.get('triggerDatum') ?? p.get('datum')))?.id ?? 'MSL',
     latest,
     // A "Latest" link means the last hour now, whenever it was saved
     ...(latest && { ...latestWindow(), useTime: false, resolution: LATEST_RESOLUTION }),
@@ -140,7 +145,10 @@ function writeFormToHash(form) {
   const p = new URLSearchParams({ target: form.target, start, end, resolution: form.resolution });
   if (form.datum) p.set('datum', form.datum);
   if (!form.predictions) p.set('predictions', '0'); // on by default, so only "off" is recorded
-  if (form.trigger !== '') p.set('trigger', form.trigger);
+  if (form.trigger !== '') {
+    p.set('trigger', form.trigger);
+    p.set('triggerDatum', form.triggerDatum);
+  }
   if (form.latest) p.set('latest', '1');
   window.history.replaceState(null, '', `#/historical?${p}`);
 }
@@ -206,6 +214,7 @@ function toSeries(data) {
       id: g.station,
       name: g.name,
       error: g.error ?? null,
+      coverage: g.coverage ?? null, // where readings are missing (see findGaps in the API)
       color: `var(--series-${(i % SERIES_SLOTS) + 1})`,
       readings,
       times: readings.map((r) => Date.parse(r.t)),
@@ -253,6 +262,25 @@ function summarize(series, { resolution, start, end, trigger }) {
     above,
     aboveLabel: resolution === 'daily' ? `${above.toLocaleString()} ${above === 1 ? 'day' : 'days'}` : formatDuration(above * stepMs),
     firstAbove,
+    gaps: describeGaps(series.coverage, resolution),
+  };
+}
+
+/** "3 days" for daily data, "2 h 30 min" otherwise: how long `n` missing readings span. */
+const missingSpan = (n, resolution) =>
+  resolution === 'daily' ? `${n.toLocaleString()} ${n === 1 ? 'day' : 'days'}` : formatDuration(n * RESOLUTIONS[resolution].stepMs);
+
+/**
+ * The API's coverage report as card text: how much is missing and the longest
+ * gap. Null when nothing is missing (or the API didn't report coverage).
+ */
+function describeGaps(coverage, resolution) {
+  if (!coverage?.missing) return null;
+  const longest = coverage.gaps.reduce((a, b) => (b.missing > a.missing ? b : a));
+  return {
+    missing: missingSpan(coverage.missing, resolution),
+    count: coverage.gaps.length,
+    longest: { ...longest, span: missingSpan(longest.missing, resolution) },
   };
 }
 
@@ -421,10 +449,11 @@ export default function ReadingsPage() {
   const loading = request.status === 'loading';
   const resolved = resolveResolution(form.start, form.end, form.resolution);
   const formProblem = rangeProblem(form.start, form.end, form.resolution);
-  const trigger = parseTrigger(form.trigger);
+  const triggerLevel = parseTrigger(form.trigger);
   // The datum picker offers NAVD88 only when every gauge in the target has it
   const datumChoices = datumsFor(form.target, directory);
   const datumValue = datumChoices.includes(form.datum) ? form.datum : datumChoices[0] ?? 'MSL';
+  const trigger = triggerLevel === null ? null : { level: triggerLevel, datum: form.triggerDatum };
 
   return (
     <main className="hx-main" data-highlight={highlight ? 'on' : 'off'}>
@@ -587,16 +616,16 @@ export default function ReadingsPage() {
 
           <div className="sec-col">
             <SubLabel as="label" htmlFor="hx-resolution">Resolution</SubLabel>
-            <select id="hx-resolution" className="hx-input" value={form.latest ? LATEST_RESOLUTION : form.resolution} disabled={form.latest} onChange={(e) => update({ resolution: e.target.value })}>
+            <SelectBox><select id="hx-resolution" className="hx-input" value={form.latest ? LATEST_RESOLUTION : form.resolution} disabled={form.latest} onChange={(e) => update({ resolution: e.target.value })}>
               {RESOLUTION_OPTIONS.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.id === 'auto' && !formProblem ? `Auto (${RESOLUTIONS[resolved].label.toLowerCase()})` : o.label}
                 </option>
               ))}
-            </select>
+            </select></SelectBox>
 
             <SubLabel as="label" htmlFor="hx-datum">Datum</SubLabel>
-            <select
+            <SelectBox><select
               id="hx-datum"
               className="hx-input"
               value={datumValue}
@@ -607,7 +636,7 @@ export default function ReadingsPage() {
               {(datumChoices.length ? DATUM_OPTIONS.filter((o) => datumChoices.includes(o.id)) : DATUM_OPTIONS.slice(0, 1)).map((o) => (
                 <option key={o.id} value={o.id}>{o.label}</option>
               ))}
-            </select>
+            </select></SelectBox>
             {datumChoices.length === 1 && (
               <p className="hx-hint">NAVD88 isn't available {parseTarget(form.target).type === 'location' ? 'at every gauge here' : 'at this gauge'}, so readings are on MSL.</p>
             )}
@@ -618,11 +647,11 @@ export default function ReadingsPage() {
             </label>
             {form.predictions && (
               <p className="hx-hint">
-                Adds NOAA's predicted tide (the tide alone, no storm surge) as a dotted line. Observed minus predicted shows how far weather pushed the water.
+                Adds NOAA's predicted tide (the tide alone, no storm surge) as a dotted line, and a surge panel under the chart: observed minus predicted, or how far weather pushed the water.
               </p>
             )}
 
-            <SubLabel as="label" htmlFor="hx-trigger">Trigger level (optional, same datum)</SubLabel>
+            <SubLabel as="label" htmlFor="hx-trigger">Reference trigger level (optional)</SubLabel>
             <div className="hx-suffix">
               <input
                 id="hx-trigger"
@@ -632,10 +661,16 @@ export default function ReadingsPage() {
                 step="0.1"
                 placeholder="e.g. 10"
                 value={form.trigger}
-                onChange={(e) => update({ trigger: e.target.value })}
+                // Typing a level states it on the datum currently picked
+                onChange={(e) => update({ trigger: e.target.value, triggerDatum: datumValue })}
               />
-              <span>ft</span>
+              <span>ft {form.trigger !== '' ? form.triggerDatum : datumValue}</span>
             </div>
+            {triggerLevel !== null && form.triggerDatum !== datumValue && (
+              <p className="hx-hint">
+                This level is stated on {form.triggerDatum}, so it won't be drawn on {datumValue} readings. Re-enter it to state it on {datumValue}.
+              </p>
+            )}
 
             {/* Live hints about the form, shown before submitting */}
             {formProblem && !loading && request.status !== 'error' && <p className="hx-hint">{formProblem}</p>}
@@ -696,7 +731,7 @@ export default function ReadingsPage() {
           <ReadingsTable
             series={result.series.filter((s) => !s.error)}
             resolution={result.data.resolution}
-            trigger={trigger}
+            trigger={trigger && trigger.datum === result.data.datum ? trigger.level : null}
             predictions={form.predictions && result.predictions?.status === 'ok' ? result.predictions.byStation : null}
             page={tablePage}
             setPage={setTablePage}
@@ -708,12 +743,32 @@ export default function ReadingsPage() {
 }
 
 /**
+ * A native <select> with the location picker's chevron instead of the browser's
+ * arrow, so every dropdown on the form has its caret in the same place.
+ */
+function SelectBox({ children }) {
+  return (
+    <span className="hx-select">
+      {children}
+      <svg className="hx-select-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true">
+        <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
+/**
  * Section 02's content for one response. `trigger` comes from the live form
  * (not the submitted one), so changing it updates the cards and chart instantly
  * without refetching.
  */
-function Results({ result, trigger, showPredictions, directory, onEdit }) {
+function Results({ result, trigger: stated, showPredictions, directory, onEdit }) {
   const { form, data, series } = result;
+  // A level stated on one datum isn't comparable with readings on another, so it
+  // only applies when it matches the readings' datum (null: gauges' datums differ)
+  const trigger = stated && stated.datum === data.datum ? stated.level : null;
+  const triggerMismatch = stated && stated.datum !== data.datum;
+  const triggerText = trigger !== null && `${trigger.toFixed(2)} ft above ${data.datum}`;
   // Predictions show while the live checkbox is on; turning it off hides them without refetching
   const predState = showPredictions ? result.predictions : null;
   const predictions = predState?.status === 'ok' ? predState.byStation : null;
@@ -743,6 +798,8 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
   // The API reports each station's datum (MSL, else NAVD88); a location's top-level
   // datum is null only if its gauges don't share one.
   const unitsLabel = data.datum ? `ft above ${data.datum}` : 'ft above each gauge\'s datum';
+  // Line styles the chart will use, for the legend: dashed only appears when a gauge mixes both
+  const mixedQuality = ok.some((s) => s.readings.some((r) => r.q === 'p') && s.readings.some((r) => r.q !== 'p'));
 
   // "New York City" for a location (name from the directory), "The Battery" for a station
   const targetName = data.location
@@ -763,7 +820,7 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
               {targetName} ·{' '}
               {latest ? 'last hour' : `${formatBound(start)} to ${formatBound(end)}`}
               {form.start === EARLIEST && ' (full record)'} · {config.label.toLowerCase()}
-              {trigger !== null && ` · trigger ${trigger.toFixed(2)} ft`}
+              {trigger !== null && ` · reference trigger ${triggerText}`}
             </p>
             <button type="button" className="sec-link" onClick={onEdit}>Edit</button>
           </div>
@@ -795,7 +852,7 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
             {s.error ? (
               <p className="hx-error">{s.error}</p>
             ) : (
-              <Summary summary={summaries[i]} residual={residuals[i]} resolution={resolution} trigger={trigger} latest={latest} />
+              <Summary summary={summaries[i]} residual={residuals[i]} resolution={resolution} trigger={trigger} datum={data.datum} latest={latest} />
             )}
           </li>
         ))}
@@ -804,7 +861,8 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
       {ok.length > 0 && (
         <>
           <SubLabel>Historical · {valueLabel.toLowerCase()}, {unitsLabel}</SubLabel>
-          {(ok.length > 1 || predictions) && (
+          {/* Legend: gauge colors, then the line styles (the same for every gauge) */}
+          {(ok.length > 1 || predictions || mixedQuality || trigger !== null) && (
             <ul className="hx-legend" aria-label="Legend">
               {ok.length > 1 &&
                 ok.map((s) => (
@@ -813,10 +871,26 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
                     {s.name}
                   </li>
                 ))}
+              <li className={ok.length > 1 ? 'hx-legend-styles' : undefined}>
+                <span className="hx-key-style" aria-hidden="true" />
+                {resolution === 'daily' ? 'Observed daily max' : 'Observed'}
+              </li>
+              {mixedQuality && (
+                <li>
+                  <span className="hx-key-style is-prelim" aria-hidden="true" />
+                  Preliminary
+                </li>
+              )}
               {predictions && (
                 <li>
-                  <span className="hx-key hx-key-pred" aria-hidden="true" />
+                  <span className="hx-key-style is-pred" aria-hidden="true" />
                   {resolution === 'daily' ? 'Predicted daily high tide' : 'Predicted tide'}
+                </li>
+              )}
+              {trigger !== null && (
+                <li>
+                  <span className="hx-key-style is-hit" aria-hidden="true" />
+                  At or above reference trigger
                 </li>
               )}
             </ul>
@@ -835,23 +909,47 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
             stepMs={config.stepMs}
             valueLabel={valueLabel}
             unitsLabel={unitsLabel}
+            datum={data.datum}
+            residualLabel={
+              resolution === 'daily'
+                ? 'Skew surge: daily max minus predicted high tide, ft'
+                : 'Surge: observed minus predicted tide, ft'
+            }
             showReadingTime={resolution === 'daily'}
           />
         </>
       )}
 
+      {triggerMismatch && ok.length > 0 && (
+        <p className="hx-pred-note">
+          The reference trigger ({stated.level.toFixed(2)} ft) is stated on {stated.datum}, but these readings are on{' '}
+          {data.datum ?? 'different datums'}, so it isn't drawn or checked. Re-enter it on this datum to compare.
+        </p>
+      )}
       {/* Headline sentence with the key number in bold, like "Events above your level: 10 in 10 years." */}
       {trigger !== null && ok.length > 0 && (
         <p className="hx-headline">
-          {latest ? 'At or above your level in the last hour' : 'At or above your level'} ({trigger.toFixed(2)} ft):{' '}
+          {latest ? 'At or above the reference trigger in the last hour' : 'At or above the reference trigger'} ({triggerText}):{' '}
           {ok
             .map((s) => ({ s, sm: summaries[series.indexOf(s)] }))
             .map(({ s, sm }, i, all) => (
               <span key={s.id}>
-                {s.name} {sm.above ? <strong className="hl-text">{sm.aboveLabel}</strong> : 'never'}
+                {s.name}{' '}
+                {sm.above ? (
+                  <strong className="hl-text">{sm.aboveLabel}</strong>
+                ) : sm.gaps ? (
+                  `not in the data available (${sm.gaps.missing} missing)`
+                ) : (
+                  'not reached'
+                )}
                 {i < all.length - 1 ? ', ' : '.'}
               </span>
             ))}
+        </p>
+      )}
+      {trigger !== null && ok.length > 0 && (
+        <p className="hx-muted hx-small">
+          A reference level for exploring the data. Whether a bond triggers is decided under its terms by its calculation agent, not by this page.
         </p>
       )}
       <p className="sec-source">
@@ -869,9 +967,12 @@ function Results({ result, trigger, showPredictions, directory, onEdit }) {
   );
 }
 
+// A gap bound: a date for daily data, a date and time otherwise
+const formatGapBound = (t, resolution) => (resolution === 'daily' ? formatDate(t) : formatDateTime(t));
+
 /** One gauge's card contents (the gauge name is rendered by Results). */
-function Summary({ summary, residual, resolution, trigger, latest = false }) {
-  const { peak, latest: last, count, missing, verifiedShare, startsLate, endsEarly, above, aboveLabel, firstAbove } = summary;
+function Summary({ summary, residual, resolution, trigger, datum, latest = false }) {
+  const { peak, latest: last, count, missing, verifiedShare, startsLate, endsEarly, above, aboveLabel, firstAbove, gaps } = summary;
   // "Latest" leads with the gauge's current level; other ranges lead with the peak
   const lead = latest ? last : peak;
   const quality =
@@ -894,7 +995,7 @@ function Summary({ summary, residual, resolution, trigger, latest = false }) {
           <div>
             <dt>{resolution === 'daily' ? 'Max above predicted high' : 'Max above tide'}</dt>
             <dd>
-              <span className={residual.v > 0 ? 'hx-surge-up' : undefined}>{formatResidual(residual.v)}</span>
+              <span className="hx-surge">{formatResidual(residual.v)}</span>
               <span className="hx-muted hx-block">
                 {formatDateTime(residual.t)}: {residual.observed.toFixed(2)} observed vs {residual.predicted.toFixed(2)} predicted
               </span>
@@ -912,26 +1013,36 @@ function Summary({ summary, residual, resolution, trigger, latest = false }) {
           <dt>Status</dt>
           <dd>{quality}</dd>
         </div>
-        {(startsLate || endsEarly) && (
+        {(startsLate || endsEarly || gaps) && (
           <div>
             <dt>Coverage</dt>
             <dd>
               {startsLate && `Starts ${formatDate(startsLate)}. `}
-              {endsEarly && `Ends ${formatDate(endsEarly)}${resolution === 'hourly' || resolution === 'daily' ? ' (verified data lags real time)' : ''}.`}
+              {endsEarly && `Ends ${formatDate(endsEarly)}${resolution === 'hourly' || resolution === 'daily' ? ' (verified data lags real time)' : ''}. `}
+              {gaps && (
+                <span className={startsLate || endsEarly ? 'hx-block' : undefined}>
+                  {gaps.missing} missing in {gaps.count.toLocaleString()} {gaps.count === 1 ? 'gap' : 'gaps'}
+                  {gaps.count > 1 && `; longest ${gaps.longest.span}`}, from {formatGapBound(gaps.longest.start, resolution)} to{' '}
+                  {formatGapBound(gaps.longest.end, resolution)}.
+                </span>
+              )}
             </dd>
           </div>
         )}
         {trigger !== null && (
           <div>
-            <dt>At or above {trigger.toFixed(2)} ft</dt>
+            <dt>At or above {trigger.toFixed(2)} ft {datum}</dt>
             <dd className={above ? 'hx-hit' : undefined}>
               {above ? (
                 <>
                   <span aria-hidden="true">▲ </span>
                   {aboveLabel}, first {formatDateTime(firstAbove.t)}
                 </>
+              ) : gaps ? (
+                // Data is missing, so the level may have been reached while the gauge was silent
+                `Not reached in the data available (${gaps.missing} missing)`
               ) : (
-                'Never reached'
+                'Not reached'
               )}
             </dd>
           </div>
@@ -967,7 +1078,7 @@ function ReadingsTable({ series, resolution, trigger, predictions, page, setPage
             <th scope="col" className="num">{daily ? 'Daily max (ft)' : 'Level (ft)'}</th>
             {daily && <th scope="col" className="num">Daily min (ft)</th>}
             {predictions && <th scope="col" className="num">{daily ? 'Predicted high (ft)' : 'Predicted (ft)'}</th>}
-            {predictions && <th scope="col" className="num">vs tide (ft)</th>}
+            {predictions && <th scope="col" className="num"><abbr title="Observed minus predicted tide: the surge">Obs − pred (ft)</abbr></th>}
             <th scope="col">Status</th>
             <th scope="col">Flags</th>
           </tr>

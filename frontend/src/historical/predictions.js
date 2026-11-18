@@ -94,5 +94,25 @@ export function maxResidual(observed, prediction) {
   return best;
 }
 
+/**
+ * One gauge's residual (observed minus predicted) at every observed reading, for
+ * the chart's surge panel. Values are null where the reading has no value or no
+ * matching prediction, so the line breaks there instead of bridging the gap.
+ *
+ * @param {{ id: string, name: string, color: string, times: number[], readings: Array }} observed
+ * @param {{ valueFor: Function, error?: string } | null} prediction
+ * @returns {{ id: string, name: string, color: string, times: number[], values: (number|null)[] } | null}
+ */
+export function residualSeries(observed, prediction) {
+  if (!prediction || prediction.error) return null;
+  const values = observed.readings.map((r) => {
+    if (r.v === null) return null;
+    const p = prediction.valueFor(r);
+    return p === null ? null : r.v - p;
+  });
+  if (!values.some((v) => v !== null)) return null;
+  return { id: observed.id, name: observed.name, color: observed.color, times: observed.times, values };
+}
+
 /** "+1.23 ft" / "−0.45 ft": residuals read best with an explicit sign. */
 export const formatResidual = (v) => `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(2)} ft`;

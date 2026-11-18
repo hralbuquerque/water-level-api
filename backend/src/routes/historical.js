@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { EARLIEST, fetchReadings, getDateRangeError, pickResolution, probeStartFor, RESOLUTIONS } from '../noaa.js';
+import { EARLIEST, fetchReadings, findGaps, getDateRangeError, pickResolution, probeStartFor, RESOLUTIONS } from '../noaa.js';
 import { STATIONS, getStationsForLocation, unsupportedStationError } from '../stations.js';
 import { meta, parseDatumQuery } from './shared.js';
 
@@ -57,6 +57,13 @@ function reportedStart(range, query, readingLists) {
   return firstDates.length ? firstDates.reduce((a, b) => (a < b ? a : b)) : range.starts.reduce((a, b) => (a < b ? a : b));
 }
 
+/**
+ * Where a station's readings are missing over its range (see findGaps). NOAA
+ * skips outages without saying so, so every response states them.
+ */
+const coverageOf = (readings, range, i) =>
+  findGaps(readings, range.starts[i], range.end, range.resolution, { fromFirstReading: range.earliest });
+
 // All gauges for a location
 router.get('/locations/:loc/historical', async (req, res) => {
   const stations = getStationsForLocation(req.params.loc);
@@ -83,7 +90,7 @@ router.get('/locations/:loc/historical', async (req, res) => {
     name: stations[i].name,
     datum: datum.datumOf(stations[i]),
     ...(outcome.status === 'fulfilled'
-      ? { readings: outcome.value }
+      ? { coverage: coverageOf(outcome.value, range, i), readings: outcome.value }
       : { error: outcome.reason.message }),
   }));
 
@@ -114,7 +121,7 @@ router.get('/stations/:id/historical', async (req, res) => {
   try {
     const readings = await fetchReadings(station.id, starts[0], end, resolution, datum.requested);
     const start = reportedStart(range, req.query, [readings]);
-    res.json({ station: station.id, name: station.name, start, end, ...meta(resolution, datum.shared), readings });
+    res.json({ station: station.id, name: station.name, start, end, ...meta(resolution, datum.shared), coverage: coverageOf(readings, range, 0), readings });
   } catch (err) {
     res.status(502).json({ error: err.message });
   }
